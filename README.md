@@ -1,3 +1,4 @@
+<!-- https://github.com/pleabargain/piano-app -->
 # Piano App
 
 A React-based piano training application built with Vite. Practice scales, chords, and free play with MIDI keyboard support.

@@ -1,3 +1,4 @@
+<!-- https://github.com/pleabargain/piano-app -->
 # Agent Coding Rules
 
 This document contains coding rules and guidelines for development of this project.
