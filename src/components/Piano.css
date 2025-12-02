@@ -56,6 +56,16 @@
   background: #854d0e; /* Dark Yellow/Brown for black keys */
 }
 
+/* Chord Note Highlighting (specific MIDI notes for chord display) */
+.key.chord-note:not(.active) {
+  background: #60a5fa !important; /* Light Blue for white keys */
+  box-shadow: 0 0 10px rgba(96, 165, 250, 0.5);
+}
+.key.black.chord-note:not(.active) {
+  background: #1e40af !important; /* Dark Blue for black keys */
+  box-shadow: 0 0 10px rgba(30, 64, 175, 0.5);
+}
+
 /* Feedback States */
 .key.correct {
   background: #22c55e !important; /* Green */

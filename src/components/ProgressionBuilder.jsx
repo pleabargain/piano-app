@@ -5,7 +5,7 @@ import { getScaleNotes, NOTES } from '../core/music-theory';
 
 const ROMAN_REGEX = /^(b|#)?(VII|III|IV|VI|II|V|I|vii|iii|iv|vi|ii|v|i)(°|\+|dim|aug|7|maj7|min7)?$/;
 
-const ProgressionBuilder = ({ selectedRoot, selectedScaleType, onProgressionSet }) => {
+const ProgressionBuilder = ({ selectedRoot, selectedScaleType, onProgressionSet, onChordClick }) => {
     const [input, setInput] = useState('I IV V I');
     const [parsedChords, setParsedChords] = useState([]);
     const [error, setError] = useState('');
@@ -76,7 +76,12 @@ const ProgressionBuilder = ({ selectedRoot, selectedScaleType, onProgressionSet 
 
             <div className="preview">
                 {parsedChords.map((chord, idx) => (
-                    <div key={idx} className="chord-preview">
+                    <div 
+                        key={idx} 
+                        className="chord-preview clickable-chord"
+                        onClick={() => onChordClick && onChordClick(chord.name)}
+                        style={{ cursor: onChordClick ? 'pointer' : 'default' }}
+                    >
                         <div className="roman">{chord.roman}</div>
                         <div className="alpha">{chord.name}</div>
                     </div>

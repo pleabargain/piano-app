@@ -23,60 +23,62 @@ const Controls = ({
 }) => {
     return (
         <div className="controls-container">
-            <div className="control-group">
-                <label>Key Center</label>
-                <select value={selectedRoot} onChange={(e) => onRootChange(e.target.value)}>
-                    {NOTES.map(note => (
-                        <option key={note} value={note}>{note}</option>
-                    ))}
-                </select>
-            </div>
-
-            <div className="control-group">
-                <label>Scale Type</label>
-                <select value={selectedScaleType} onChange={(e) => onScaleTypeChange(e.target.value)}>
-                    {Object.entries(SCALES).map(([key, data]) => (
-                        <option key={key} value={key}>{data.name}</option>
-                    ))}
-                </select>
-            </div>
-
-            <div className="control-group">
-                <label>Mode</label>
-                <div className="mode-toggle">
-                    <button
-                        className={mode === 'scale' ? 'active' : ''}
-                        onClick={() => onModeChange('scale')}
-                    >
-                        Scale Practice
-                    </button>
-                    <button
-                        className={mode === 'chord' ? 'active' : ''}
-                        onClick={() => onModeChange('chord')}
-                    >
-                        Chord Practice
-                    </button>
-                    <button
-                        className={mode === 'free' ? 'active' : ''}
-                        onClick={() => onModeChange('free')}
-                    >
-                        Free Play
-                    </button>
+            <div className="controls-row">
+                <div className="control-group">
+                    <label>Key Center</label>
+                    <select value={selectedRoot} onChange={(e) => onRootChange(e.target.value)}>
+                        {NOTES.map(note => (
+                            <option key={note} value={note}>{note}</option>
+                        ))}
+                    </select>
                 </div>
-            </div>
 
-            <div className="control-group">
-                <label>Keyboard Size</label>
-                <select
-                    value={JSON.stringify(keyboardSize)}
-                    onChange={(e) => onKeyboardSizeChange(JSON.parse(e.target.value))}
-                >
-                    {KEYBOARD_SIZES.map((size, idx) => (
-                        <option key={idx} value={JSON.stringify({ start: size.start, end: size.end })}>
-                            {size.label}
-                        </option>
-                    ))}
-                </select>
+                <div className="control-group">
+                    <label>Scale Type</label>
+                    <select value={selectedScaleType} onChange={(e) => onScaleTypeChange(e.target.value)}>
+                        {Object.entries(SCALES).map(([key, data]) => (
+                            <option key={key} value={key}>{data.name}</option>
+                        ))}
+                    </select>
+                </div>
+
+                <div className="control-group">
+                    <label>Mode</label>
+                    <div className="mode-toggle">
+                        <button
+                            className={mode === 'scale' ? 'active' : ''}
+                            onClick={() => onModeChange('scale')}
+                        >
+                            Scale Practice
+                        </button>
+                        <button
+                            className={mode === 'chord' ? 'active' : ''}
+                            onClick={() => onModeChange('chord')}
+                        >
+                            Chord Practice
+                        </button>
+                        <button
+                            className={mode === 'free' ? 'active' : ''}
+                            onClick={() => onModeChange('free')}
+                        >
+                            Free Play
+                        </button>
+                    </div>
+                </div>
+
+                <div className="control-group">
+                    <label>Keyboard Size</label>
+                    <select
+                        value={JSON.stringify(keyboardSize)}
+                        onChange={(e) => onKeyboardSizeChange(JSON.parse(e.target.value))}
+                    >
+                        {KEYBOARD_SIZES.map((size, idx) => (
+                            <option key={idx} value={JSON.stringify({ start: size.start, end: size.end })}>
+                                {size.label}
+                            </option>
+                        ))}
+                    </select>
+                </div>
             </div>
         </div>
     );

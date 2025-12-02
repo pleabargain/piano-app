@@ -1,0 +1,93 @@
+/* https://github.com/pleabargain/piano-app */
+.circle-of-fifths-container {
+  background: #fff;
+  padding: 20px;
+  border-radius: 10px;
+  margin: 20px 0;
+  text-align: center;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.circle-of-fifths-container h3 {
+  margin: 0 0 20px 0;
+  color: #1a1a1a;
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+
+.circle-of-fifths {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.circle-svg {
+  width: 100%;
+  max-width: 400px;
+  height: auto;
+}
+
+.segment {
+  stroke: #000;
+  stroke-width: 2;
+  transition: all 0.2s ease;
+}
+
+.segment.light {
+  fill: #e5e5e5;
+}
+
+.segment.dark {
+  fill: #d0d0d0;
+}
+
+.segment:hover {
+  stroke-width: 3;
+  stroke: #3b82f6;
+  opacity: 0.8;
+}
+
+.segment.selected {
+  fill: #3b82f6;
+  stroke: #1e40af;
+  stroke-width: 3;
+  opacity: 0.9;
+}
+
+.major-label {
+  font-size: 20px;
+  font-weight: 700;
+  fill: #000;
+  pointer-events: none;
+  user-select: none;
+}
+
+.minor-label {
+  font-size: 14px;
+  font-weight: 700;
+  fill: #000;
+  pointer-events: none;
+  user-select: none;
+}
+
+.enharmonic {
+  font-size: 12px;
+  font-weight: 500;
+  fill: #555;
+}
+
+.segment.selected .major-label,
+.segment.selected .minor-label {
+  fill: #fff;
+}
+
+.segment.selected .enharmonic {
+  fill: #e0e7ff;
+}
+
+.center-circle {
+  fill: #fff;
+  stroke: #000;
+  stroke-width: 2;
+  pointer-events: none;
+}

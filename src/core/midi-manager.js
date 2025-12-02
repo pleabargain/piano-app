@@ -41,6 +41,9 @@ class MIDIManager {
             // Usually input objects are stable or new ones are created.
             input.onmidimessage = this.handleMessage.bind(this);
         });
+        
+        // Notify listeners about input changes
+        this.notifyListeners({ type: 'inputsChanged', inputs: this.inputs });
     }
 
     handleMessage(message) {
@@ -71,6 +74,14 @@ class MIDIManager {
 
     getActiveNotes() {
         return Array.from(this.activeNotes).sort((a, b) => a - b);
+    }
+
+    getInputNames() {
+        return this.inputs.map(input => input.name);
+    }
+
+    getFirstInputName() {
+        return this.inputs.length > 0 ? this.inputs[0].name : null;
     }
 }
 

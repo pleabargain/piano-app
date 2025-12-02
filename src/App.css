@@ -4,11 +4,18 @@ body {
   font-family: 'Inter', sans-serif;
   background: #1a1a1a;
   color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
 }
 
 .app-container {
   display: flex;
   flex-direction: column;
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
   min-height: 100vh;
 }
 
@@ -25,10 +32,37 @@ header h1 {
   color: #3b82f6;
 }
 
+.midi-device-name {
+  font-size: 0.8rem;
+  color: #60a5fa;
+  font-weight: 400;
+  margin-left: 8px;
+}
+
 .status-bar {
   margin-top: 10px;
   color: #aaa;
   font-size: 0.9rem;
+}
+
+.detected-chord-display {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+}
+
+.chord-name-large {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #3b82f6;
+  text-shadow: 0 0 10px rgba(59, 130, 246, 0.5);
+}
+
+.chord-inversion {
+  font-size: 1rem;
+  color: #60a5fa;
+  font-style: italic;
 }
 
 .main-content {
@@ -38,6 +72,31 @@ header h1 {
   align-items: center;
   padding: 20px;
   gap: 30px;
+}
+
+.controls-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  width: 100%;
+  max-width: 1200px;
+}
+
+.circle-and-chord-container {
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 30px;
+  width: 100%;
+  flex-wrap: wrap;
+}
+
+@media (max-width: 768px) {
+  .circle-and-chord-container {
+    flex-direction: column;
+    align-items: center;
+  }
 }
 
 .current-target {
@@ -57,4 +116,84 @@ header h1 {
 .current-target h3 {
   margin: 10px 0 0;
   color: #ccc;
+}
+
+.clicked-chord-display {
+  text-align: center;
+  background: #2a2a2a;
+  padding: 15px;
+  border-radius: 8px;
+  margin-top: 10px;
+  border: 2px solid #3b82f6;
+}
+
+.clicked-chord-label {
+  font-size: 0.8rem;
+  color: #aaa;
+  margin-bottom: 5px;
+}
+
+.clicked-chord-name {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #60a5fa;
+  margin-bottom: 5px;
+}
+
+.clicked-chord-inversion {
+  font-size: 1rem;
+  color: #fbbf24;
+  font-style: italic;
+  margin-bottom: 5px;
+}
+
+.clicked-chord-hint {
+  font-size: 0.75rem;
+  color: #666;
+  margin-top: 5px;
+}
+
+.detected-chord-info {
+  margin-top: 20px;
+  padding-top: 20px;
+  border-top: 1px solid #555;
+  text-align: center;
+}
+
+.detected-label {
+  font-size: 0.8rem;
+  color: #aaa;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 8px;
+}
+
+.detected-chord-name {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #3b82f6;
+  margin-bottom: 4px;
+}
+
+.detected-chord-inversion {
+  font-size: 1rem;
+  color: #60a5fa;
+  font-style: italic;
+}
+
+.detected-chord-card {
+  background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);
+  border: 2px solid #60a5fa;
+  box-shadow: 0 0 20px rgba(59, 130, 246, 0.3);
+}
+
+.chord-name-display {
+  font-size: 2.5rem !important;
+  color: #fff !important;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+}
+
+.chord-inversion-display {
+  color: #e0e7ff !important;
+  font-size: 1.2rem !important;
 }

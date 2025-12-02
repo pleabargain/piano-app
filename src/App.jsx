@@ -3,8 +3,9 @@ import React, { useState, useEffect, useRef } from 'react';
 import Piano from './components/Piano';
 import Controls from './components/Controls';
 import ProgressionBuilder from './components/ProgressionBuilder';
+import CircleOfFifths from './components/CircleOfFifths';
 import { midiManager } from './core/midi-manager';
-import { getScaleNotes, getChordNotes, identifyChord, NOTES } from './core/music-theory';
+import { getScaleNotes, getChordNotes, identifyChord, getChordNotesAsMidi, parseChordName, NOTES, CHORD_TYPES } from './core/music-theory';
 import './App.css';
 
 function App() {
@@ -17,6 +18,7 @@ function App() {
   // MIDI State
   const [activeNotes, setActiveNotes] = useState([]);
   const [midiEnabled, setMidiEnabled] = useState(false);
+  const [midiDeviceName, setMidiDeviceName] = useState(null);
 
   // Practice State
   const [progression, setProgression] = useState([]); // Array of { name: 'C Major', roman: 'I' }
@@ -24,6 +26,18 @@ function App() {
   const [feedbackState, setFeedbackState] = useState({}); // { midiNumber: 'correct' | 'incorrect' }
   const [statusMessage, setStatusMessage] = useState('Connect MIDI keyboard to start');
   const [detectedChord, setDetectedChord] = useState(null);
+  
+  // Chord display state
+  const [clickedChord, setClickedChord] = useState(null); // { name: 'C Major', inversion: 0 }
+  const [chordMidiNotes, setChordMidiNotes] = useState([]); // MIDI numbers to highlight
+  
+  // Clear clicked chord when mode changes
+  useEffect(() => {
+    if (mode !== 'chord') {
+      setClickedChord(null);
+      setChordMidiNotes([]);
+    }
+  }, [mode]);
 
   // Refs for state access in callbacks if needed (though we use functional updates)
 
@@ -32,10 +46,17 @@ function App() {
     midiManager.requestAccess().then(success => {
       setMidiEnabled(success);
       if (success) {
-        setStatusMessage('MIDI Connected. Select a mode to play.');
+        const deviceName = midiManager.getFirstInputName();
+        setMidiDeviceName(deviceName);
+        if (deviceName) {
+          setStatusMessage(`MIDI Connected: ${deviceName}`);
+        } else {
+          setStatusMessage('MIDI Connected. Select a mode to play.');
+        }
         midiManager.addListener(handleMidiMessage);
       } else {
         setStatusMessage('Web MIDI API not supported or no device found.');
+        setMidiDeviceName(null);
       }
     });
 
@@ -46,6 +67,17 @@ function App() {
 
   const handleMidiMessage = (event, activeNotesList) => {
     setActiveNotes(activeNotesList);
+    
+    // Update device name if inputs changed
+    if (event.type === 'inputsChanged') {
+      const deviceName = midiManager.getFirstInputName();
+      setMidiDeviceName(deviceName);
+      if (deviceName && midiEnabled) {
+        setStatusMessage(`MIDI Connected: ${deviceName}`);
+      } else if (midiEnabled) {
+        setStatusMessage('MIDI Connected. Select a mode to play.');
+      }
+    }
   };
 
   // Logic for Practice Modes
@@ -74,24 +106,45 @@ function App() {
   }, [mode, selectedRoot, selectedScaleType]);
 
   const handleChordPractice = () => {
+    // Detect the chord being played
+    const detected = identifyChord(activeNotes);
+    
     if (progression.length > 0) {
       const target = progression[currentStepIndex % progression.length];
-      setStatusMessage(`Target: ${target.name} (${target.roman})`);
+      if (detected) {
+        setStatusMessage(`Target: ${target.name} (${target.roman}) | Playing: ${detected.name} ${detected.inversion ? `(${detected.inversion})` : ''}`);
+        setDetectedChord(detected);
+      } else if (activeNotes.length > 0) {
+        setStatusMessage(`Target: ${target.name} (${target.roman}) | Playing...`);
+        setDetectedChord(null);
+      } else {
+        setStatusMessage(`Target: ${target.name} (${target.roman})`);
+        setDetectedChord(null);
+      }
     } else {
-      setStatusMessage('Set a progression to start');
+      if (detected) {
+        setStatusMessage(`Playing: ${detected.name} ${detected.inversion ? `(${detected.inversion})` : ''}`);
+        setDetectedChord(detected);
+      } else if (activeNotes.length > 0) {
+        setStatusMessage('Playing... (no chord detected)');
+        setDetectedChord(null);
+      } else {
+        setStatusMessage('Set a progression to start');
+        setDetectedChord(null);
+      }
     }
   };
 
   const handleFreePlay = () => {
     const chord = identifyChord(activeNotes);
     if (chord) {
-      setStatusMessage(`Detected: ${chord.name}`);
+      setStatusMessage(`Detected: ${chord.name} ${chord.inversion ? `(${chord.inversion})` : ''}`);
       setDetectedChord(chord);
     } else if (activeNotes.length > 0) {
-      setStatusMessage('Playing...');
+      setStatusMessage('Playing... (no chord detected)');
       setDetectedChord(null);
     } else {
-      setStatusMessage('Free Play');
+      setStatusMessage('Free Play - Play any chord to see detection');
       setDetectedChord(null);
     }
     setFeedbackState({});
@@ -301,8 +354,7 @@ function App() {
   return (
     <div className="app-container">
       <header>
-        <h1>Piano Trainer</h1>
-        <div className="status-bar">{statusMessage}</div>
+        <h1>Piano Trainer {midiDeviceName && <span className="midi-device-name">({midiDeviceName})</span>}</h1>
       </header>
 
       <div className="main-content">
@@ -311,42 +363,117 @@ function App() {
           endNote={keyboardSize.end}
           activeNotes={activeNotes}
           highlightedNotes={getHighlightedNotes()}
+          chordMidiNotes={chordMidiNotes}
           feedbackState={feedbackState}
         />
 
-        <Controls
-          selectedRoot={selectedRoot}
-          onRootChange={setSelectedRoot}
-          selectedScaleType={selectedScaleType}
-          onScaleTypeChange={setSelectedScaleType}
-          mode={mode}
-          onModeChange={setMode}
-          keyboardSize={keyboardSize}
-          onKeyboardSizeChange={setKeyboardSize}
-        />
+        <div className="controls-section">
+          <Controls
+            selectedRoot={selectedRoot}
+            onRootChange={setSelectedRoot}
+            selectedScaleType={selectedScaleType}
+            onScaleTypeChange={setSelectedScaleType}
+            mode={mode}
+            onModeChange={setMode}
+            keyboardSize={keyboardSize}
+            onKeyboardSizeChange={setKeyboardSize}
+          />
+
+          <div className="circle-and-chord-container">
+            <CircleOfFifths
+              selectedRoot={selectedRoot}
+              onRootSelect={setSelectedRoot}
+            />
+            {(mode === 'free' || mode === 'chord') && (
+              <div className="chord-display-in-controls">
+                <div className="chord-label">Detected Chord:</div>
+                {detectedChord ? (
+                  <>
+                    <div className="chord-name-in-controls">{detectedChord.name}</div>
+                    {detectedChord.inversion && (
+                      <div className="chord-inversion-in-controls">{detectedChord.inversion}</div>
+                    )}
+                  </>
+                ) : (
+                  <div className="chord-placeholder">No chord detected</div>
+                )}
+              </div>
+            )}
+          </div>
+        </div>
 
         {mode === 'chord' && (
-          <ProgressionBuilder
-            selectedRoot={selectedRoot}
-            selectedScaleType={selectedScaleType}
-            onProgressionSet={(p) => {
-              setProgression(p);
-              setCurrentStepIndex(0);
-            }}
-          />
+          <>
+            <ProgressionBuilder
+              selectedRoot={selectedRoot}
+              selectedScaleType={selectedScaleType}
+              onProgressionSet={(p) => {
+                setProgression(p);
+                setCurrentStepIndex(0);
+                // Clear clicked chord when progression changes
+                setClickedChord(null);
+                setChordMidiNotes([]);
+              }}
+              onChordClick={(chordName) => {
+                // Handle chord click - cycle through inversions
+                const parsed = parseChordName(chordName);
+                if (!parsed) return;
+                
+                // Check if this is the same chord that was clicked before
+                if (clickedChord && clickedChord.name === chordName) {
+                  // Cycle to next inversion
+                  const maxInversions = CHORD_TYPES[parsed.chordType].intervals.length + 1;
+                  const nextInversion = (clickedChord.inversion + 1) % maxInversions;
+                  setClickedChord({ name: chordName, inversion: nextInversion });
+                  
+                  // Calculate MIDI notes for this inversion (use middle C octave = 4)
+                  const midiNotes = getChordNotesAsMidi(parsed.root, parsed.chordType, nextInversion, 4);
+                  setChordMidiNotes(midiNotes);
+                } else {
+                  // New chord clicked - start with root position
+                  setClickedChord({ name: chordName, inversion: 0 });
+                  const midiNotes = getChordNotesAsMidi(parsed.root, parsed.chordType, 0, 4);
+                  setChordMidiNotes(midiNotes);
+                }
+              }}
+            />
+            {clickedChord && (
+              <div className="clicked-chord-display">
+                <div className="clicked-chord-label">Showing on Piano:</div>
+                <div className="clicked-chord-name">{clickedChord.name}</div>
+                <div className="clicked-chord-inversion">
+                  {clickedChord.inversion === 0 ? 'Root Position' : 
+                   clickedChord.inversion === 1 ? '1st Inversion' :
+                   clickedChord.inversion === 2 ? '2nd Inversion' :
+                   clickedChord.inversion === 3 ? '3rd Inversion' : 
+                   `${clickedChord.inversion}th Inversion`}
+                </div>
+                <div className="clicked-chord-hint">Click chord again to cycle inversions</div>
+              </div>
+            )}
+          </>
         )}
 
         {mode === 'chord' && progression.length > 0 && (
           <div className="current-target">
-            <h2>Current: {progression[currentStepIndex % progression.length].roman}</h2>
+            <h2>Target: {progression[currentStepIndex % progression.length].roman}</h2>
             <h3>{progression[currentStepIndex % progression.length].name}</h3>
+            {detectedChord && (
+              <div className="detected-chord-info">
+                <div className="detected-label">Playing:</div>
+                <div className="detected-chord-name">{detectedChord.name}</div>
+                {detectedChord.inversion && (
+                  <div className="detected-chord-inversion">{detectedChord.inversion}</div>
+                )}
+              </div>
+            )}
           </div>
         )}
 
         {mode === 'free' && detectedChord && (
-          <div className="current-target">
-            <h2>{detectedChord.name}</h2>
-            <h3>{detectedChord.inversion}</h3>
+          <div className="current-target detected-chord-card">
+            <h2 className="chord-name-display">{detectedChord.name}</h2>
+            <h3 className="chord-inversion-display">{detectedChord.inversion}</h3>
           </div>
         )}
       </div>

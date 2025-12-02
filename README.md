@@ -3,6 +3,32 @@
 
 A React-based piano training application built with Vite. Practice scales, chords, and free play with MIDI keyboard support.
 
+## Screenshots
+
+### Main Application View
+![Main Application View](screenshots/main-view.png)
+*Main interface showing piano keyboard and controls*
+
+### Full Application Interface
+![Full Application Interface](screenshots/full-app-view.png)
+*Complete view with Circle of Fifths and all controls*
+
+### Free Play Mode with Circle of Fifths
+![Free Play Mode](screenshots/free-play-mode.png)
+*Free Play mode with real-time chord detection and Circle of Fifths*
+
+### Chord Practice Mode
+![Chord Practice Mode](screenshots/chord-practice-mode.png)
+*Chord Practice mode with progression builder*
+
+### Chord Practice with Detection
+![Chord Practice with Detection](screenshots/chord-practice-with-detection.png)
+*Chord Practice mode showing target chord and detected chord side-by-side*
+
+### Circle of Fifths and Chord Display
+![Circle of Fifths and Chord Display](screenshots/chord-practice-complete-view.png)
+*Interactive Circle of Fifths with detected chord display frame positioned to the right*
+
 ## Getting Started
 
 ### Prerequisites
@@ -64,15 +90,34 @@ npm run test:ui
   - Create and set your own progressions using Roman numeral notation
   - Automatic progression through chords with real-time feedback
   - Displays current target chord in both Roman numeral and letter notation
+  - **Real-time chord detection**: Shows the chord you're currently playing with inversion detection
+  - **Chord display frame**: Always-visible frame next to Circle of Fifths showing detected chord
+  - Target chord displayed in card below controls with detected chord information
+  - **Interactive chord buttons**: Click any chord in the progression preview to see its keys highlighted on the piano
+  - **Inversion cycling**: Each click on a chord button cycles through all inversions (Root Position → 1st → 2nd → 3rd → back to Root)
+  - Visual feedback shows which chord and inversion is currently displayed on the piano
   - Transposable progressions - practice the same progression in any key
 
 - **Free Play Mode**:
   - Play freely and see chord detection in real-time
   - Automatic chord identification with inversion detection
-  - Displays detected chord name and inversion
+  - **Chord display frame**: Always-visible frame positioned next to Circle of Fifths
+  - Shows detected chord name and inversion when playing, or "No chord detected" when idle
   - Educational feedback showing what you're playing
 
 ### Music Theory Features
+
+- **Interactive Circle of Fifths**:
+  - Traditional two-ring design matching standard music theory diagrams
+  - **Outer ring**: Major keys with enharmonic equivalents (e.g., F#/Gb, Db/C#)
+  - **Inner ring**: Relative minor keys with enharmonic equivalents
+  - **Centered text labels**: All key names properly centered within their segments
+  - Visual representation of the circle of fifths
+  - Click any segment on the circle to instantly change the selected key
+  - Highlights the currently selected key with blue color
+  - Alternating light/dark segments for better visual distinction
+  - Positioned alongside detected chord display for easy reference
+  - Helps understand key relationships and music theory
 
 - **Scale Support**: 
   - Major scales (all 12 keys)
@@ -98,6 +143,7 @@ npm run test:ui
 - **Real-time Input Detection**: See which keys are being pressed
 - **Visual Feedback**: Active notes highlighted on the virtual keyboard
 - **Automatic Device Detection**: Connects to available MIDI devices
+- **Device Name Display**: Connected MIDI device name shown in the header for easy identification
 
 ### Keyboard Visualization
 
@@ -109,10 +155,13 @@ npm run test:ui
   - 25 Keys (C3-C5)
 
 - **Visual Features**:
-  - Highlighted scale notes
-  - Active MIDI notes display
+  - Highlighted scale notes (yellow highlighting)
+  - Active MIDI notes display (blue when pressed)
+  - **Interactive chord highlighting**: Click chord buttons to highlight specific chord keys in blue
   - Note labels on keys
   - Color-coded feedback (correct/incorrect notes)
+  - Centered layout for optimal viewing experience
+  - **Chord Display**: Detected chords shown prominently in controls and status areas
 
 ## Project Structure
 
@@ -122,7 +171,8 @@ piano-app/
 │   ├── components/           # React components
 │   │   ├── Piano.jsx         # Virtual piano keyboard component
 │   │   ├── Controls.jsx      # Settings and mode controls
-│   │   └── ProgressionBuilder.jsx  # Chord progression input
+│   │   ├── ProgressionBuilder.jsx  # Chord progression input
+│   │   └── CircleOfFifths.jsx  # Interactive circle of fifths component
 │   ├── core/                 # Core music theory and MIDI logic
 │   │   ├── music-theory.js   # Scale/chord calculations, chord detection
 │   │   └── midi-manager.js   # Web MIDI API wrapper
@@ -173,19 +223,34 @@ piano-app/
    - Enter a chord progression using Roman numerals (e.g., "I IV V I")
    - Click "Set Progression" to activate it
    - The progression will be displayed with both Roman and letter notation
-3. **Practice**:
-   - The app shows the current target chord
-   - Play the target chord to advance through the progression
+3. **Explore Chord Inversions**:
+   - **Click any chord button** in the progression preview to see its keys highlighted on the piano
+   - The piano keys will light up in blue showing exactly which keys to play for that chord
+   - **Cycle through inversions**: Click the same chord button again to see the next inversion
+   - Each click cycles through: Root Position → 1st Inversion → 2nd Inversion → 3rd Inversion → (back to Root)
+   - A display below the progression shows which chord and inversion is currently highlighted
+   - This helps you learn different voicings and fingerings for the same chord
+4. **Practice**:
+   - The app shows the current target chord (what you should play) in a card below the controls
+   - **Real-time feedback**: As you play, the app detects and displays:
+     - The chord name you're playing (e.g., "C Major", "D Minor 7")
+     - The inversion (e.g., "Root Position", "1st Inversion")
+   - Detected chord shown in the frame next to Circle of Fifths and in the target card
+   - The chord display frame is always visible, showing "No chord detected" when idle
+   - Play the target chord correctly to advance through the progression
    - Change the key to practice the same progression in different keys
 
 ### Free Play
 
 1. Select "Free Play" mode
-2. Play any combination of notes on your MIDI keyboard
-3. The app automatically detects and displays:
+2. The chord display frame appears next to the Circle of Fifths (always visible)
+3. Play any combination of notes on your MIDI keyboard
+4. The app automatically detects and displays:
    - Chord name (e.g., "C Major", "D Minor 7")
    - Chord inversion (e.g., "Root Position", "1st Inversion")
-4. Scale notes are highlighted for reference
+5. When no chord is detected, the frame shows "No chord detected"
+6. Scale notes are highlighted for reference on the keyboard
+7. Use the Circle of Fifths to quickly change keys while playing
 
 ## Browser Compatibility
 
@@ -200,6 +265,20 @@ piano-app/
 See `agent-rules.md` for coding rules and guidelines.
 
 ---
+
+## UI/Design
+
+- **Centered Layout**: The application interface is centered both horizontally and vertically in the browser for optimal viewing experience
+- **Responsive Design**: Adapts to different screen sizes while maintaining centered layout
+- **Dark Theme**: Modern dark theme optimized for extended practice sessions
+- **Max Width**: Content is constrained to a maximum width of 1400px for better readability on large screens
+- **Real-time Feedback**: Chord detection displayed in dedicated frame:
+  - **Chord Display Frame**: Always-visible frame positioned to the right of Circle of Fifths
+  - Shows detected chord name and inversion when playing
+  - Displays "No chord detected" placeholder when idle
+  - Target card (below controls in practice modes) shows both target and detected chords
+- **Circle of Fifths**: White background with traditional two-ring design for clear visibility
+- **Layout**: Circle of Fifths and chord display arranged side-by-side for optimal workflow
 
 ## Technical Details
 

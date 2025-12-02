@@ -1,7 +1,7 @@
 /* https://github.com/pleabargain/piano-app */
 .controls-container {
     display: flex;
-    flex-wrap: wrap;
+    flex-direction: column;
     gap: 20px;
     padding: 20px;
     background: #333;
@@ -10,6 +10,63 @@
     margin-bottom: 20px;
     align-items: center;
     justify-content: center;
+}
+
+.controls-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+}
+
+.chord-display-in-controls {
+    min-width: 200px;
+    max-width: 300px;
+    min-height: 150px;
+    text-align: center;
+    padding: 20px;
+    background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);
+    border-radius: 10px;
+    border: 2px solid #60a5fa;
+    box-shadow: 0 0 15px rgba(59, 130, 246, 0.3);
+    align-self: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.chord-placeholder {
+    color: #a0a0a0;
+    font-size: 0.9rem;
+    font-style: italic;
+    margin-top: 10px;
+    opacity: 0.7;
+}
+
+.chord-label {
+    font-size: 0.75rem;
+    color: #e0e7ff;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 8px;
+    opacity: 0.9;
+}
+
+.chord-name-in-controls {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: #fff;
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+    margin-bottom: 4px;
+}
+
+.chord-inversion-in-controls {
+    font-size: 0.9rem;
+    color: #e0e7ff;
+    font-style: italic;
+    opacity: 0.9;
 }
 
 .control-group {

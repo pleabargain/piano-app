@@ -50,6 +50,10 @@ This document contains coding rules and guidelines for development of this proje
 3. **Performance**: Consider performance implications of code changes
 4. **Accessibility**: Ensure UI components are accessible
 
+## UI/UX Rules
+
+1. **Centering**: The UI should be centered in the browser both horizontally and vertically. Use flexbox or CSS Grid to achieve proper centering of the main application container.
+
 ## React-Specific Rules
 
 1. **Component Structure**: 

@@ -55,6 +55,113 @@ export function getChordNotes(root, chordType) {
   return chordNotes;
 }
 
+// Get chord notes as MIDI numbers for a specific inversion
+// Returns array of MIDI note numbers (e.g., [60, 64, 67] for C Major in middle C octave)
+// inversion: 0 = Root Position, 1 = 1st Inversion, 2 = 2nd Inversion, 3 = 3rd Inversion
+export function getChordNotesAsMidi(root, chordType, inversion = 0, baseOctave = 4) {
+  const rootIndex = getNoteIndex(root);
+  if (rootIndex === -1) return [];
+
+  const intervals = CHORD_TYPES[chordType].intervals;
+  const allIntervals = [0, ...intervals]; // Root + intervals (e.g., [0, 4, 7] for major)
+  
+  // Apply inversion: rotate the intervals
+  const rotatedIntervals = [];
+  for (let i = 0; i < allIntervals.length; i++) {
+    const intervalIndex = (i + inversion) % allIntervals.length;
+    rotatedIntervals.push(allIntervals[intervalIndex]);
+  }
+  
+  // Calculate MIDI numbers
+  // For inversions, we need to ensure notes are placed in ascending order
+  // The bass note (first in rotated array) is in baseOctave
+  // Subsequent notes go up, wrapping to next octave if needed
+  const midiNotes = [];
+  let currentOctave = baseOctave;
+  let prevNoteIndex = -1;
+  
+  rotatedIntervals.forEach((interval, index) => {
+    const noteIndex = (rootIndex + interval) % 12;
+    
+    // If this note is lower than the previous one (wrapped around), move to next octave
+    if (index > 0 && noteIndex < prevNoteIndex) {
+      currentOctave = baseOctave + 1;
+    } else if (index === 0) {
+      // First note (bass) stays in base octave
+      currentOctave = baseOctave;
+    }
+    
+    const midiNumber = currentOctave * 12 + noteIndex;
+    midiNotes.push(midiNumber);
+    prevNoteIndex = noteIndex;
+  });
+  
+  // Sort to ensure proper order (lowest to highest)
+  return midiNotes.sort((a, b) => a - b);
+}
+
+// Parse chord name to get root and type
+// Handles formats like "C Major", "Cm", "Cm7", "Cdim", "C Major 7", etc.
+export function parseChordName(chordName) {
+  if (!chordName || chordName === '?') return null;
+  
+  // Handle format like "C Major", "D Minor 7", "F# Diminished"
+  const parts = chordName.split(' ');
+  if (parts.length >= 2) {
+    const root = parts[0];
+    const typeName = parts.slice(1).join(' ').toLowerCase();
+    
+    // Map type names to chord type keys
+    const typeMap = {
+      'major': 'major',
+      'minor': 'minor',
+      'diminished': 'diminished',
+      'augmented': 'augmented',
+      'major 7': 'major7',
+      'minor 7': 'minor7',
+      'dominant 7': 'dominant7',
+      'diminished 7': 'diminished7',
+      'half diminished 7': 'half_diminished7',
+    };
+    
+    const chordType = typeMap[typeName] || 'major';
+    return { root, chordType };
+  }
+  
+  // Handle format like "Cm", "Cm7", "Cdim", "Caug", "C7", etc.
+  // Extract root note (can be C, C#, D, D#, E, F, F#, G, G#, A, A#, B)
+  const match = chordName.match(/^([A-G]#?)(.*)$/);
+  if (!match) return null;
+  
+  const root = match[1];
+  const suffix = match[2].toLowerCase();
+  
+  // Map suffixes to chord types
+  let chordType = 'major'; // default
+  
+  if (suffix === '' || suffix === 'maj') {
+    chordType = 'major';
+  } else if (suffix === 'm' || suffix === 'min') {
+    chordType = 'minor';
+  } else if (suffix === 'dim' || suffix === '°') {
+    chordType = 'diminished';
+  } else if (suffix === 'aug' || suffix === '+') {
+    chordType = 'augmented';
+  } else if (suffix === 'm7' || suffix === 'min7') {
+    chordType = 'minor7';
+  } else if (suffix === 'maj7' || suffix === 'M7') {
+    chordType = 'major7';
+  } else if (suffix === '7') {
+    chordType = 'dominant7';
+  } else if (suffix === 'dim7' || suffix === '°7') {
+    chordType = 'diminished7';
+  } else if (suffix === 'm7b5' || suffix === 'ø7') {
+    chordType = 'half_diminished7';
+  }
+  
+  return { root, chordType };
+}
+
 // Helper to normalize notes to 0-11 range
 function normalizeNotes(notes) {
   return notes.map(n => {

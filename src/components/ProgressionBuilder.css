@@ -73,3 +73,13 @@
     font-size: 0.8rem;
     color: #aaa;
 }
+
+.chord-preview.clickable-chord {
+    transition: transform 0.1s, box-shadow 0.1s;
+}
+
+.chord-preview.clickable-chord:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    background: #3a3a3a;
+}
