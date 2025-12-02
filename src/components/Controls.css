@@ -1,0 +1,66 @@
+.controls-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    padding: 20px;
+    background: #333;
+    color: white;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    align-items: center;
+    justify-content: center;
+}
+
+.control-group {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.control-group label {
+    font-size: 0.8rem;
+    color: #aaa;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+select {
+    padding: 8px 12px;
+    border-radius: 5px;
+    border: 1px solid #555;
+    background: #222;
+    color: white;
+    font-size: 1rem;
+    cursor: pointer;
+}
+
+select:focus {
+    outline: none;
+    border-color: #3b82f6;
+}
+
+.mode-toggle {
+    display: flex;
+    background: #222;
+    border-radius: 5px;
+    padding: 2px;
+}
+
+.mode-toggle button {
+    background: transparent;
+    border: none;
+    color: #aaa;
+    padding: 8px 16px;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: all 0.2s;
+}
+
+.mode-toggle button:hover {
+    color: white;
+}
+
+.mode-toggle button.active {
+    background: #3b82f6;
+    color: white;
+}
