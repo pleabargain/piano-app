@@ -79,22 +79,6 @@ npm run test:ui
 ### Practice Modes
 
 - **Scale Practice Mode**: 
-  - Practice scales note-by-note with guided feedback
-  - Visual highlighting of scale notes on the piano keyboard
-  - Real-time feedback as you play each note in sequence
-  - Supports all 12 keys (C, C#, D, D#, E, F, F#, G, G#, A, A#, B)
-  - Scale types: Major, Natural Minor, Harmonic Minor, Melodic Minor
-
-- **Chord Practice Mode**:
-  - Practice custom chord progressions (e.g., "I IV V I")
-  - Create and set your own progressions using Roman numeral notation
-  - Automatic progression through chords with real-time feedback
-  - Displays current target chord in both Roman numeral and letter notation
-  - **Real-time chord detection**: Shows the chord you're currently playing with inversion detection
-  - **Chord display frame**: Always-visible frame next to Circle of Fifths showing detected chord
-  - Target chord displayed in card below controls with detected chord information
-  - **Interactive chord buttons**: Click any chord in the progression preview to see its keys highlighted on the piano
-  - **Inversion cycling**: Each click on a chord button cycles through all inversions (Root Position → 1st → 2nd → 3rd → back to Root)
   - Visual feedback shows which chord and inversion is currently displayed on the piano
   - Transposable progressions - practice the same progression in any key
 
