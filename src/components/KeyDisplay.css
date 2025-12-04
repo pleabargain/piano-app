@@ -3,7 +3,8 @@
   background: #2a2a2a;
   padding: 20px;
   border-radius: 8px;
-  margin-bottom: 20px;
+  flex: 1;
+  min-width: 300px;
 }
 
 .keys-section {
@@ -81,10 +82,9 @@
     grid-template-columns: repeat(auto-fill, minmax(50px, 1fr));
     gap: 6px;
   }
-  
+
   .key-button {
     padding: 8px 12px;
     font-size: 0.8rem;
   }
 }
-

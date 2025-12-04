@@ -85,9 +85,9 @@ header h1 {
 
 .circle-and-chord-container {
   display: flex;
-  align-items: flex-start;
+  align-items: stretch;
   justify-content: center;
-  gap: 30px;
+  gap: 20px;
   width: 100%;
   flex-wrap: wrap;
 }

@@ -198,6 +198,13 @@ function App() {
       if (detected) {
         setStatusMessage(`Playing: ${detected.name} ${detected.inversion ? `(${detected.inversion})` : ''}`);
         setDetectedChord(detected);
+
+        // Suggest extensions if it's a triad (or any chord really, logic handles it)
+        const suggestions = findPotentialChords(activeNotes);
+        // Filter out the detected chord itself from suggestions
+        const filteredSuggestions = suggestions.filter(s => s.name !== detected.name);
+        setChordSuggestions(filteredSuggestions);
+
       } else if (activeNotes.length > 0) {
         setStatusMessage('Playing... (no chord detected)');
         setDetectedChord(null);
@@ -496,9 +503,11 @@ function App() {
                   </div>
                 )}
 
-                {mode === 'chord' && !detectedChord && chordSuggestions.length > 0 && (
+                {mode === 'chord' && chordSuggestions.length > 0 && (
                   <div className="chord-suggestions">
-                    <div className="suggestions-label">Possible Chords:</div>
+                    <div className="suggestions-label">
+                      {detectedChord ? 'Extensions / Variations:' : 'Possible Chords:'}
+                    </div>
                     <div className="suggestions-list">
                       {chordSuggestions.map((s, i) => (
                         <div key={i} className="suggestion-item">
