@@ -6,6 +6,7 @@ export const SCALES = {
   natural_minor: { name: 'Natural Minor', intervals: [2, 1, 2, 2, 1, 2, 2] },
   harmonic_minor: { name: 'Harmonic Minor', intervals: [2, 1, 2, 2, 1, 3, 1] },
   melodic_minor: { name: 'Melodic Minor', intervals: [2, 1, 2, 2, 2, 2, 1] },
+  blues: { name: 'Blues', intervals: [3, 1, 2, 1, 3, 2] }, // Root, m3, P4, d5, P5, m7, octave
 };
 
 export const CHORD_TYPES = {
@@ -64,14 +65,14 @@ export function getChordNotesAsMidi(root, chordType, inversion = 0, baseOctave =
 
   const intervals = CHORD_TYPES[chordType].intervals;
   const allIntervals = [0, ...intervals]; // Root + intervals (e.g., [0, 4, 7] for major)
-  
+
   // Apply inversion: rotate the intervals
   const rotatedIntervals = [];
   for (let i = 0; i < allIntervals.length; i++) {
     const intervalIndex = (i + inversion) % allIntervals.length;
     rotatedIntervals.push(allIntervals[intervalIndex]);
   }
-  
+
   // Calculate MIDI numbers
   // For inversions, we need to ensure notes are placed in ascending order
   // The bass note (first in rotated array) is in baseOctave
@@ -79,10 +80,10 @@ export function getChordNotesAsMidi(root, chordType, inversion = 0, baseOctave =
   const midiNotes = [];
   let currentOctave = baseOctave;
   let prevNoteIndex = -1;
-  
+
   rotatedIntervals.forEach((interval, index) => {
     const noteIndex = (rootIndex + interval) % 12;
-    
+
     // If this note is lower than the previous one (wrapped around), move to next octave
     if (index > 0 && noteIndex < prevNoteIndex) {
       currentOctave = baseOctave + 1;
@@ -90,12 +91,12 @@ export function getChordNotesAsMidi(root, chordType, inversion = 0, baseOctave =
       // First note (bass) stays in base octave
       currentOctave = baseOctave;
     }
-    
+
     const midiNumber = currentOctave * 12 + noteIndex;
     midiNotes.push(midiNumber);
     prevNoteIndex = noteIndex;
   });
-  
+
   // Sort to ensure proper order (lowest to highest)
   return midiNotes.sort((a, b) => a - b);
 }
@@ -104,13 +105,13 @@ export function getChordNotesAsMidi(root, chordType, inversion = 0, baseOctave =
 // Handles formats like "C Major", "Cm", "Cm7", "Cdim", "C Major 7", etc.
 export function parseChordName(chordName) {
   if (!chordName || chordName === '?') return null;
-  
+
   // Handle format like "C Major", "D Minor 7", "F# Diminished"
   const parts = chordName.split(' ');
   if (parts.length >= 2) {
     const root = parts[0];
     const typeName = parts.slice(1).join(' ').toLowerCase();
-    
+
     // Map type names to chord type keys
     const typeMap = {
       'major': 'major',
@@ -123,22 +124,22 @@ export function parseChordName(chordName) {
       'diminished 7': 'diminished7',
       'half diminished 7': 'half_diminished7',
     };
-    
+
     const chordType = typeMap[typeName] || 'major';
     return { root, chordType };
   }
-  
+
   // Handle format like "Cm", "Cm7", "Cdim", "Caug", "C7", etc.
   // Extract root note (can be C, C#, D, D#, E, F, F#, G, G#, A, A#, B)
   const match = chordName.match(/^([A-G]#?)(.*)$/);
   if (!match) return null;
-  
+
   const root = match[1];
   const suffix = match[2].toLowerCase();
-  
+
   // Map suffixes to chord types
   let chordType = 'major'; // default
-  
+
   if (suffix === '' || suffix === 'maj') {
     chordType = 'major';
   } else if (suffix === 'm' || suffix === 'min') {
@@ -158,7 +159,7 @@ export function parseChordName(chordName) {
   } else if (suffix === 'm7b5' || suffix === 'ø7') {
     chordType = 'half_diminished7';
   }
-  
+
   return { root, chordType };
 }
 
@@ -245,4 +246,52 @@ export function getRomanNumeral(scaleRoot, scaleType, chordRoot, chordType) {
   if (isAugmented) numeral = numeral + '+';
 
   return numeral;
+}
+
+// Find potential chords based on a subset of notes
+// activeNotes: array of MIDI numbers
+export function findPotentialChords(activeNotes) {
+  if (!activeNotes || activeNotes.length < 2) return [];
+
+  // Convert to pitch classes (0-11) and remove duplicates
+  const pitchClasses = [...new Set(activeNotes.map(n => typeof n === 'number' ? n % 12 : getNoteIndex(n)))];
+
+  const suggestions = [];
+
+  // Check all roots and chord types
+  for (let root of NOTES) {
+    for (let [type, data] of Object.entries(CHORD_TYPES)) {
+      const targetNotes = getChordNotes(root, type);
+      const targetPitchClasses = normalizeNotes(targetNotes);
+
+      // Check if active notes are a subset of this chord
+      // Every active note must be in the target chord
+      const isSubset = pitchClasses.every(pc => targetPitchClasses.includes(pc));
+
+      if (isSubset) {
+        // Calculate missing notes
+        const missingNotes = targetNotes.filter(note => !pitchClasses.includes(getNoteIndex(note)));
+
+        // We only want suggestions where we are missing 1 or 2 notes, 
+        // otherwise we get too many complex chords for just 2 notes input
+        if (missingNotes.length > 0 && missingNotes.length <= 2) {
+          suggestions.push({
+            root,
+            type,
+            name: `${root} ${data.name}`,
+            missingNotes,
+            complexity: data.intervals.length // Prefer simpler chords
+          });
+        }
+      }
+    }
+  }
+
+  // Sort suggestions:
+  // 1. By complexity (triads first)
+  // 2. By root (alphabetical)
+  return suggestions.sort((a, b) => {
+    if (a.complexity !== b.complexity) return a.complexity - b.complexity;
+    return a.root.localeCompare(b.root);
+  }).slice(0, 5); // Limit to top 5
 }

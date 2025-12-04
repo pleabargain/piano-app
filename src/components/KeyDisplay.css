@@ -1,0 +1,90 @@
+/* https://github.com/pleabargain/piano-app */
+.key-display-container {
+  background: #2a2a2a;
+  padding: 20px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+}
+
+.keys-section {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.keys-group h4 {
+  margin: 0 0 10px 0;
+  font-size: 1rem;
+  color: #aaa;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.keys-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(60px, 1fr));
+  gap: 8px;
+}
+
+.key-button {
+  padding: 10px 15px;
+  border: 2px solid #555;
+  border-radius: 6px;
+  background: #333;
+  color: white;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  text-align: center;
+}
+
+.key-button:hover {
+  background: #444;
+  border-color: #666;
+  transform: translateY(-2px);
+}
+
+.key-button.major-key {
+  border-color: #3b82f6;
+}
+
+.key-button.major-key:hover {
+  background: #1e3a8a;
+  border-color: #60a5fa;
+}
+
+.key-button.minor-key {
+  border-color: #8b5cf6;
+}
+
+.key-button.minor-key:hover {
+  background: #5b21b6;
+  border-color: #a78bfa;
+}
+
+.key-button.selected {
+  background: #3b82f6;
+  border-color: #60a5fa;
+  box-shadow: 0 0 10px rgba(59, 130, 246, 0.5);
+  transform: scale(1.05);
+}
+
+.key-button.minor-key.selected {
+  background: #8b5cf6;
+  border-color: #a78bfa;
+  box-shadow: 0 0 10px rgba(139, 92, 246, 0.5);
+}
+
+@media (max-width: 768px) {
+  .keys-grid {
+    grid-template-columns: repeat(auto-fill, minmax(50px, 1fr));
+    gap: 6px;
+  }
+  
+  .key-button {
+    padding: 8px 12px;
+    font-size: 0.8rem;
+  }
+}
+

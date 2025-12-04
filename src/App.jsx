@@ -1,18 +1,19 @@
 // https://github.com/pleabargain/piano-app
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import Piano from './components/Piano';
 import Controls from './components/Controls';
 import ProgressionBuilder from './components/ProgressionBuilder';
 import CircleOfFifths from './components/CircleOfFifths';
+import KeyDisplay from './components/KeyDisplay';
 import { midiManager } from './core/midi-manager';
-import { getScaleNotes, getChordNotes, identifyChord, getChordNotesAsMidi, parseChordName, NOTES, CHORD_TYPES } from './core/music-theory';
+import { getScaleNotes, getChordNotes, identifyChord, getChordNotesAsMidi, parseChordName, findPotentialChords, NOTES, CHORD_TYPES } from './core/music-theory';
 import './App.css';
 
 function App() {
   // Settings State
   const [selectedRoot, setSelectedRoot] = useState('C');
   const [selectedScaleType, setSelectedScaleType] = useState('major');
-  const [mode, setMode] = useState('scale'); // 'scale', 'chord', 'free'
+  const [mode, setMode] = useState('scale'); // 'scale', 'chord', 'free', 'lava'
   const [keyboardSize, setKeyboardSize] = useState({ start: 36, end: 96 }); // 61 keys default
 
   // MIDI State
@@ -26,20 +27,96 @@ function App() {
   const [feedbackState, setFeedbackState] = useState({}); // { midiNumber: 'correct' | 'incorrect' }
   const [statusMessage, setStatusMessage] = useState('Connect MIDI keyboard to start');
   const [detectedChord, setDetectedChord] = useState(null);
-  
+
   // Chord display state
   const [clickedChord, setClickedChord] = useState(null); // { name: 'C Major', inversion: 0 }
   const [chordMidiNotes, setChordMidiNotes] = useState([]); // MIDI numbers to highlight
-  
+  const [chordSuggestions, setChordSuggestions] = useState([]); // Array of potential chords
+
+  // Lava Game state
+  const [lavaScore, setLavaScore] = useState({ good: 0, bad: 0 });
+  const [lavaKeys, setLavaKeys] = useState([]); // MIDI numbers that are "lava" (bad keys)
+
   // Clear clicked chord when mode changes
   useEffect(() => {
     if (mode !== 'chord') {
       setClickedChord(null);
       setChordMidiNotes([]);
+      setChordSuggestions([]);
+    }
+    // Reset lava game score when switching modes
+    if (mode !== 'lava') {
+      setLavaScore({ good: 0, bad: 0 });
     }
   }, [mode]);
 
-  // Refs for state access in callbacks if needed (though we use functional updates)
+  // Initialize lava keys when mode or key/scale changes
+  useEffect(() => {
+    if (mode === 'lava') {
+      const scaleNotes = getScaleNotes(selectedRoot, selectedScaleType);
+      const scaleNoteIndices = scaleNotes.map(n => NOTES.indexOf(n));
+
+      // All keys in the keyboard range
+      const allKeys = [];
+      const lavaKeyIndices = [];
+
+      for (let i = keyboardSize.start; i <= keyboardSize.end; i++) {
+        const pitchClass = i % 12;
+        if (scaleNoteIndices.includes(pitchClass)) {
+          // Good key - in scale
+          allKeys.push(i);
+        } else {
+          // Bad key - lava key
+          lavaKeyIndices.push(i);
+        }
+      }
+
+      setLavaKeys(lavaKeyIndices);
+    }
+  }, [mode, selectedRoot, selectedScaleType, keyboardSize]);
+
+  // Refs for state access in callbacks to avoid stale closures
+  const modeRef = useRef(mode);
+  const selectedRootRef = useRef(selectedRoot);
+  const selectedScaleTypeRef = useRef(selectedScaleType);
+
+  // Update refs when state changes
+  useEffect(() => {
+    modeRef.current = mode;
+    selectedRootRef.current = selectedRoot;
+    selectedScaleTypeRef.current = selectedScaleType;
+  }, [mode, selectedRoot, selectedScaleType]);
+
+  const handleMidiMessage = useCallback((event, activeNotesList) => {
+    setActiveNotes(activeNotesList);
+
+    // Update device name if inputs changed
+    if (event.type === 'inputsChanged') {
+      const deviceName = midiManager.getFirstInputName();
+      setMidiDeviceName(deviceName);
+      if (deviceName && midiEnabled) {
+        setStatusMessage(`MIDI Connected: ${deviceName}`);
+      } else if (midiEnabled) {
+        setStatusMessage('MIDI Connected. Select a mode to play.');
+      }
+    }
+
+    // Track lava game scoring - use refs to get latest values
+    if (modeRef.current === 'lava' && event.type === 'noteOn') {
+      const scaleNotes = getScaleNotes(selectedRootRef.current, selectedScaleTypeRef.current);
+      const scaleNoteIndices = scaleNotes.map(n => NOTES.indexOf(n));
+      const note = event.note;
+      const pitchClass = note % 12;
+
+      if (scaleNoteIndices.includes(pitchClass)) {
+        // Good key - increment good score
+        setLavaScore(prev => ({ ...prev, good: prev.good + 1 }));
+      } else {
+        // Bad key (lava) - increment bad score
+        setLavaScore(prev => ({ ...prev, bad: prev.bad + 1 }));
+      }
+    }
+  }, []);
 
   useEffect(() => {
     // Initialize MIDI
@@ -63,22 +140,7 @@ function App() {
     return () => {
       midiManager.removeListener(handleMidiMessage);
     };
-  }, []);
-
-  const handleMidiMessage = (event, activeNotesList) => {
-    setActiveNotes(activeNotesList);
-    
-    // Update device name if inputs changed
-    if (event.type === 'inputsChanged') {
-      const deviceName = midiManager.getFirstInputName();
-      setMidiDeviceName(deviceName);
-      if (deviceName && midiEnabled) {
-        setStatusMessage(`MIDI Connected: ${deviceName}`);
-      } else if (midiEnabled) {
-        setStatusMessage('MIDI Connected. Select a mode to play.');
-      }
-    }
-  };
+  }, [handleMidiMessage]);
 
   // Logic for Practice Modes
   useEffect(() => {
@@ -88,8 +150,10 @@ function App() {
       handleScalePractice();
     } else if (mode === 'chord') {
       handleChordPractice();
+    } else if (mode === 'lava') {
+      handleLavaGame();
     }
-  }, [activeNotes, mode, selectedRoot, selectedScaleType, currentStepIndex, progression]);
+  }, [activeNotes, mode, selectedRoot, selectedScaleType, currentStepIndex, progression, lavaScore]);
 
   // Reset practice state when settings change
   useEffect(() => {
@@ -108,7 +172,10 @@ function App() {
   const handleChordPractice = () => {
     // Detect the chord being played
     const detected = identifyChord(activeNotes);
-    
+
+    // Clear suggestions by default, we'll set them if needed
+    setChordSuggestions([]);
+
     if (progression.length > 0) {
       const target = progression[currentStepIndex % progression.length];
       if (detected) {
@@ -117,6 +184,12 @@ function App() {
       } else if (activeNotes.length > 0) {
         setStatusMessage(`Target: ${target.name} (${target.roman}) | Playing...`);
         setDetectedChord(null);
+
+        // If 2+ notes, suggest chords
+        if (activeNotes.length >= 2) {
+          const suggestions = findPotentialChords(activeNotes);
+          setChordSuggestions(suggestions);
+        }
       } else {
         setStatusMessage(`Target: ${target.name} (${target.roman})`);
         setDetectedChord(null);
@@ -128,6 +201,12 @@ function App() {
       } else if (activeNotes.length > 0) {
         setStatusMessage('Playing... (no chord detected)');
         setDetectedChord(null);
+
+        // If 2+ notes, suggest chords
+        if (activeNotes.length >= 2) {
+          const suggestions = findPotentialChords(activeNotes);
+          setChordSuggestions(suggestions);
+        }
       } else {
         setStatusMessage('Set a progression to start');
         setDetectedChord(null);
@@ -148,6 +227,11 @@ function App() {
       setDetectedChord(null);
     }
     setFeedbackState({});
+  };
+
+  const handleLavaGame = () => {
+    setStatusMessage(`🔥 Lava Game - ${selectedRoot} ${selectedScaleType} | Good: ${lavaScore.good} | Bad: ${lavaScore.bad}`);
+    setDetectedChord(null);
   };
 
   const handleScalePractice = () => {
@@ -345,6 +429,11 @@ function App() {
       // Let's just highlight the scale notes for context?
       return getScaleNotes(selectedRoot, selectedScaleType).map(n => NOTES.indexOf(n));
     }
+    else if (mode === 'lava') {
+      // In lava mode, highlight good keys (scale notes) - they'll be blue
+      const scaleNotes = getScaleNotes(selectedRoot, selectedScaleType);
+      return scaleNotes.map(n => NOTES.indexOf(n));
+    }
     else {
       // Free play: Highlight scale notes
       return getScaleNotes(selectedRoot, selectedScaleType).map(n => NOTES.indexOf(n));
@@ -364,6 +453,7 @@ function App() {
           activeNotes={activeNotes}
           highlightedNotes={getHighlightedNotes()}
           chordMidiNotes={chordMidiNotes}
+          lavaKeys={mode === 'lava' ? lavaKeys : []}
           feedbackState={feedbackState}
         />
 
@@ -384,6 +474,12 @@ function App() {
               selectedRoot={selectedRoot}
               onRootSelect={setSelectedRoot}
             />
+            <KeyDisplay
+              selectedRoot={selectedRoot}
+              selectedScaleType={selectedScaleType}
+              onRootSelect={setSelectedRoot}
+              onScaleTypeSelect={setSelectedScaleType}
+            />
             {(mode === 'free' || mode === 'chord') && (
               <div className="chord-display-in-controls">
                 <div className="chord-label">Detected Chord:</div>
@@ -395,8 +491,44 @@ function App() {
                     )}
                   </>
                 ) : (
-                  <div className="chord-placeholder">No chord detected</div>
+                  <div className="chord-placeholder">
+                    {activeNotes.length > 0 ? 'Playing...' : 'No chord detected'}
+                  </div>
                 )}
+
+                {mode === 'chord' && !detectedChord && chordSuggestions.length > 0 && (
+                  <div className="chord-suggestions">
+                    <div className="suggestions-label">Possible Chords:</div>
+                    <div className="suggestions-list">
+                      {chordSuggestions.map((s, i) => (
+                        <div key={i} className="suggestion-item">
+                          <span className="suggestion-name">{s.name}</span>
+                          <span className="suggestion-missing"> (add {s.missingNotes.join(', ')})</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+            )}
+            {mode === 'lava' && (
+              <div className="lava-game-score">
+                <h3>🔥 Lava Game Score 🔥</h3>
+                <div className="score-display">
+                  <div className="score-item good-keys">
+                    <span className="score-label">Good Keys:</span>
+                    <span className="score-value">{lavaScore.good}</span>
+                  </div>
+                  <div className="score-item bad-keys">
+                    <span className="score-label">Lava Keys Hit:</span>
+                    <span className="score-value">{lavaScore.bad}</span>
+                  </div>
+                </div>
+                <div className="lava-instructions">
+                  <p>🎹 Ice Blue keys = Good (in {selectedRoot} {selectedScaleType})</p>
+                  <p>🔥 Red keys = Lava (avoid these!)</p>
+                  <p>Play continuously - no time limit!</p>
+                </div>
               </div>
             )}
           </div>
@@ -418,14 +550,14 @@ function App() {
                 // Handle chord click - cycle through inversions
                 const parsed = parseChordName(chordName);
                 if (!parsed) return;
-                
+
                 // Check if this is the same chord that was clicked before
                 if (clickedChord && clickedChord.name === chordName) {
                   // Cycle to next inversion
                   const maxInversions = CHORD_TYPES[parsed.chordType].intervals.length + 1;
                   const nextInversion = (clickedChord.inversion + 1) % maxInversions;
                   setClickedChord({ name: chordName, inversion: nextInversion });
-                  
+
                   // Calculate MIDI notes for this inversion (use middle C octave = 4)
                   const midiNotes = getChordNotesAsMidi(parsed.root, parsed.chordType, nextInversion, 4);
                   setChordMidiNotes(midiNotes);
@@ -442,11 +574,11 @@ function App() {
                 <div className="clicked-chord-label">Showing on Piano:</div>
                 <div className="clicked-chord-name">{clickedChord.name}</div>
                 <div className="clicked-chord-inversion">
-                  {clickedChord.inversion === 0 ? 'Root Position' : 
-                   clickedChord.inversion === 1 ? '1st Inversion' :
-                   clickedChord.inversion === 2 ? '2nd Inversion' :
-                   clickedChord.inversion === 3 ? '3rd Inversion' : 
-                   `${clickedChord.inversion}th Inversion`}
+                  {clickedChord.inversion === 0 ? 'Root Position' :
+                    clickedChord.inversion === 1 ? '1st Inversion' :
+                      clickedChord.inversion === 2 ? '2nd Inversion' :
+                        clickedChord.inversion === 3 ? '3rd Inversion' :
+                          `${clickedChord.inversion}th Inversion`}
                 </div>
                 <div className="clicked-chord-hint">Click chord again to cycle inversions</div>
               </div>

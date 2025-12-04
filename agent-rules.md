@@ -74,13 +74,21 @@ This document contains coding rules and guidelines for development of this proje
 2. **Branches**: Use feature branches for new features
 3. **Pull Requests**: Include tests and documentation updates
 
+## User Interaction
+
+1. **Question Format**: When clarification is needed, ask only multiple choice questions
+2. **Multiple Choice Options**: Include "All of the above" as an option when applicable
+3. **Question Logging**: All questions and answers must be logged in `instructions.md` with ISO datestamp format (YYYY-MM-DDTHH:MM:SS)
+4. **One Question at a Time**: Ask one question at a time to avoid overwhelming the user
+
 ## Documentation Updates
 
 - Update README.md with accurate YYYY-MM-DD timestamp at the bottom of the file
 - Document API changes
 - Update this file when new rules are established
+- Log all user interaction questions and answers in instructions.md with ISO datestamp
 
 ---
 
-Last Updated: 2025-01-27
+Last Updated: 2025-12-02T19:21:11
 

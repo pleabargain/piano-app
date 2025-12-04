@@ -122,3 +122,46 @@ select:focus {
     background: #3b82f6;
     color: white;
 }
+
+/* Chord Suggestions */
+.chord-suggestions {
+    margin-top: 1rem;
+    width: 100%;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    padding-top: 0.5rem;
+}
+
+.suggestions-label {
+    font-size: 0.8rem;
+    color: #a0aec0;
+    margin-bottom: 0.5rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.suggestions-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+}
+
+.suggestion-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: rgba(255, 255, 255, 0.05);
+    padding: 0.4rem 0.6rem;
+    border-radius: 4px;
+    font-size: 0.9rem;
+}
+
+.suggestion-name {
+    font-weight: 600;
+    color: #e2e8f0;
+}
+
+.suggestion-missing {
+    font-size: 0.8rem;
+    color: #718096;
+    font-style: italic;
+}

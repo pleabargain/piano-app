@@ -37,6 +37,15 @@ Create an interactive web-based piano training application that helps users lear
   - Display the scale
   - User plays the scale, app provides feedback
   - Show correct/incorrect notes in real-time
+
+- **Lava Game Mode**:
+  - Select a key (major/minor)
+  - Visual key indicators on the piano keyboard:
+    - **Ice Blue keys = Good keys** (notes in the selected scale - safe to play)
+    - **Red keys = Bad keys** (lava keys - notes NOT in the selected scale - avoid these!)
+  - **Real-time scoring**: Scores update instantly as keys are pressed - tracks good keys hit and lava keys hit
+  - Continuous gameplay with no time limit
+  - Perfect for practicing scale awareness and avoiding wrong notes
   
 - **Chord Practice Mode**:
   - Display chords in both Roman numerals (I, ii, iii, IV, V, vi, vii°) and alpha notation (C, Dm, Em, F, G, Am, Bdim)
@@ -235,5 +244,26 @@ Build a complete, working application with all features implemented and ready to
 
 ---
 
-Last Updated: 2025-11-28T00:00:00
+## User Interaction Log
+
+### 2025-12-02T19:21:11
+
+**Question**: For the Lava Game feature, how should scoring and gameplay mechanics work?
+
+**Options**:
+A) Players gain points for hitting good (blue) keys, and lose points for hitting bad (red) keys
+B) Players only lose points for hitting bad (red) keys, no points gained for good keys
+C) Continuous gameplay (play as long as you want)
+D) Time limit or number of mistakes before game over
+E) All of the above
+
+**Answer**: C (Continuous gameplay - play as long as you want)
+
+**Additional Requirements**: Keep score of good and bad keys
+
+**Implementation Completed**: 2025-12-02T19:21:57
+
+---
+
+Last Updated: 2025-12-02T19:21:11
 

@@ -9,6 +9,8 @@ const Piano = ({
     activeNotes = [],
     highlightedNotes = [], // Notes to show as part of scale/chord (pitch classes)
     chordMidiNotes = [], // Specific MIDI notes to highlight for chord display
+    lavaKeys = [], // MIDI numbers that are "lava" (bad keys) in lava game mode
+    mode = 'free', // Current mode to determine styling
     feedbackState = {} // { noteNumber: 'correct' | 'incorrect' }
 }) => {
     const keys = [];
@@ -17,20 +19,25 @@ const Piano = ({
     for (let i = startNote; i <= endNote; i++) {
         const noteName = NOTES[i % 12];
         const isBlack = noteName.includes('#');
+        const isLavaKey = lavaKeys.includes(i);
+        const isLavaGoodKey = mode === 'lava' && highlightedNotes.includes(i % 12) && !isLavaKey;
 
         keys.push({
             midi: i,
             noteName,
             isBlack,
             isActive: activeNotes.includes(i),
-            isHighlighted: highlightedNotes.includes(i % 12) || chordMidiNotes.includes(i), // Compare pitch class or exact MIDI
+            // Don't apply 'highlighted' class in lava mode - use lava-good-key instead
+            isHighlighted: mode !== 'lava' && (highlightedNotes.includes(i % 12) || chordMidiNotes.includes(i)), // Compare pitch class or exact MIDI
             isChordNote: chordMidiNotes.includes(i), // Specific chord note highlighting
+            isLavaKey: isLavaKey, // Lava key (bad key) in lava game
+            isLavaGoodKey: isLavaGoodKey, // Good key in lava game (ice blue)
             status: feedbackState[i] || null
         });
     }
 
     return (
-        <div className="piano-container">
+        <div className={`piano-container ${mode === 'lava' ? 'lava-mode' : ''}`}>
             <div className="piano">
                 {keys.map((key) => (
                     <div
@@ -39,6 +46,8 @@ const Piano = ({
               ${key.isActive ? 'active' : ''} 
               ${key.isHighlighted ? 'highlighted' : ''}
               ${key.isChordNote ? 'chord-note' : ''}
+              ${key.isLavaKey ? 'lava-key' : ''}
+              ${key.isLavaGoodKey ? 'lava-good-key' : ''}
               ${key.status ? key.status : ''}
             `}
                         data-note={key.noteName}

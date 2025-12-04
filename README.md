@@ -105,6 +105,20 @@ npm run test:ui
   - Shows detected chord name and inversion when playing, or "No chord detected" when idle
   - Educational feedback showing what you're playing
 
+- **Lava Game Mode**:
+  - Fun, interactive game mode to practice staying in key
+  - **Visual Key Indicators**: 
+    - **Blue keys = Good keys** (notes in the selected scale - safe to play)
+    - **Red keys = Lava keys** (notes NOT in the scale - avoid these!)
+  - **Real-time Scoring System**: 
+    - Scores update instantly as keys are pressed
+    - Tracks good keys hit (notes in scale)
+    - Tracks lava keys hit (notes out of scale)
+    - Score display positioned next to Circle of Fifths showing both counts in real-time
+  - **Continuous Gameplay**: No time limit - play as long as you want
+  - Perfect for practicing scale awareness and avoiding wrong notes
+  - Animated lava keys with glowing red effect for visual feedback
+
 ### Music Theory Features
 
 - **Interactive Circle of Fifths**:
@@ -158,10 +172,15 @@ npm run test:ui
   - Highlighted scale notes (yellow highlighting)
   - Active MIDI notes display (blue when pressed)
   - **Interactive chord highlighting**: Click chord buttons to highlight specific chord keys in blue
+  - **Lava Game visuals**: 
+    - Red keys for out-of-scale notes (lava keys) with animated glowing effect
+    - Blue keys for in-scale notes (good keys)
+    - All keys in lava mode are either red or blue - no default colors
   - Note labels on keys
   - Color-coded feedback (correct/incorrect notes)
   - Centered layout for optimal viewing experience
   - **Chord Display**: Detected chords shown prominently in controls and status areas
+  - **Real-time Score Display**: Lava game score updates instantly as keys are pressed
 
 ## Project Structure
 
@@ -252,6 +271,30 @@ piano-app/
 6. Scale notes are highlighted for reference on the keyboard
 7. Use the Circle of Fifths to quickly change keys while playing
 
+### Lava Game
+
+1. Select your desired key and scale type (e.g., "C Major")
+2. Choose "Lava Game" mode
+3. **Visual Guide**:
+   - **Blue keys = Good keys** (safe to play - these are in your selected scale)
+   - **Red keys = Lava keys** (avoid these - they're NOT in your scale!)
+4. **Gameplay**:
+   - Play continuously on your MIDI keyboard
+   - Try to hit only the blue (good) keys
+   - Avoid the red (lava) keys
+   - No time limit - play as long as you want
+5. **Real-time Scoring**:
+   - Score display positioned next to Circle of Fifths shows two counters:
+     - **Good Keys**: Number of correct scale notes hit (displayed in blue)
+     - **Lava Keys Hit**: Number of wrong notes (out of scale) hit (displayed in red)
+   - **Scores update instantly** as you press keys - no delay
+   - Watch your score change in real-time as you play
+6. **Practice Tips**:
+   - Start with a simple scale (like C Major) to get familiar
+   - Focus on staying in key and avoiding the lava keys
+   - Challenge yourself by trying different keys and scale types
+   - Great for developing muscle memory and scale awareness
+
 ## Browser Compatibility
 
 - **Chrome/Edge**: Full Web MIDI API support ✅
@@ -308,4 +351,4 @@ Run tests with `npm test` or `npm run test:ui` for interactive test interface.
 
 ---
 
-Last Updated: 2025-01-27
+Last Updated: 2025-12-02

@@ -63,6 +63,12 @@ const Controls = ({
                         >
                             Free Play
                         </button>
+                        <button
+                            className={mode === 'lava' ? 'active' : ''}
+                            onClick={() => onModeChange('lava')}
+                        >
+                            Lava Game
+                        </button>
                     </div>
                 </div>
 

@@ -42,6 +42,15 @@
   color: white;
 }
 
+/* In lava mode, ensure all keys are either red or blue - no default colors */
+.piano-container.lava-mode .key.white:not(.lava-key):not(.lava-good-key):not(.active) {
+  background: #3b82f6 !important; /* Default to blue if not explicitly marked */
+}
+
+.piano-container.lava-mode .key.black:not(.lava-key):not(.lava-good-key):not(.active) {
+  background: #1e40af !important; /* Default to dark blue if not explicitly marked */
+}
+
 /* Active State (User Pressing) */
 .key.active {
   background: #3b82f6; /* Blue */
@@ -56,6 +65,16 @@
   background: #854d0e; /* Dark Yellow/Brown for black keys */
 }
 
+/* Lava Game - Blue Good Keys (must override highlighted and other styles) */
+.piano-container.lava-mode .key.lava-good-key:not(.active):not(.lava-key) {
+  background: #3b82f6 !important; /* Blue for white keys */
+  box-shadow: 0 0 10px rgba(59, 130, 246, 0.6) !important;
+}
+.piano-container.lava-mode .key.black.lava-good-key:not(.active):not(.lava-key) {
+  background: #1e40af !important; /* Dark Blue for black keys */
+  box-shadow: 0 0 10px rgba(30, 64, 175, 0.6) !important;
+}
+
 /* Chord Note Highlighting (specific MIDI notes for chord display) */
 .key.chord-note:not(.active) {
   background: #60a5fa !important; /* Light Blue for white keys */
@@ -64,6 +83,36 @@
 .key.black.chord-note:not(.active) {
   background: #1e40af !important; /* Dark Blue for black keys */
   box-shadow: 0 0 10px rgba(30, 64, 175, 0.5);
+}
+
+/* Lava Game - Fiery Red Bad Keys (must override all other styles) */
+.piano-container.lava-mode .key.lava-key:not(.active) {
+  background: #dc2626 !important; /* Fiery Red for white keys */
+  box-shadow: 0 0 15px rgba(220, 38, 38, 0.8), inset 0 0 10px rgba(239, 68, 68, 0.6) !important;
+  animation: lava-glow 2s ease-in-out infinite alternate;
+}
+.piano-container.lava-mode .key.black.lava-key:not(.active) {
+  background: #991b1b !important; /* Dark Red for black keys */
+  box-shadow: 0 0 15px rgba(153, 27, 27, 0.8), inset 0 0 10px rgba(185, 28, 28, 0.6) !important;
+  animation: lava-glow-black 2s ease-in-out infinite alternate;
+}
+
+@keyframes lava-glow {
+  from {
+    box-shadow: 0 0 15px rgba(220, 38, 38, 0.8), inset 0 0 10px rgba(239, 68, 68, 0.6);
+  }
+  to {
+    box-shadow: 0 0 25px rgba(220, 38, 38, 1), inset 0 0 15px rgba(239, 68, 68, 0.9);
+  }
+}
+
+@keyframes lava-glow-black {
+  from {
+    box-shadow: 0 0 15px rgba(153, 27, 27, 0.8), inset 0 0 10px rgba(185, 28, 28, 0.6);
+  }
+  to {
+    box-shadow: 0 0 25px rgba(153, 27, 27, 1), inset 0 0 15px rgba(185, 28, 28, 0.9);
+  }
 }
 
 /* Feedback States */
