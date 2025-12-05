@@ -37,11 +37,15 @@ const NOTE_MAP = {
   'F': 'F',
 };
 
-const CircleOfFifths = ({ selectedRoot, onRootSelect, detectedChord }) => {
-  const handleSegmentClick = (majorNote) => {
+const CircleOfFifths = ({ selectedRoot, onRootSelect, detectedChord, onChordClick }) => {
+  const handleSegmentClick = (majorNote, chordName) => {
     // Map the circle of fifths note to app's note system
     const mappedNote = NOTE_MAP[majorNote] || majorNote;
     onRootSelect(mappedNote);
+
+    if (onChordClick && chordName) {
+      onChordClick(chordName);
+    }
   };
 
   // Check if a segment is selected
@@ -188,7 +192,7 @@ const CircleOfFifths = ({ selectedRoot, onRootSelect, detectedChord }) => {
                   d={majorPathData}
                   data-key={`major-${key.major}`}
                   className={`segment major-segment ${isLight ? 'light' : 'dark'} ${selected ? 'selected' : ''} ${isMajorActive ? 'active-major' : ''}`}
-                  onClick={() => handleSegmentClick(key.major)}
+                  onClick={() => handleSegmentClick(key.major, `${key.major} Major`)}
                   style={{ cursor: 'pointer' }}
                 />
 
@@ -197,7 +201,10 @@ const CircleOfFifths = ({ selectedRoot, onRootSelect, detectedChord }) => {
                   d={minorPathData}
                   data-key={`minor-${key.minor}`}
                   className={`segment minor-segment ${isLight ? 'light' : 'dark'} ${selected ? 'selected' : ''} ${isMinorActive ? 'active-minor' : ''}`}
-                  onClick={() => handleSegmentClick(key.major)}
+                  onClick={() => {
+                    const root = key.minor.slice(0, -1);
+                    handleSegmentClick(key.major, `${root} Minor`);
+                  }}
                   style={{ cursor: 'pointer' }}
                 />
 
@@ -211,7 +218,7 @@ const CircleOfFifths = ({ selectedRoot, onRootSelect, detectedChord }) => {
                       textAnchor="middle"
                       dominantBaseline="middle"
                       className={`major-label ${selected ? 'selected-text' : ''}`}
-                      onClick={() => handleSegmentClick(key.major)}
+                      onClick={() => handleSegmentClick(key.major, `${key.major} Major`)}
                       style={{ cursor: 'pointer', pointerEvents: 'none' }}
                     >
                       {key.major}
@@ -234,7 +241,10 @@ const CircleOfFifths = ({ selectedRoot, onRootSelect, detectedChord }) => {
                       textAnchor="middle"
                       dominantBaseline="middle"
                       className={`minor-label ${selected ? 'selected-text' : ''}`}
-                      onClick={() => handleSegmentClick(key.major)}
+                      onClick={() => {
+                        const root = key.minor.slice(0, -1);
+                        handleSegmentClick(key.major, `${root} Minor`);
+                      }}
                       style={{ cursor: 'pointer', pointerEvents: 'none' }}
                     >
                       {key.minor}

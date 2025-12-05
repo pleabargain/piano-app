@@ -1,5 +1,6 @@
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
 import { render } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import CircleOfFifths from './CircleOfFifths';
 import React from 'react';
 
@@ -47,5 +48,26 @@ describe('CircleOfFifths', () => {
         const fmSegment = container.querySelector('path[data-key="minor-Fm"]');
         expect(fmSegment).toBeTruthy();
         expect(fmSegment.classList.contains('active-minor')).toBe(true);
+    });
+    it('should call onChordClick with correct chord name when segment is clicked', async () => {
+        const onChordClick = vi.fn();
+        const { container } = render(
+            <CircleOfFifths
+                selectedRoot="C"
+                onRootSelect={() => { }}
+                detectedChord={null}
+                onChordClick={onChordClick}
+            />
+        );
+
+        // Click C Major segment
+        const cMajorSegment = container.querySelector('path[data-key="major-C"]');
+        await userEvent.click(cMajorSegment);
+        expect(onChordClick).toHaveBeenCalledWith('C Major');
+
+        // Click A Minor segment
+        const amSegment = container.querySelector('path[data-key="minor-Am"]');
+        await userEvent.click(amSegment);
+        expect(onChordClick).toHaveBeenCalledWith('A Minor');
     });
 });

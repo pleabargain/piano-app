@@ -462,6 +462,31 @@ function App() {
     }
   };
 
+
+
+  const handleChordClick = (chordName) => {
+    // Handle chord click - cycle through inversions
+    const parsed = parseChordName(chordName);
+    if (!parsed) return;
+
+    // Check if this is the same chord that was clicked before
+    if (clickedChord && clickedChord.name === chordName) {
+      // Cycle to next inversion
+      const maxInversions = CHORD_TYPES[parsed.chordType].intervals.length + 1;
+      const nextInversion = (clickedChord.inversion + 1) % maxInversions;
+      setClickedChord({ name: chordName, inversion: nextInversion });
+
+      // Calculate MIDI notes for this inversion (use middle C octave = 4)
+      const midiNotes = getChordNotesAsMidi(parsed.root, parsed.chordType, nextInversion, 4);
+      setChordMidiNotes(midiNotes);
+    } else {
+      // New chord clicked - start with root position
+      setClickedChord({ name: chordName, inversion: 0 });
+      const midiNotes = getChordNotesAsMidi(parsed.root, parsed.chordType, 0, 4);
+      setChordMidiNotes(midiNotes);
+    }
+  };
+
   return (
     <div className="app-container">
       <header>
@@ -496,6 +521,7 @@ function App() {
               selectedRoot={selectedRoot}
               onRootSelect={setSelectedRoot}
               detectedChord={detectedChord}
+              onChordClick={handleChordClick}
             />
             <KeyDisplay
               selectedRoot={selectedRoot}
@@ -571,28 +597,7 @@ function App() {
                 setClickedChord(null);
                 setChordMidiNotes([]);
               }}
-              onChordClick={(chordName) => {
-                // Handle chord click - cycle through inversions
-                const parsed = parseChordName(chordName);
-                if (!parsed) return;
-
-                // Check if this is the same chord that was clicked before
-                if (clickedChord && clickedChord.name === chordName) {
-                  // Cycle to next inversion
-                  const maxInversions = CHORD_TYPES[parsed.chordType].intervals.length + 1;
-                  const nextInversion = (clickedChord.inversion + 1) % maxInversions;
-                  setClickedChord({ name: chordName, inversion: nextInversion });
-
-                  // Calculate MIDI notes for this inversion (use middle C octave = 4)
-                  const midiNotes = getChordNotesAsMidi(parsed.root, parsed.chordType, nextInversion, 4);
-                  setChordMidiNotes(midiNotes);
-                } else {
-                  // New chord clicked - start with root position
-                  setClickedChord({ name: chordName, inversion: 0 });
-                  const midiNotes = getChordNotesAsMidi(parsed.root, parsed.chordType, 0, 4);
-                  setChordMidiNotes(midiNotes);
-                }
-              }}
+              onChordClick={handleChordClick}
             />
             {clickedChord && (
               <div className="clicked-chord-display">

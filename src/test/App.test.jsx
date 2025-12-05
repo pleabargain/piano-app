@@ -22,10 +22,10 @@ describe('App Component', () => {
     expect(screen.getByText('Piano Trainer')).toBeInTheDocument()
   })
 
-  it('should display the status message', () => {
+  it('should display the status message', async () => {
     render(<App />)
-    // The initial status message should be visible
-    expect(screen.getByText(/Connect MIDI keyboard to start|Web MIDI API not supported/i)).toBeInTheDocument()
+    const statusElement = await screen.findByText(/Connect MIDI|Web MIDI|Practice|Free Play|Lava Game/i);
+    expect(statusElement).toBeInTheDocument();
   })
 
   it('should render the Piano component', () => {

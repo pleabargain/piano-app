@@ -22,7 +22,21 @@ export const CHORD_TYPES = {
 };
 
 export function getNoteIndex(note) {
-  return NOTES.indexOf(note);
+  if (!note) return -1;
+
+  // Handle flats by converting to sharps
+  const flatToSharp = {
+    'Db': 'C#',
+    'Eb': 'D#',
+    'Gb': 'F#',
+    'Ab': 'G#',
+    'Bb': 'A#',
+    'Cb': 'B',
+    'Fb': 'E'
+  };
+
+  const normalizedNote = flatToSharp[note] || note;
+  return NOTES.indexOf(normalizedNote);
 }
 
 export function getScaleNotes(root, scaleType) {
