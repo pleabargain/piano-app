@@ -14,7 +14,7 @@ const CIRCLE_OF_FIFTHS = [
   { major: 'F#', minor: 'D#m', enharmonicMajor: 'Gb', enharmonicMinor: 'Ebm' },
   { major: 'Db', minor: 'A#m', enharmonicMajor: 'C#', enharmonicMinor: 'Bbm' },
   { major: 'Ab', minor: 'Fm', enharmonicMajor: null, enharmonicMinor: null },
-  { major: 'Eb', minor: 'Cm', enharmonicMajor: null, enharmonicMinor: null },
+  { major: 'Eb', minor: 'Cm', enharmonicMajor: 'D#', enharmonicMinor: null },
   { major: 'Bb', minor: 'Gm', enharmonicMajor: null, enharmonicMinor: null },
   { major: 'F', minor: 'Dm', enharmonicMajor: null, enharmonicMinor: null },
 ];
