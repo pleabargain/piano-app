@@ -115,6 +115,11 @@ npm run test:ui
   - Highlights the currently selected key with blue color
   - Alternating light/dark segments for better visual distinction
   - Positioned alongside detected chord display for easy reference
+  - **Dynamic Chord Animation**:
+    - Real-time highlighting of the detected chord on the circle
+    - **Active Major**: Dark blue highlighting for major chords
+    - **Active Minor**: Light blue highlighting for minor chords
+    - **Neighbor Highlighting**: Automatically highlights related keys (relative major/minor and adjacent fifths) to visualize harmonic relationships
   - Helps understand key relationships and music theory
 
 - **Scale Support**: 
@@ -335,4 +340,4 @@ Run tests with `npm test` or `npm run test:ui` for interactive test interface.
 
 ---
 
-Last Updated: 2025-12-02
+Last Updated: 2025-12-05
