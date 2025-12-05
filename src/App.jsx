@@ -495,6 +495,7 @@ function App() {
             <CircleOfFifths
               selectedRoot={selectedRoot}
               onRootSelect={setSelectedRoot}
+              detectedChord={detectedChord}
             />
             <KeyDisplay
               selectedRoot={selectedRoot}

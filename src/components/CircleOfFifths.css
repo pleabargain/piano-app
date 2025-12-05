@@ -33,7 +33,7 @@
 
 .segment {
   stroke: #000;
-  stroke-width: 2;
+  stroke-width: 1;
   transition: all 0.2s ease;
 }
 
@@ -46,7 +46,7 @@
 }
 
 .segment:hover {
-  stroke-width: 3;
+  stroke-width: 2;
   stroke: #3b82f6;
   opacity: 0.8;
 }
@@ -56,6 +56,33 @@
   stroke: #1e40af;
   stroke-width: 3;
   opacity: 0.9;
+}
+
+/* Animation / Active States */
+.segment.active-major {
+  fill: #1e3a8a;
+  /* Distinct Dark Blue */
+  stroke: #000;
+}
+
+.segment.active-minor {
+  fill: #93c5fd;
+  /* Distinct Light Blue */
+  stroke: #000;
+}
+
+/* Ensure text is visible on dark backgrounds */
+.segment.active-major~.major-label {
+  fill: #fff;
+}
+
+.segment.active-major~.major-label .enharmonic {
+  fill: #9ca3af;
+}
+
+/* Ensure text is visible on light backgrounds (default is black, so fine) */
+.segment.active-minor~.minor-label {
+  fill: #000;
 }
 
 .major-label {
