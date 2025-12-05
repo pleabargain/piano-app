@@ -223,12 +223,27 @@ function App() {
 
   const handleFreePlay = () => {
     const chord = identifyChord(activeNotes);
+
+    // Always clear suggestions first
+    setChordSuggestions([]);
+
     if (chord) {
       setStatusMessage(`Detected: ${chord.name} ${chord.inversion ? `(${chord.inversion})` : ''}`);
       setDetectedChord(chord);
+
+      // Suggest extensions/variations
+      const suggestions = findPotentialChords(activeNotes);
+      const filteredSuggestions = suggestions.filter(s => s.name !== chord.name);
+      setChordSuggestions(filteredSuggestions);
     } else if (activeNotes.length > 0) {
       setStatusMessage('Playing... (no chord detected)');
       setDetectedChord(null);
+
+      // If 2+ notes, suggest chords
+      if (activeNotes.length >= 2) {
+        const suggestions = findPotentialChords(activeNotes);
+        setChordSuggestions(suggestions);
+      }
     } else {
       setStatusMessage('Free Play - Play any chord to see detection');
       setDetectedChord(null);
@@ -503,7 +518,7 @@ function App() {
                   </div>
                 )}
 
-                {mode === 'chord' && chordSuggestions.length > 0 && (
+                {(mode === 'chord' || mode === 'free') && chordSuggestions.length > 0 && (
                   <div className="chord-suggestions">
                     <div className="suggestions-label">
                       {detectedChord ? 'Extensions / Variations:' : 'Possible Chords:'}
@@ -599,19 +614,10 @@ function App() {
           <div className="current-target">
             <h2>Target: {progression[currentStepIndex % progression.length].roman}</h2>
             <h3>{progression[currentStepIndex % progression.length].name}</h3>
-            {detectedChord && (
-              <div className="detected-chord-info">
-                <div className="detected-label">Playing:</div>
-                <div className="detected-chord-name">{detectedChord.name}</div>
-                {detectedChord.inversion && (
-                  <div className="detected-chord-inversion">{detectedChord.inversion}</div>
-                )}
-              </div>
-            )}
           </div>
         )}
 
-        {mode === 'free' && detectedChord && (
+        {(mode === 'free' || mode === 'chord') && detectedChord && (
           <div className="current-target detected-chord-card">
             <h2 className="chord-name-display">{detectedChord.name}</h2>
             <h3 className="chord-inversion-display">{detectedChord.inversion}</h3>
