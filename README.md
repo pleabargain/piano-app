@@ -103,6 +103,49 @@ npm run test:ui
   - Perfect for practicing scale awareness and avoiding wrong notes
   - Animated lava keys with glowing red effect for visual feedback
 
+### Three-Frame Layout (split-keyboard branch)
+
+The application features an enhanced three-frame layout for integrated chord and scale practice:
+
+- **Three-Frame Architecture**:
+  - **Left Frame**: Chord Practice (2-octave keyboard C2-C4)
+  - **Center Frame**: Interactive Circle of Fifths (without title for clean display)
+  - **Right Frame**: Scale Practice (2-octave keyboard C4-C6)
+
+- **Chord Locking Feature** (Left Frame):
+  - Lock any detected chord to maintain display even when keys are released
+  - **Lock Button** (🔓): Click to lock currently detected chord
+  - **Locked Display**: Shows with green gradient and lock icon (🔒)
+  - **Unlock Button**: Release locked chord at any time
+  - Locked chord root automatically filters scale selection on right frame
+
+- **Two-Note Chord Suggestions** (Left Frame):
+  - When exactly 2 notes are pressed, displays potential chords
+  - Shows "💡 Potential Chords (add one more note)"
+  - Lists possible chords with missing notes (e.g., "C Major +G")
+  - Helps learn chord construction and extensions
+
+- **Chord Extensions Display** (Left Frame):
+  - When full chord is detected, shows extension suggestions
+  - Displays "🎵 Extensions / Variations"
+  - Suggests 7th, 9th, and other extended chords
+  - Shows which notes to add (e.g., "C Major 7 +B")
+
+- **Scale Selector** (Right Frame):
+  - Dropdown to select scale type (Major, Natural Minor, Harmonic Minor, Melodic Minor, Blues)
+  - **Root Filtering**: When chord is locked, only shows scales for that root note
+  - **Locked Root Indicator**: Displays lock icon and root (e.g., "🔒 Root: C")
+  - **Info Box**: Explains scale filtering based on locked chord
+  - Automatic scale highlighting on right keyboard
+
+- **Integrated Practice Workflow**:
+  1. Play and lock a chord on left piano (e.g., "D Major")
+  2. Circle of Fifths reflects the locked root automatically
+  3. Right frame filters to show only D-based scales (D Major, D Minor, etc.)
+  4. Practice scales that match your locked chord
+  5. Unlock to switch to a different chord/key
+
+
 ### Music Theory Features
 
 - **Interactive Circle of Fifths**:
@@ -180,10 +223,14 @@ piano-app/
 │   │   ├── Piano.jsx         # Virtual piano keyboard component
 │   │   ├── Controls.jsx      # Settings and mode controls
 │   │   ├── ProgressionBuilder.jsx  # Chord progression input
-│   │   └── CircleOfFifths.jsx  # Interactive circle of fifths component
+│   │   ├── CircleOfFifths.jsx  # Interactive circle of fifths component
+│   │   ├── ChordInfo.jsx     # Chord information and locking panel
+│   │   └── ScaleSelector.jsx # Scale selection dropdown
 │   ├── core/                 # Core music theory and MIDI logic
 │   │   ├── music-theory.js   # Scale/chord calculations, chord detection
 │   │   └── midi-manager.js   # Web MIDI API wrapper
+│   ├── hooks/                # Custom React hooks
+│   │   └── useChordDetection.js  # Chord detection hook
 │   ├── test/                 # Unit tests
 │   │   ├── App.test.jsx      # App component tests
 │   │   └── main.test.jsx     # Entry point tests
@@ -340,4 +387,4 @@ Run tests with `npm test` or `npm run test:ui` for interactive test interface.
 
 ---
 
-Last Updated: 2025-12-05
+Last Updated: 2025-12-06

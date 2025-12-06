@@ -41,9 +41,11 @@ describe('Circle of Fifths Integration', () => {
             // Click it
             fireEvent.click(segment);
 
-            // Check if keys are highlighted
-            // We look for keys with class 'chord-note'
-            const highlightedKeys = container.querySelectorAll('.key.chord-note');
+            // Check if keys are highlighted in the Left Piano (Chords)
+            // We look for keys with class 'chord-note' inside the left piano section
+            const leftPiano = container.querySelector('.piano-section.left-piano');
+            expect(leftPiano).toBeTruthy();
+            const highlightedKeys = leftPiano.querySelectorAll('.key.chord-note');
             expect(highlightedKeys.length).toBeGreaterThan(0);
 
             // Verify at least the root note is highlighted
@@ -52,11 +54,9 @@ describe('Circle of Fifths Integration', () => {
 
             if (!rootKey) {
                 console.error(`Failed to find root key ${testCase.expectedRoot} for ${testCase.label}`);
-                // Debug: print what IS highlighted
-                const highlightedNotes = Array.from(highlightedKeys).map(k => k.getAttribute('data-note'));
-                console.log('Highlighted notes:', highlightedNotes);
             }
 
+            expect(highlightedKeys.length).toBeGreaterThan(0);
             expect(rootKey).toBeTruthy();
         }
     });

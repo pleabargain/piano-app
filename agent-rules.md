@@ -5,6 +5,8 @@ This document contains coding rules and guidelines for development of this proje
 
 ## General Rules
 
+1a. functions should only one input and one output. build unit tests to make sure that is true.
+
 1. **Bug Fixing**: When a bug is discovered, add a unit test to isolate that bug and abstract the function causing the issue.
 
 2. **Testing**: All new features and bug fixes should include appropriate unit tests to verify desired behavior.
@@ -52,7 +54,7 @@ This document contains coding rules and guidelines for development of this proje
 
 ## UI/UX Rules
 
-1. **Centering**: The UI should be centered in the browser both horizontally and vertically. Use flexbox or CSS Grid to achieve proper centering of the main application container.
+1. **Centering**: The UI should be centered in the browser horizontally. Use flexbox or CSS Grid to achieve proper centering of the main application container.
 
 ## React-Specific Rules
 
@@ -76,7 +78,7 @@ This document contains coding rules and guidelines for development of this proje
 
 ## User Interaction
 
-1. **Question Format**: When clarification is needed, ask only multiple choice questions
+1. **Question Format**: When clarification is needed, ask only one multiple choice question at a time and provide a clear description of the options.
 2. **Multiple Choice Options**: Include "All of the above" as an option when applicable
 3. **Question Logging**: All questions and answers must be logged in `instructions.md` with ISO datestamp format (YYYY-MM-DDTHH:MM:SS)
 4. **One Question at a Time**: Ask one question at a time to avoid overwhelming the user

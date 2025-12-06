@@ -1,6 +1,7 @@
 // https://github.com/pleabargain/piano-app
 import React from 'react';
 import './CircleOfFifths.css';
+import { parseChordName } from '../core/music-theory';
 
 // Circle of Fifths data: [major, minor, enharmonic major, enharmonic minor]
 // Order: C, G, D, A, E, B, F#/Gb, Db/C#, Ab, Eb, Bb, F
@@ -37,7 +38,7 @@ const NOTE_MAP = {
   'F': 'F',
 };
 
-const CircleOfFifths = ({ selectedRoot, onRootSelect, detectedChord, onChordClick }) => {
+const CircleOfFifths = ({ selectedRoot, onRootSelect, detectedChord, onChordClick, hideTitle = false }) => {
   const handleSegmentClick = (majorNote, chordName) => {
     // Map the circle of fifths note to app's note system
     const mappedNote = NOTE_MAP[majorNote] || majorNote;
@@ -68,10 +69,19 @@ const CircleOfFifths = ({ selectedRoot, onRootSelect, detectedChord, onChordClic
     } else {
       const { name } = detectedChord;
       if (typeof name !== 'string') return { major: [], minor: [] };
-      const parts = name.split(' ');
-      root = parts[0];
-      const quality = parts.slice(1).join(' ').toLowerCase();
-      isMinor = quality.includes('minor');
+
+      const parsed = parseChordName(name);
+      if (parsed) {
+        root = parsed.root;
+        const type = parsed.chordType.toLowerCase();
+        isMinor = type.includes('minor') || type.includes('diminished');
+      } else {
+        // Fallback to simple split if parse fails (though parseChordName is robust)
+        const parts = name.split(' ');
+        root = parts[0];
+        const quality = parts.slice(1).join(' ').toLowerCase();
+        isMinor = quality.includes('minor');
+      }
     }
 
     // Helper to map circle notes to app notes (sharps)
@@ -147,7 +157,7 @@ const CircleOfFifths = ({ selectedRoot, onRootSelect, detectedChord, onChordClic
 
   return (
     <div className="circle-of-fifths-container">
-      <h3>Circle of Fifths</h3>
+      {!hideTitle && <h3>Circle of Fifths</h3>}
       <div className="circle-of-fifths">
         <svg viewBox="-200 -200 400 400" className="circle-svg">
           {/* Draw rings */}

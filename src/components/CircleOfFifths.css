@@ -1,22 +1,24 @@
 /* https://github.com/pleabargain/piano-app */
 .circle-of-fifths-container {
   background: #fff;
-  padding: 20px;
-  border-radius: 10px;
+  padding: 30px;
+  border-radius: 16px;
   text-align: center;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
   flex: 1;
-  min-width: 300px;
+  min-width: 320px;
   display: flex;
   flex-direction: column;
   justify-content: center;
+  align-items: center;
 }
 
 .circle-of-fifths-container h3 {
-  margin: 0 0 20px 0;
-  color: #1a1a1a;
+  margin: 0 0 25px 0;
+  color: #111;
   font-size: 1.5rem;
-  font-weight: 600;
+  font-weight: 700;
+  letter-spacing: -0.5px;
 }
 
 .circle-of-fifths {

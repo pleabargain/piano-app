@@ -1,0 +1,158 @@
+/* https://github.com/pleabargain/piano-app */
+.scale-selector-container {
+    background: linear-gradient(135deg, #1e1b4b 0%, #312e81 100%);
+    border: 2px solid #8b5cf6;
+    border-radius: 12px;
+    padding: 20px;
+    min-width: 280px;
+    max-width: 320px;
+    box-shadow: 0 4px 20px rgba(139, 92, 246, 0.2);
+}
+
+.scale-selector-header {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+.scale-selector-header h3 {
+    margin: 0;
+    color: #a78bfa;
+    font-size: 1.1rem;
+    font-weight: 600;
+    text-align: center;
+    letter-spacing: 0.5px;
+}
+
+.locked-root-indicator {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    background: rgba(16, 185, 129, 0.15);
+    border: 1px solid rgba(16, 185, 129, 0.3);
+    border-radius: 6px;
+    padding: 6px 12px;
+}
+
+.lock-icon-small {
+    font-size: 0.9rem;
+}
+
+.locked-root-text {
+    font-size: 0.85rem;
+    color: #6ee7b7;
+    font-weight: 600;
+}
+
+/* Current Scale Display */
+.current-scale-display {
+    background: rgba(139, 92, 246, 0.15);
+    border: 1px solid rgba(139, 92, 246, 0.3);
+    border-radius: 8px;
+    padding: 15px;
+    text-align: center;
+    margin-bottom: 15px;
+}
+
+.scale-label {
+    font-size: 0.8rem;
+    color: #c4b5fd;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 8px;
+    font-weight: 600;
+}
+
+.scale-name {
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: #fff;
+    text-shadow: 0 2px 8px rgba(139, 92, 246, 0.4);
+}
+
+/* Scale Type Selector */
+.scale-type-selector {
+    margin-bottom: 15px;
+}
+
+.scale-type-selector label {
+    display: block;
+    font-size: 0.85rem;
+    color: #c4b5fd;
+    margin-bottom: 8px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.scale-dropdown {
+    width: 100%;
+    background: rgba(30, 27, 75, 0.8);
+    border: 2px solid rgba(139, 92, 246, 0.4);
+    border-radius: 6px;
+    padding: 10px 12px;
+    font-size: 1rem;
+    color: #e0e7ff;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.scale-dropdown:hover {
+    border-color: #8b5cf6;
+    background: rgba(30, 27, 75, 0.95);
+}
+
+.scale-dropdown:focus {
+    outline: none;
+    border-color: #a78bfa;
+    box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.2);
+}
+
+.scale-dropdown option {
+    background: #1e1b4b;
+    color: #e0e7ff;
+    padding: 8px;
+}
+
+/* Info Box */
+.scale-info-box {
+    background: rgba(251, 191, 36, 0.1);
+    border: 1px solid rgba(251, 191, 36, 0.3);
+    border-radius: 8px;
+    padding: 12px;
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+}
+
+.info-icon {
+    font-size: 1.2rem;
+    flex-shrink: 0;
+}
+
+.info-text {
+    font-size: 0.85rem;
+    color: #fde68a;
+    line-height: 1.4;
+}
+
+.info-text strong {
+    color: #fbbf24;
+    font-weight: 700;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .scale-selector-container {
+        min-width: 240px;
+        max-width: 100%;
+        padding: 16px;
+    }
+
+    .scale-name {
+        font-size: 1.4rem;
+    }
+}

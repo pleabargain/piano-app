@@ -263,7 +263,21 @@ E) All of the above
 
 **Implementation Completed**: 2025-12-02T19:21:57
 
+### 2025-12-06T13:26:37
+
+**Question**: When a chord is locked on the left frame (e.g., D Major), how should the scale selector on the right frame behave?
+
+**Options**:
+A) Only show scales for that root note (D Major, D Minor, D Blues, etc.)
+B) Show all scales but highlight/suggest the matching root
+C) Lock the root but allow any scale type selection
+D) All of the above - provide multiple modes
+
+**Answer**: A (Only show scales for that root note)
+
+**Implementation Status**: Complete
+
 ---
 
-Last Updated: 2025-12-02T19:21:11
+Last Updated: 2025-12-06T13:27:00
 

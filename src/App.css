@@ -253,6 +253,395 @@ header h1 {
 }
 
 .detected-chord-card {
+  .chord-inversion {
+    font-size: 1rem;
+    color: #60a5fa;
+    font-style: italic;
+  }
+
+  .main-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+    gap: 30px;
+  }
+
+  .controls-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    width: 100%;
+    max-width: 1200px;
+  }
+
+  .circle-and-chord-container {
+    display: flex;
+    align-items: stretch;
+    justify-content: center;
+    gap: 20px;
+    width: 100%;
+    flex-wrap: wrap;
+  }
+
+  .key-display-container {
+    min-width: 300px;
+  }
+
+  @media (max-width: 768px) {
+    .circle-and-chord-container {
+      flex-direction: column;
+      align-items: center;
+    }
+  }
+
+  .current-target {
+    text-align: center;
+    background: #333;
+    padding: 20px;
+    border-radius: 10px;
+    min-width: 200px;
+  }
+
+  .current-target h2 {
+    margin: 0;
+    font-size: 2rem;
+    color: #fbbf24;
+  }
+
+  .current-target h3 {
+    margin: 10px 0 0;
+    color: #ccc;
+  }
+
+  .clicked-chord-display {
+    text-align: center;
+    background: #2a2a2a;
+    padding: 15px;
+    border-radius: 8px;
+    margin-top: 10px;
+    border: 2px solid #3b82f6;
+  }
+
+  .clicked-chord-label {
+    font-size: 0.8rem;
+    color: #aaa;
+    margin-bottom: 5px;
+  }
+
+  .clicked-chord-name {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #60a5fa;
+    margin-bottom: 5px;
+  }
+
+  .clicked-chord-inversion {
+    font-size: 1rem;
+    color: #fbbf24;
+    font-style: italic;
+    margin-bottom: 5px;
+  }
+
+  .clicked-chord-hint {
+    font-size: 0.75rem;
+    color: #666;
+    margin-top: 5px;
+  }
+
+  .lava-game-score {
+    text-align: center;
+    background: linear-gradient(135deg, #1a1a1a 0%, #2a1a1a 100%);
+    padding: 20px;
+    border-radius: 10px;
+    border: 2px solid #dc2626;
+    box-shadow: 0 0 20px rgba(220, 38, 38, 0.3);
+    min-width: 250px;
+    min-height: 200px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .lava-game-score h3 {
+    margin: 0 0 15px 0;
+    font-size: 1.5rem;
+    color: #fbbf24;
+    text-shadow: 0 0 10px rgba(251, 191, 36, 0.5);
+  }
+
+  .score-display {
+    display: flex;
+    justify-content: center;
+    gap: 40px;
+    margin-bottom: 15px;
+  }
+
+  .score-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+  }
+
+  .score-label {
+    font-size: 0.9rem;
+    color: #aaa;
+  }
+
+  .score-value {
+    font-size: 2rem;
+    font-weight: 700;
+  }
+
+  .score-item.good-keys .score-value {
+    color: #7dd3fc;
+    text-shadow: 0 0 10px rgba(125, 211, 252, 0.5);
+  }
+
+  .score-item.bad-keys .score-value {
+    color: #dc2626;
+    text-shadow: 0 0 10px rgba(220, 38, 38, 0.5);
+  }
+
+  .lava-instructions {
+    margin-top: 15px;
+    padding-top: 15px;
+    border-top: 1px solid #444;
+  }
+
+  .lava-instructions p {
+    margin: 5px 0;
+    font-size: 0.9rem;
+    color: #ccc;
+  }
+
+  .detected-chord-info {
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 1px solid #555;
+    text-align: center;
+  }
+
+  .detected-label {
+    font-size: 0.8rem;
+    color: #aaa;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 8px;
+  }
+
+  .detected-chord-name {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #3b82f6;
+    margin-bottom: 4px;
+  }
+
+  .detected-chord-inversion {
+    font-size: 1rem;
+    color: #60a5fa;
+    font-style: italic;
+  }
+
+  .detected-chord-card {
+    background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);
+    border: 2px solid #60a5fa;
+    box-shadow: 0 0 20px rgba(59, 130, 246, 0.3);
+  }
+
+  .chord-name-display {
+    font-size: 2.5rem !important;
+    color: #fff !important;
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+  }
+
+  align-items: center;
+  padding: 20px;
+  gap: 30px;
+}
+
+.controls-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  width: 100%;
+  max-width: 1200px;
+}
+
+.circle-and-chord-container {
+  display: flex;
+  align-items: stretch;
+  justify-content: center;
+  gap: 20px;
+  width: 100%;
+  flex-wrap: wrap;
+}
+
+.key-display-container {
+  min-width: 300px;
+}
+
+@media (max-width: 768px) {
+  .circle-and-chord-container {
+    flex-direction: column;
+    align-items: center;
+  }
+}
+
+.current-target {
+  text-align: center;
+  background: #333;
+  padding: 20px;
+  border-radius: 10px;
+  min-width: 200px;
+}
+
+.current-target h2 {
+  margin: 0;
+  font-size: 2rem;
+  color: #fbbf24;
+}
+
+.current-target h3 {
+  margin: 10px 0 0;
+  color: #ccc;
+}
+
+.clicked-chord-display {
+  text-align: center;
+  background: #2a2a2a;
+  padding: 15px;
+  border-radius: 8px;
+  margin-top: 10px;
+  border: 2px solid #3b82f6;
+}
+
+.clicked-chord-label {
+  font-size: 0.8rem;
+  color: #aaa;
+  margin-bottom: 5px;
+}
+
+.clicked-chord-name {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #60a5fa;
+  margin-bottom: 5px;
+}
+
+.clicked-chord-inversion {
+  font-size: 1rem;
+  color: #fbbf24;
+  font-style: italic;
+  margin-bottom: 5px;
+}
+
+.clicked-chord-hint {
+  font-size: 0.75rem;
+  color: #666;
+  margin-top: 5px;
+}
+
+.lava-game-score {
+  text-align: center;
+  background: linear-gradient(135deg, #1a1a1a 0%, #2a1a1a 100%);
+  padding: 20px;
+  border-radius: 10px;
+  border: 2px solid #dc2626;
+  box-shadow: 0 0 20px rgba(220, 38, 38, 0.3);
+  min-width: 250px;
+  min-height: 200px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.lava-game-score h3 {
+  margin: 0 0 15px 0;
+  font-size: 1.5rem;
+  color: #fbbf24;
+  text-shadow: 0 0 10px rgba(251, 191, 36, 0.5);
+}
+
+.score-display {
+  display: flex;
+  justify-content: center;
+  gap: 40px;
+  margin-bottom: 15px;
+}
+
+.score-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+}
+
+.score-label {
+  font-size: 0.9rem;
+  color: #aaa;
+}
+
+.score-value {
+  font-size: 2rem;
+  font-weight: 700;
+}
+
+.score-item.good-keys .score-value {
+  color: #7dd3fc;
+  text-shadow: 0 0 10px rgba(125, 211, 252, 0.5);
+}
+
+.score-item.bad-keys .score-value {
+  color: #dc2626;
+  text-shadow: 0 0 10px rgba(220, 38, 38, 0.5);
+}
+
+.lava-instructions {
+  margin-top: 15px;
+  padding-top: 15px;
+  border-top: 1px solid #444;
+}
+
+.lava-instructions p {
+  margin: 5px 0;
+  font-size: 0.9rem;
+  color: #ccc;
+}
+
+.detected-chord-info {
+  margin-top: 20px;
+  padding-top: 20px;
+  border-top: 1px solid #555;
+  text-align: center;
+}
+
+.detected-label {
+  font-size: 0.8rem;
+  color: #aaa;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 8px;
+}
+
+.detected-chord-name {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #3b82f6;
+  margin-bottom: 4px;
+}
+
+.detected-chord-inversion {
+  font-size: 1rem;
+  color: #60a5fa;
+  font-style: italic;
+}
+
+.detected-chord-card {
   background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);
   border: 2px solid #60a5fa;
   box-shadow: 0 0 20px rgba(59, 130, 246, 0.3);
@@ -267,4 +656,203 @@ header h1 {
 .chord-inversion-display {
   color: #e0e7ff !important;
   font-size: 1.2rem !important;
+}
+
+/* Split Keyboard Layout */
+.split-keyboard-container {
+  display: flex;
+  align-items: flex-start;
+  /* Align from top for consistent layout */
+  justify-content: center;
+  gap: 30px;
+  width: 100%;
+  padding: 40px 10px;
+  flex-wrap: wrap;
+  max-width: 1400px;
+}
+
+.piano-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 15px;
+  /* Ensure consistent height by aligning at bottom */
+}
+
+/* Make pianos smaller in split view to fit side-by-side */
+.split-keyboard-container .piano-container .key.white {
+  width: 28px;
+  height: 140px;
+}
+
+.split-keyboard-container .piano-container .key.black {
+  width: 18px;
+  height: 85px;
+  margin-left: -9px;
+  margin-right: -9px;
+}
+
+.piano-section h3 {
+  color: #fff;
+  margin-bottom: 15px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  text-transform: none;
+  letter-spacing: 0.5px;
+}
+
+.center-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  /* Add top padding equal to piano height (140px) + gap (15px) to align Circle with info panels */
+  padding-top: 155px;
+}
+
+/* Pyramid Layout */
+.pyramid-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 30px;
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+/* Top: Circle of Fifths (smaller, centered) */
+.pyramid-top {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+}
+
+.pyramid-top .circle-of-fifths-container {
+  transform: scale(0.7);
+  /* Shrink the circle */
+  transform-origin: center;
+}
+
+/* Middle Row: Extensions, ChordInfo, ScaleSelector (3 columns) */
+.pyramid-middle {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 20px;
+  width: 100%;
+  max-width: 1100px;
+  flex-wrap: nowrap;
+}
+
+/* Extensions Panel (left column) */
+.extensions-panel {
+  background: linear-gradient(135deg, #581c87 0%, #7c3aed 100%);
+  border: 2px solid #a78bfa;
+  border-radius: 12px;
+  padding: 16px;
+  min-width: 240px;
+  max-width: 240px;
+  min-height: 280px;
+  box-shadow: 0 4px 20px rgba(124, 58, 237, 0.2);
+}
+
+.extensions-panel h3 {
+  margin: 0 0 12px 0;
+  color: #ddd6fe;
+  font-size: 1rem;
+  font-weight: 600;
+  text-align: center;
+  letter-spacing: 0.5px;
+}
+
+.extensions-content {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.extensions-placeholder {
+  font-size: 0.9rem;
+  color: #c4b5fd;
+  font-style: italic;
+  text-align: center;
+  padding: 20px 10px;
+  min-height: 240px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Fixed dimensions for ChordInfo and ScaleSelector */
+.chord-info-container {
+  min-width: 280px;
+  max-width: 280px;
+  min-height: 280px;
+}
+
+.scale-selector-container {
+  min-width: 280px;
+  max-width: 280px;
+  min-height: 280px;
+}
+
+/* Bottom Row: Two Pianos side-by-side */
+.pyramid-bottom {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 30px;
+  width: 100%;
+  flex-wrap: wrap;
+}
+
+.piano-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+.piano-section h3 {
+  color: #fff;
+  margin: 0 0 10px 0;
+  font-size: 1rem;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
+
+/* Make pianos smaller to fit side-by-side in pyramid */
+.pyramid-bottom .piano-container .key.white {
+  width: 28px;
+  height: 140px;
+}
+
+.pyramid-bottom .piano-container .key.black {
+  width: 18px;
+  height: 85px;
+  margin-left: -9px;
+  margin-right: -9px;
+}
+
+/* Responsive: Stack on smaller screens */
+@media (max-width: 1100px) {
+
+  .pyramid-middle,
+  .pyramid-bottom {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .pyramid-top .circle-of-fifths-container {
+    transform: scale(0.8);
+  }
+}
+
+@media (max-width: 768px) {
+  .pyramid-top .circle-of-fifths-container {
+    transform: scale(0.6);
+  }
 }

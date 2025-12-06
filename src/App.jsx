@@ -5,8 +5,11 @@ import Controls from './components/Controls';
 import ProgressionBuilder from './components/ProgressionBuilder';
 import CircleOfFifths from './components/CircleOfFifths';
 import KeyDisplay from './components/KeyDisplay';
+import ChordInfo from './components/ChordInfo';
+import ScaleSelector from './components/ScaleSelector';
 import { midiManager } from './core/midi-manager';
 import { getScaleNotes, getChordNotes, identifyChord, getChordNotesAsMidi, parseChordName, findPotentialChords, NOTES, CHORD_TYPES } from './core/music-theory';
+import { useChordDetection } from './hooks/useChordDetection';
 import './App.css';
 
 function App() {
@@ -26,12 +29,16 @@ function App() {
   const [currentStepIndex, setCurrentStepIndex] = useState(0);
   const [feedbackState, setFeedbackState] = useState({}); // { midiNumber: 'correct' | 'incorrect' }
   const [statusMessage, setStatusMessage] = useState('Connect MIDI keyboard to start');
-  const [detectedChord, setDetectedChord] = useState(null);
+
+  // Use custom hook for chord detection
+  const { detectedChord, chordSuggestions } = useChordDetection(activeNotes);
 
   // Chord display state
   const [clickedChord, setClickedChord] = useState(null); // { name: 'C Major', inversion: 0 }
   const [chordMidiNotes, setChordMidiNotes] = useState([]); // MIDI numbers to highlight
-  const [chordSuggestions, setChordSuggestions] = useState([]); // Array of potential chords
+
+  // Locked chord state (for left frame)
+  const [lockedChord, setLockedChord] = useState(null); // { name: 'C Major', root: 'C', notes: [...] }
 
   // Lava Game state
   const [lavaScore, setLavaScore] = useState({ good: 0, bad: 0 });
@@ -42,7 +49,6 @@ function App() {
     if (mode !== 'chord') {
       setClickedChord(null);
       setChordMidiNotes([]);
-      setChordSuggestions([]);
     }
     // Reset lava game score when switching modes
     if (mode !== 'lava') {
@@ -159,7 +165,7 @@ function App() {
   useEffect(() => {
     setCurrentStepIndex(0);
     setFeedbackState({});
-    setDetectedChord(null);
+    // detectedChord is now managed by hook, no need to reset manually
     if (mode === 'scale') {
       setStatusMessage(`Practice ${selectedRoot} ${selectedScaleType} Scale`);
     } else if (mode === 'chord') {
@@ -170,53 +176,25 @@ function App() {
   }, [mode, selectedRoot, selectedScaleType]);
 
   const handleChordPractice = () => {
-    // Detect the chord being played
+    // We use identifyChord locally for synchronous status message updates relative to activeNotes
     const detected = identifyChord(activeNotes);
-
-    // Clear suggestions by default, we'll set them if needed
-    setChordSuggestions([]);
 
     if (progression.length > 0) {
       const target = progression[currentStepIndex % progression.length];
       if (detected) {
         setStatusMessage(`Target: ${target.name} (${target.roman}) | Playing: ${detected.name} ${detected.inversion ? `(${detected.inversion})` : ''}`);
-        setDetectedChord(detected);
       } else if (activeNotes.length > 0) {
         setStatusMessage(`Target: ${target.name} (${target.roman}) | Playing...`);
-        setDetectedChord(null);
-
-        // If 2+ notes, suggest chords
-        if (activeNotes.length >= 2) {
-          const suggestions = findPotentialChords(activeNotes);
-          setChordSuggestions(suggestions);
-        }
       } else {
         setStatusMessage(`Target: ${target.name} (${target.roman})`);
-        setDetectedChord(null);
       }
     } else {
       if (detected) {
         setStatusMessage(`Playing: ${detected.name} ${detected.inversion ? `(${detected.inversion})` : ''}`);
-        setDetectedChord(detected);
-
-        // Suggest extensions if it's a triad (or any chord really, logic handles it)
-        const suggestions = findPotentialChords(activeNotes);
-        // Filter out the detected chord itself from suggestions
-        const filteredSuggestions = suggestions.filter(s => s.name !== detected.name);
-        setChordSuggestions(filteredSuggestions);
-
       } else if (activeNotes.length > 0) {
         setStatusMessage('Playing... (no chord detected)');
-        setDetectedChord(null);
-
-        // If 2+ notes, suggest chords
-        if (activeNotes.length >= 2) {
-          const suggestions = findPotentialChords(activeNotes);
-          setChordSuggestions(suggestions);
-        }
       } else {
         setStatusMessage('Set a progression to start');
-        setDetectedChord(null);
       }
     }
   };
@@ -224,36 +202,18 @@ function App() {
   const handleFreePlay = () => {
     const chord = identifyChord(activeNotes);
 
-    // Always clear suggestions first
-    setChordSuggestions([]);
-
     if (chord) {
       setStatusMessage(`Detected: ${chord.name} ${chord.inversion ? `(${chord.inversion})` : ''}`);
-      setDetectedChord(chord);
-
-      // Suggest extensions/variations
-      const suggestions = findPotentialChords(activeNotes);
-      const filteredSuggestions = suggestions.filter(s => s.name !== chord.name);
-      setChordSuggestions(filteredSuggestions);
     } else if (activeNotes.length > 0) {
       setStatusMessage('Playing... (no chord detected)');
-      setDetectedChord(null);
-
-      // If 2+ notes, suggest chords
-      if (activeNotes.length >= 2) {
-        const suggestions = findPotentialChords(activeNotes);
-        setChordSuggestions(suggestions);
-      }
     } else {
       setStatusMessage('Free Play - Play any chord to see detection');
-      setDetectedChord(null);
     }
     setFeedbackState({});
   };
 
   const handleLavaGame = () => {
     setStatusMessage(`🔥 Lava Game - ${selectedRoot} ${selectedScaleType} | Good: ${lavaScore.good} | Bad: ${lavaScore.bad}`);
-    setDetectedChord(null);
   };
 
   const handleScalePractice = () => {
@@ -421,45 +381,30 @@ function App() {
   }, [activeNotes, mode, progression, currentStepIndex]);
 
 
-  // Helper to get highlighted notes for Piano
-  const getHighlightedNotes = () => {
-    if (mode === 'scale') {
-      const scaleNotes = getScaleNotes(selectedRoot, selectedScaleType);
-      // Highlight all notes in scale? Or just the target?
-      // User asked for "Wait-for-Input", implying guidance.
-      // Let's highlight the TARGET note in a specific color, and others in scale in background?
-      // For now, just highlight the target pitch class.
-      const target = scaleNotes[currentStepIndex % scaleNotes.length];
-      return [NOTES.indexOf(target)];
-    }
-    else if (mode === 'chord') {
+
+
+  // Helper to get highlighted notes for Left Piano (Chords)
+  const getChordHighlights = () => {
+    if (mode === 'chord') {
+      // If a chord is clicked in Circle of Fifths, show that
+      if (chordMidiNotes.length > 0) return chordMidiNotes;
+
       if (progression.length === 0) return [];
-      const targetChord = progression[currentStepIndex % progression.length];
-      // We need notes for this chord.
-      // We can parse the name "C Major" -> root: C, type: major
-      const [root, ...rest] = targetChord.name.split(' ');
-      const typeName = rest.join(' ');
-      // Map typeName back to type key? 'Major' -> 'major'
-      // This is a bit reverse.
-      // Better to store structured data in progression.
 
-      // For now, let's just highlight nothing or try to parse.
-      // Actually, the ProgressionBuilder returns { roman, name }.
-      // We can re-calculate notes if we know the scale context?
-      // Yes, we have selectedRoot/ScaleType.
+      // Otherwise show target chord from progression?
+      // For now, let's use the same logic as before but specific to chords
+      // If we have chordMidiNotes (from click), use them.
+      return chordMidiNotes;
+    }
+    return [];
+  };
 
-      // Let's just highlight the scale notes for context?
-      return getScaleNotes(selectedRoot, selectedScaleType).map(n => NOTES.indexOf(n));
-    }
-    else if (mode === 'lava') {
-      // In lava mode, highlight good keys (scale notes) - they'll be blue
-      const scaleNotes = getScaleNotes(selectedRoot, selectedScaleType);
-      return scaleNotes.map(n => NOTES.indexOf(n));
-    }
-    else {
-      // Free play: Highlight scale notes
-      return getScaleNotes(selectedRoot, selectedScaleType).map(n => NOTES.indexOf(n));
-    }
+  // Helper to get highlighted notes for Right Piano (Scales)
+  const getScaleHighlights = () => {
+    // Always show scale notes on the right piano, regardless of mode (except maybe lava?)
+    // User said "scales on one side", implying constant reference.
+    const scaleNotes = getScaleNotes(selectedRoot, selectedScaleType);
+    return scaleNotes.map(n => NOTES.indexOf(n));
   };
 
 
@@ -476,15 +421,36 @@ function App() {
       const nextInversion = (clickedChord.inversion + 1) % maxInversions;
       setClickedChord({ name: chordName, inversion: nextInversion });
 
-      // Calculate MIDI notes for this inversion (use middle C octave = 4)
-      const midiNotes = getChordNotesAsMidi(parsed.root, parsed.chordType, nextInversion, 4);
+      // Calculate MIDI notes for this inversion (use octave 3 to fit in Left Piano 36-60)
+      const midiNotes = getChordNotesAsMidi(parsed.root, parsed.chordType, nextInversion, 3);
       setChordMidiNotes(midiNotes);
     } else {
       // New chord clicked - start with root position
       setClickedChord({ name: chordName, inversion: 0 });
-      const midiNotes = getChordNotesAsMidi(parsed.root, parsed.chordType, 0, 4);
+      const midiNotes = getChordNotesAsMidi(parsed.root, parsed.chordType, 0, 3);
       setChordMidiNotes(midiNotes);
     }
+  };
+
+  // Lock/Unlock chord handlers
+  const handleLockChord = (chord) => {
+    if (!chord) return;
+    const parsed = parseChordName(chord.name);
+    if (!parsed) return;
+
+    const chordNotes = getChordNotes(parsed.root, parsed.chordType);
+    setLockedChord({
+      name: chord.name,
+      root: parsed.root,
+      notes: chordNotes,
+    });
+
+    // Also update selectedRoot to match locked chord root
+    setSelectedRoot(parsed.root);
+  };
+
+  const handleUnlockChord = () => {
+    setLockedChord(null);
   };
 
   return (
@@ -494,15 +460,95 @@ function App() {
       </header>
 
       <div className="main-content">
-        <Piano
-          startNote={keyboardSize.start}
-          endNote={keyboardSize.end}
-          activeNotes={activeNotes}
-          highlightedNotes={getHighlightedNotes()}
-          chordMidiNotes={chordMidiNotes}
-          lavaKeys={mode === 'lava' ? lavaKeys : []}
-          feedbackState={feedbackState}
-        />
+
+        {/* Pyramid Layout */}
+        <div className="pyramid-container">
+
+          {/* Top: Circle of Fifths */}
+          <div className="pyramid-top">
+            <CircleOfFifths
+              selectedRoot={lockedChord ? lockedChord.root : selectedRoot}
+              onRootSelect={setSelectedRoot}
+              detectedChord={detectedChord}
+              onChordClick={handleChordClick}
+              hideTitle={true}
+            />
+          </div>
+
+          {/* Middle Row: Extensions, ChordInfo, and ScaleSelector */}
+          <div className="pyramid-middle">
+            {/* Extensions Panel (left) */}
+            <div className="extensions-panel">
+              <h3>Extensions</h3>
+              {detectedChord && chordSuggestions.length > 0 ? (
+                <div className="extensions-content">
+                  <div className="section-label">🎵 Add to {detectedChord.name.split(' ')[0]}</div>
+                  <div className="suggestions-list">
+                    {chordSuggestions.slice(0, 4).map((suggestion, index) => (
+                      <div key={index} className="suggestion-item">
+                        <span className="suggestion-name">{suggestion.name}</span>
+                        <span className="suggestion-missing">+{suggestion.missingNotes.join(', ')}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              ) : (
+                <div className="extensions-placeholder">
+                  Play a chord to see extensions
+                </div>
+              )}
+            </div>
+
+            {/* ChordInfo (center) */}
+            <ChordInfo
+              detectedChord={detectedChord}
+              chordSuggestions={chordSuggestions}
+              lockedChord={lockedChord}
+              onLockChord={handleLockChord}
+              onUnlockChord={handleUnlockChord}
+              activeNotes={activeNotes}
+              hideExtensions={true}
+            />
+
+            {/* ScaleSelector (right) */}
+            <ScaleSelector
+              selectedRoot={lockedChord ? lockedChord.root : selectedRoot}
+              selectedScaleType={selectedScaleType}
+              onScaleTypeChange={setSelectedScaleType}
+              lockedChordRoot={lockedChord ? lockedChord.root : null}
+            />
+          </div>
+
+          {/* Bottom Row: Two Pianos */}
+          <div className="pyramid-bottom">
+            <div className="piano-section left-piano">
+              <h3>Chord Practice</h3>
+              <Piano
+                startNote={36}
+                endNote={60}
+                activeNotes={activeNotes}
+                highlightedNotes={[]}
+                chordMidiNotes={getChordHighlights()}
+                lavaKeys={mode === 'lava' ? lavaKeys : []}
+                feedbackState={feedbackState}
+              />
+            </div>
+
+            <div className="piano-section right-piano">
+              <h3>Scale Practice</h3>
+              <Piano
+                startNote={60}
+                endNote={84}
+                activeNotes={activeNotes}
+                highlightedNotes={getScaleHighlights()}
+                chordMidiNotes={[]}
+                lavaKeys={mode === 'lava' ? lavaKeys : []}
+                feedbackState={feedbackState}
+              />
+            </div>
+          </div>
+
+        </div>
 
         <div className="controls-section">
           <Controls
@@ -517,12 +563,8 @@ function App() {
           />
 
           <div className="circle-and-chord-container">
-            <CircleOfFifths
-              selectedRoot={selectedRoot}
-              onRootSelect={setSelectedRoot}
-              detectedChord={detectedChord}
-              onChordClick={handleChordClick}
-            />
+            {/* CircleOfFifths moved up */}
+
             <KeyDisplay
               selectedRoot={selectedRoot}
               selectedScaleType={selectedScaleType}
@@ -630,7 +672,7 @@ function App() {
           </div>
         )}
       </div>
-    </div>
+    </div >
   );
 }
 
