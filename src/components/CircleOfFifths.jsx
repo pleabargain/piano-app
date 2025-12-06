@@ -4,19 +4,19 @@ import './CircleOfFifths.css';
 import { parseChordName } from '../core/music-theory';
 
 // Circle of Fifths data: [major, minor, enharmonic major, enharmonic minor]
-// Order: C, G, D, A, E, B, F#/Gb, Db/C#, Ab, Eb, Bb, F
+// Order: C, G, D, A, E, B, F#/Gb, Db/C#, Ab/G#, Eb/D#, Bb/A#, F
 const CIRCLE_OF_FIFTHS = [
   { major: 'C', minor: 'Am', enharmonicMajor: null, enharmonicMinor: null },
   { major: 'G', minor: 'Em', enharmonicMajor: null, enharmonicMinor: null },
   { major: 'D', minor: 'Bm', enharmonicMajor: null, enharmonicMinor: null },
   { major: 'A', minor: 'F#m', enharmonicMajor: null, enharmonicMinor: null },
   { major: 'E', minor: 'C#m', enharmonicMajor: null, enharmonicMinor: null },
-  { major: 'B', minor: 'G#m', enharmonicMajor: null, enharmonicMinor: 'Abm' },
+  { major: 'B', minor: 'G#m', enharmonicMajor: 'Cb', enharmonicMinor: 'Abm' },
   { major: 'F#', minor: 'D#m', enharmonicMajor: 'Gb', enharmonicMinor: 'Ebm' },
-  { major: 'Db', minor: 'A#m', enharmonicMajor: 'C#', enharmonicMinor: 'Bbm' },
-  { major: 'Ab', minor: 'Fm', enharmonicMajor: null, enharmonicMinor: null },
+  { major: 'Db', minor: 'Bbm', enharmonicMajor: 'C#', enharmonicMinor: 'A#m' },
+  { major: 'Ab', minor: 'Fm', enharmonicMajor: 'G#', enharmonicMinor: null },
   { major: 'Eb', minor: 'Cm', enharmonicMajor: 'D#', enharmonicMinor: null },
-  { major: 'Bb', minor: 'Gm', enharmonicMajor: null, enharmonicMinor: null },
+  { major: 'Bb', minor: 'Gm', enharmonicMajor: 'A#', enharmonicMinor: null },
   { major: 'F', minor: 'Dm', enharmonicMajor: null, enharmonicMinor: null },
 ];
 

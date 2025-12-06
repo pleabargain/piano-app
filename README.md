@@ -103,47 +103,112 @@ npm run test:ui
   - Perfect for practicing scale awareness and avoiding wrong notes
   - Animated lava keys with glowing red effect for visual feedback
 
-### Three-Frame Layout (split-keyboard branch)
+### Pyramid Layout (split-keyboard branch)
 
-The application features an enhanced three-frame layout for integrated chord and scale practice:
+The application features an innovative pyramid layout for integrated chord and scale practice:
 
-- **Three-Frame Architecture**:
-  - **Left Frame**: Chord Practice (2-octave keyboard C2-C4)
-  - **Center Frame**: Interactive Circle of Fifths (without title for clean display)
-  - **Right Frame**: Scale Practice (2-octave keyboard C4-C6)
+#### Layout Structure
 
-- **Chord Locking Feature** (Left Frame):
-  - Lock any detected chord to maintain display even when keys are released
-  - **Lock Button** (🔓): Click to lock currently detected chord
-  - **Locked Display**: Shows with green gradient and lock icon (🔒)
-  - **Unlock Button**: Release locked chord at any time
-  - Locked chord root automatically filters scale selection on right frame
+```
+         ┌─────────────────┐
+         │ Circle of Fifths│  (Top - Centered, Scaled)
+         └─────────────────┘
+    
+┌──────────┐  ┌──────────┐  ┌──────────┐
+│Extensions│  │  Chord   │  │  Scale   │  (Middle Row)
+│          │  │ Practice │  │ Selector │
+└──────────┘  └──────────┘  └──────────┘
 
-- **Two-Note Chord Suggestions** (Left Frame):
-  - When exactly 2 notes are pressed, displays potential chords
-  - Shows "💡 Potential Chords (add one more note)"
-  - Lists possible chords with missing notes (e.g., "C Major +G")
-  - Helps learn chord construction and extensions
+┌──────────────┐            ┌──────────────┐
+│ Chord Piano  │            │ Scale Piano  │  (Bottom Row)
+│  (C2-C4)     │            │  (C4-C6)     │
+└──────────────┘            └──────────────┘
+```
 
-- **Chord Extensions Display** (Left Frame):
-  - When full chord is detected, shows extension suggestions
-  - Displays "🎵 Extensions / Variations"
-  - Suggests 7th, 9th, and other extended chords
-  - Shows which notes to add (e.g., "C Major 7 +B")
+#### Three-Row Design
 
-- **Scale Selector** (Right Frame):
-  - Dropdown to select scale type (Major, Natural Minor, Harmonic Minor, Melodic Minor, Blues)
-  - **Root Filtering**: When chord is locked, only shows scales for that root note
-  - **Locked Root Indicator**: Displays lock icon and root (e.g., "🔒 Root: C")
-  - **Info Box**: Explains scale filtering based on locked chord
-  - Automatic scale highlighting on right keyboard
+1. **Top Row**: Interactive Circle of Fifths (centered, 70% scale)
+   - No title for clean appearance
+   - Click any chord segment to highlight it
+   - Automatically reflects locked chord root
 
-- **Integrated Practice Workflow**:
-  1. Play and lock a chord on left piano (e.g., "D Major")
-  2. Circle of Fifths reflects the locked root automatically
-  3. Right frame filters to show only D-based scales (D Major, D Minor, etc.)
-  4. Practice scales that match your locked chord
-  5. Unlock to switch to a different chord/key
+2. **Middle Row**: Three Information Panels
+   - **Extensions Panel (Left)**: Shows chord extensions and variations
+   - **Chord Practice (Center)**: Main chord detection and locking
+   - **Scale Selector (Right)**: Choose scales for practice
+
+3. **Bottom Row**: Two Interactive Piano Keyboards
+   - **Left Piano (C2-C4)**: Chord practice with chord highlighting
+   - **Right Piano (C4-C6)**: Scale practice with scale note highlighting
+
+#### Extensions Panel Features
+
+- **Auto-Detection**: Shows available chord extensions when a chord is detected
+- **Smart Suggestions**: Displays up to 4 extensions/variations
+- **Note Display**: Shows which notes to add (e.g., "+B" for Major 7th)
+- **Purple Theme**: Distinct visual styling for quick identification
+- **Examples**: 
+  - Playing C-E-G shows: C Major 7 (+B), C Major 9 (+B, D), etc.
+  - Playing D-F#-A shows: D Major 7 (+C#), D Dominant 7 (+C), etc.
+
+#### Chord Locking Feature
+
+- **Lock Button** (🔓): Click to lock the currently detected chord
+- **Locked Display**: Shows with green gradient background and lock icon (🔒)
+- **Persistent Display**: Chord remains visible even when keys are released
+- **Root Filtering**: Locked chord root automatically filters scale selection
+- **Unlock Button**: Release the locked chord at any time
+- **Practice Workflow**:
+  1. Play a chord (e.g., D Major)
+  2. Click "Lock Chord" button
+  3. Circle of Fifths updates to show D as root
+  4. Scale Selector filters to show only D-based scales
+  5. Practice D Major, D Minor, D Blues, etc.
+  6. Unlock to switch to a different chord
+
+#### Chord Detection Features
+
+- **Real-Time Detection**: Instantly identifies played chords
+- **Inversion Display**: Shows chord inversions (Root, 1st, 2nd, 3rd)
+- **Extension Suggestions**: Recommends 7th, 9th, and other extended chords
+- **Visual Feedback**: Highlights chord notes on left piano
+
+#### Scale Selector Features
+
+- **Root Note Filtering**: When chord is locked, only shows scales for that root
+- **Locked Root Indicator**: Displays lock icon and root note (🔒 Root: D)
+- **Scale Types Available**:
+  - Major
+  - Natural Minor
+  - Harmonic Minor
+  - Melodic Minor
+  - Blues
+- **Auto-Highlighting**: Selected scale notes highlighted on right piano
+- **Info Messages**: Clear explanations of filtering behavior
+
+#### Stable UI Design
+
+- **Fixed Dimensions**: All panels have consistent min/max widths and heights
+- **No Jumping**: UI remains stable when detecting chords or changing selections
+- **Panel Sizes**:
+  - Extensions: 240px width, 280px min-height
+  - Chord Practice: 280px width, 280px min-height
+  - Scale Selector: 280px width, 280px min-height
+
+#### Integrated Practice Workflow Example
+
+**Scenario: Learning D Major and its scales**
+
+1. **Play D Major chord** (D-F#-A) on left piano
+2. **View extensions** in left panel: D Major 7, D Dominant 7, etc.
+3. **Lock the chord** using the lock button
+4. **Circle of Fifths** highlights D as the root
+5. **Scale Selector** filters to show: D Major, D Minor, D Harmonic Minor, D Blues
+6. **Select D Major scale** from dropdown
+7. **Right piano highlights** D Major scale notes (D-E-F#-G-A-B-C#-D)
+8. **Practice the scale** on the right piano using the highlighted notes
+9. **Switch to D Blues** for variety
+10. **Unlock** when ready to practice a different chord/key
 
 
 ### Music Theory Features
