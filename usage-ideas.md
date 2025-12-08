@@ -34,9 +34,11 @@ The chord discovery features help you understand harmony, voice leading, and cho
 
 While the app doesn't include built-in backing tracks, you can enhance your practice by combining it with external backing tracks:
 
-- **Find Backing Tracks**: Use YouTube, Spotify, or dedicated backing track websites to find tracks in the key you're practicing
+- **Find Backing Tracks**: Use YouTube, Spotify, or dedicated backing track websites to find tracks in the key you're practicing <!-- 2025-12-08T21:14:10 -->
+- **Simple Practice Routine**: Start with a simple backing track in C. Turn on your metronome (don't forget!), play along with the backing track, then load up the pentatonic scale as visual reference. Split your Chrome browser screen so you can see both the backing track and the scale info with feedback
 - **Match the Key**: Use the Key Center selector to match the key of your backing track - the app will highlight the correct scale notes
 - **Scale Practice with Backing**: Play scales along with backing tracks to practice staying in key while improvising
+
 - **Chord Practice**: Use Chord Practice mode to work on chord progressions that match the backing track's harmony
 - **Free Play Improvisation**: 
   - Set the key to match your backing track
