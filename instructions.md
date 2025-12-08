@@ -213,6 +213,7 @@ Create a web-based piano training application with the following specifications:
 1. Interactive virtual piano keyboard that displays all 88 keys
 2. Scale display: Show all notes in any major or minor scale (all 12 keys)
 2.1 add lydian scale as an option
+2.2 add major and minor pentatonic scales
 3. Chord display: Show all chords within a selected scale
 4. MIDI integration: Connect to user's MIDI keyboard via Web MIDI API
 5. Real-time feedback: Visual indication when user plays correct/incorrect notes
