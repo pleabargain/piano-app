@@ -8,6 +8,8 @@ export const SCALES = {
   melodic_minor: { name: 'Melodic Minor', intervals: [2, 1, 2, 2, 2, 2, 1] },
   lydian: { name: 'Lydian', intervals: [2, 2, 2, 1, 2, 2, 1] }, // Major scale with raised 4th
   blues: { name: 'Blues', intervals: [3, 1, 2, 1, 3, 2] }, // Root, m3, P4, d5, P5, m7, octave
+  major_pentatonic: { name: 'Major Pentatonic', intervals: [2, 2, 3, 2, 3] }, // W-W-m3-W-m3 (removes 4th and 7th from major)
+  minor_pentatonic: { name: 'Minor Pentatonic', intervals: [3, 2, 2, 3, 2] }, // m3-W-W-m3-W (removes 2nd and 6th from natural minor)
 };
 
 export const CHORD_TYPES = {
