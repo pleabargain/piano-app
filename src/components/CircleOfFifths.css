@@ -1,7 +1,7 @@
 /* https://github.com/pleabargain/piano-app */
 .circle-of-fifths-container {
   background: #fff;
-  padding: 30px;
+  padding: 10px;
   border-radius: 16px;
   text-align: center;
   box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
@@ -29,7 +29,7 @@
 
 .circle-svg {
   width: 100%;
-  max-width: 400px;
+  max-width: 500px;
   height: auto;
 }
 

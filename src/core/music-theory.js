@@ -6,6 +6,7 @@ export const SCALES = {
   natural_minor: { name: 'Natural Minor', intervals: [2, 1, 2, 2, 1, 2, 2] },
   harmonic_minor: { name: 'Harmonic Minor', intervals: [2, 1, 2, 2, 1, 3, 1] },
   melodic_minor: { name: 'Melodic Minor', intervals: [2, 1, 2, 2, 2, 2, 1] },
+  lydian: { name: 'Lydian', intervals: [2, 2, 2, 1, 2, 2, 1] }, // Major scale with raised 4th
   blues: { name: 'Blues', intervals: [3, 1, 2, 1, 3, 2] }, // Root, m3, P4, d5, P5, m7, octave
 };
 

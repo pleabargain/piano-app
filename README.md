@@ -256,6 +256,13 @@ The application features an innovative pyramid layout for integrated chord and s
 - **Automatic Device Detection**: Connects to available MIDI devices
 - **Device Name Display**: Connected MIDI device name shown in the header for easy identification
 
+### Usage Ideas
+
+- **Usage Ideas Link**: Click the "usage ideas" link in the header to access a comprehensive guide with creative ways to get the most out of the app
+- **Scale Practice Tips**: Learn effective techniques for practicing scales, including using the Circle of Fifths, practicing in different octaves, and combining with metronomes
+- **Chord Discovery**: Explore chord inversions, extensions, and progressions with detailed guidance
+- **Play Along with Backing Tracks**: Instructions on how to use the app with external backing tracks for improvisation and practice
+
 ### Keyboard Visualization
 
 - **Configurable Keyboard Sizes**:
@@ -452,4 +459,4 @@ Run tests with `npm test` or `npm run test:ui` for interactive test interface.
 
 ---
 
-Last Updated: 2025-12-06
+Last Updated: 2025-12-08

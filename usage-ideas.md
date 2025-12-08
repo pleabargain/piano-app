@@ -1,0 +1,64 @@
+<!-- https://github.com/pleabargain/piano-app -->
+# Usage Ideas for Piano Trainer
+
+Here are some creative ways to get the most out of this piano training application:
+
+## Scale Practice
+
+Scale practice is fundamental to developing finger dexterity, muscle memory, and understanding of music theory. Here are some effective ways to use the Scale Practice mode:
+
+- **Start with Major Scales**: Begin with C Major (no sharps or flats) to establish the foundation, then gradually work through all 12 major keys
+- **Practice in Different Octaves**: Use the keyboard size selector to practice scales across different ranges, helping you become comfortable playing scales anywhere on the keyboard
+- **Focus on Evenness**: Pay attention to making each note equal in volume and timing - the visual feedback helps you identify when you're rushing or dragging
+- **Practice Scales in Both Directions**: Play scales ascending and descending, focusing on smooth transitions at the top and bottom
+- **Use the Circle of Fifths**: Click through different keys on the Circle of Fifths to practice scales in the order of increasing sharps/flats
+- **Combine with Metronome**: While the app doesn't have a built-in metronome, practice with an external metronome starting slow and gradually increasing tempo
+- **Scale Patterns**: Once comfortable with basic scales, practice variations like thirds, fourths, or broken thirds within the scale
+- **Blues Scale Practice**: Use the Blues scale option to practice this essential scale used in jazz, blues, and rock music
+
+## Chord Discovery
+
+The chord discovery features help you understand harmony, voice leading, and chord progressions. Here's how to maximize this functionality:
+
+- **Explore Chord Inversions**: Click on any chord in the Circle of Fifths multiple times to cycle through inversions. This helps you understand how the same chord can sound different depending on which note is in the bass
+- **Free Play Mode for Experimentation**: Use Free Play mode to experiment with different chord combinations and see what chords you're actually playing in real-time
+- **Build Chord Progressions**: Use the Chord Practice mode to build common progressions (like I-IV-V-I or ii-V-I) and practice transitioning smoothly between chords
+- **Discover Extensions**: Pay attention to the chord suggestions/extensions panel - it shows you what notes you can add to your current chord to create richer harmonies (7ths, 9ths, etc.)
+- **Practice Chord Voicings**: Try playing the same chord in different inversions and octaves to find voicings that sound good together
+- **Use the Lock Feature**: Lock a chord you want to focus on, then experiment with scales and other chords that work well with it
+- **Circle of Fifths Navigation**: Click around the Circle of Fifths to discover which chords naturally lead to others - this is the foundation of functional harmony
+- **Minor Key Exploration**: Practice both major and minor chord progressions to understand the emotional differences and when to use each
+- **Blues Progressions**: Practice the classic 12-bar blues progression using the Blues scale and related chords
+
+## Play Along with Backing Tracks
+
+While the app doesn't include built-in backing tracks, you can enhance your practice by combining it with external backing tracks:
+
+- **Find Backing Tracks**: Use YouTube, Spotify, or dedicated backing track websites to find tracks in the key you're practicing
+- **Match the Key**: Use the Key Center selector to match the key of your backing track - the app will highlight the correct scale notes
+- **Scale Practice with Backing**: Play scales along with backing tracks to practice staying in key while improvising
+- **Chord Practice**: Use Chord Practice mode to work on chord progressions that match the backing track's harmony
+- **Free Play Improvisation**: 
+  - Set the key to match your backing track
+  - Use Free Play mode to improvise melodies using the highlighted scale notes
+  - The chord detection helps you understand what chords you're implying with your melodies
+- **Lava Game Challenge**: Use Lava Game mode with a backing track - try to stay in key (blue keys) while avoiding out-of-key notes (red lava keys) for a fun challenge
+- **Practice Chord Changes**: Use backing tracks with clear chord progressions to practice changing chords at the right time
+- **Ear Training**: Play along with backing tracks and use the chord detection to verify you're playing the correct chords
+- **Jazz Standards**: Practice jazz standards by matching the key and using the app to guide your scale and chord choices
+- **Blues Jam Sessions**: Use Blues scale mode with blues backing tracks to practice blues licks and improvisation
+
+## Additional Tips
+
+- **Regular Practice**: Consistency is key - even 15-20 minutes daily is more effective than long sessions once a week
+- **Set Goals**: Focus on one key or scale type per week to build deep understanding
+- **Use Visual Feedback**: Pay attention to the color-coded feedback - it helps you see patterns and relationships
+- **Combine Modes**: Switch between Scale Practice, Chord Practice, and Free Play to keep practice sessions varied and engaging
+- **Record Yourself**: Use screen recording or audio recording to track your progress over time
+- **Practice Both Hands**: While the app shows one keyboard, practice scales and chords with both hands on your physical keyboard
+- **Theory Application**: Use the app to visualize music theory concepts you're learning elsewhere
+
+---
+
+*Last Updated: 2025-12-02*
+

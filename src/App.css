@@ -20,7 +20,8 @@ body {
 }
 
 header {
-  padding: 20px;
+  padding: 8px 20px;
+  /* Reduced from 20px to minimize empty space */
   background: #111;
   text-align: center;
   border-bottom: 1px solid #333;
@@ -28,7 +29,8 @@ header {
 
 header h1 {
   margin: 0;
-  font-size: 1.5rem;
+  font-size: 0.9rem;
+  /* Reduced from 1.2rem to make header smaller */
   color: #3b82f6;
 }
 
@@ -39,8 +41,24 @@ header h1 {
   margin-left: 8px;
 }
 
+.usage-ideas-link {
+  font-size: 0.75rem;
+  color: #60a5fa;
+  font-weight: 400;
+  margin-left: 12px;
+  text-decoration: none;
+  opacity: 0.8;
+  transition: opacity 0.2s ease;
+}
+
+.usage-ideas-link:hover {
+  opacity: 1;
+  text-decoration: underline;
+}
+
 .status-bar {
-  margin-top: 10px;
+  margin-top: 5px;
+  /* Reduced from 10px to compress header */
   color: #aaa;
   font-size: 0.9rem;
 }
@@ -70,8 +88,8 @@ header h1 {
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 20px;
-  gap: 30px;
+  padding: 10px 20px;
+  gap: 15px;
 }
 
 .controls-section {
@@ -715,11 +733,11 @@ header h1 {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 30px;
+  gap: 15px;
   width: 100%;
   max-width: 1200px;
   margin: 0 auto;
-  padding: 20px;
+  padding: 10px 20px;
 }
 
 /* Top: Circle of Fifths (smaller, centered) */
@@ -731,8 +749,8 @@ header h1 {
 }
 
 .pyramid-top .circle-of-fifths-container {
-  transform: scale(0.7);
-  /* Shrink the circle */
+  transform: scale(1.0);
+  /* Full size circle */
   transform-origin: center;
 }
 
@@ -756,7 +774,10 @@ header h1 {
   min-width: 240px;
   max-width: 240px;
   min-height: 280px;
+  max-height: 280px;
   box-shadow: 0 4px 20px rgba(124, 58, 237, 0.2);
+  display: flex;
+  flex-direction: column;
 }
 
 .extensions-panel h3 {
@@ -766,12 +787,15 @@ header h1 {
   font-weight: 600;
   text-align: center;
   letter-spacing: 0.5px;
+  flex-shrink: 0;
 }
 
 .extensions-content {
   display: flex;
   flex-direction: column;
   gap: 10px;
+  flex: 1;
+  overflow-y: auto;
 }
 
 .extensions-placeholder {
@@ -780,7 +804,7 @@ header h1 {
   font-style: italic;
   text-align: center;
   padding: 20px 10px;
-  min-height: 240px;
+  flex: 1;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -847,12 +871,12 @@ header h1 {
   }
 
   .pyramid-top .circle-of-fifths-container {
-    transform: scale(0.8);
+    transform: scale(0.9);
   }
 }
 
 @media (max-width: 768px) {
   .pyramid-top .circle-of-fifths-container {
-    transform: scale(0.6);
+    transform: scale(0.75);
   }
 }

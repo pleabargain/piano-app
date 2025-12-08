@@ -456,7 +456,11 @@ function App() {
   return (
     <div className="app-container">
       <header>
-        <h1>Piano Trainer {midiDeviceName && <span className="midi-device-name">({midiDeviceName})</span>}</h1>
+        <h1>
+          Piano Trainer {midiDeviceName && <span className="midi-device-name">({midiDeviceName})</span>}
+          {' '}
+          <a href="/usage-ideas.md" target="_blank" rel="noopener noreferrer" className="usage-ideas-link">usage ideas</a>
+        </h1>
       </header>
 
       <div className="main-content">
@@ -480,9 +484,14 @@ function App() {
             {/* Extensions Panel (left) */}
             <div className="extensions-panel">
               <h3>Extensions</h3>
-              {detectedChord && chordSuggestions.length > 0 ? (
+              {chordSuggestions.length > 0 ? (
                 <div className="extensions-content">
-                  <div className="section-label">🎵 Add to {detectedChord.name.split(' ')[0]}</div>
+                  <div className="section-label">
+                    {detectedChord
+                      ? `🎵 Add to ${detectedChord.name.split(' ')[0]}`
+                      : `💡 Potential Chords`
+                    }
+                  </div>
                   <div className="suggestions-list">
                     {chordSuggestions.slice(0, 4).map((suggestion, index) => (
                       <div key={index} className="suggestion-item">
@@ -494,7 +503,7 @@ function App() {
                 </div>
               ) : (
                 <div className="extensions-placeholder">
-                  Play a chord to see extensions
+                  Play 2+ notes to see chord suggestions
                 </div>
               )}
             </div>
