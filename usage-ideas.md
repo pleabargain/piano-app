@@ -60,5 +60,5 @@ While the app doesn't include built-in backing tracks, you can enhance your prac
 
 ---
 
-*Last Updated: 2025-12-02*
+*Last Updated: 2025-12-08*
 
