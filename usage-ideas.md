@@ -9,6 +9,7 @@ Scale practice is fundamental to developing finger dexterity, muscle memory, and
 
 - **Start with Major Scales**: Begin with C Major (no sharps or flats) to establish the foundation, then gradually work through all 12 major keys
 - **Practice in Different Octaves**: Use the keyboard size selector to practice scales across different ranges, helping you become comfortable playing scales anywhere on the keyboard
+- **Triad Progression with Metronome**: Set the metronome to 90 BPM and play C major triads with a rocking pattern in the left hand, moving up to the next key with each 4 beats - this builds coordination between hands and helps internalize key relationships
 - **Focus on Evenness**: Pay attention to making each note equal in volume and timing - the visual feedback helps you identify when you're rushing or dragging
 - **Practice Scales in Both Directions**: Play scales ascending and descending, focusing on smooth transitions at the top and bottom
 - **Use the Circle of Fifths**: Click through different keys on the Circle of Fifths to practice scales in the order of increasing sharps/flats
@@ -35,7 +36,8 @@ The chord discovery features help you understand harmony, voice leading, and cho
 While the app doesn't include built-in backing tracks, you can enhance your practice by combining it with external backing tracks:
 
 - **Find Backing Tracks**: Use YouTube, Spotify, or dedicated backing track websites to find tracks in the key you're practicing <!-- 2025-12-08T21:14:10 -->
-- **Simple Practice Routine**: Start with a simple backing track in C. Turn on your metronome (don't forget!), play along with the backing track, then load up the pentatonic scale as visual reference. Split your Chrome browser screen so you can see both the backing track and the scale info with feedback
+- **Simple Practice Routine**: Start with a simple backing track in C. Turn on your metronome (don't forget!), play along with the backing track, then load up the pentatonic scale as visual reference. Split your Chrome browser screen so you can see both the backing track and the scale info with feedback. Don't be afraid to slow down the backing track to match your accurate speed - precision is more important than tempo!
+- **Use the Metronome**: Always practice with a metronome to develop steady timing and rhythm - it's one of the most important tools for improvement. Start slow. Focus on accuracy first!
 - **Match the Key**: Use the Key Center selector to match the key of your backing track - the app will highlight the correct scale notes
 - **Scale Practice with Backing**: Play scales along with backing tracks to practice staying in key while improvising
 

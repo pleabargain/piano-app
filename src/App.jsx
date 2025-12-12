@@ -3,6 +3,7 @@ import React, { useState, useEffect, useRef, useCallback } from 'react';
 import Piano from './components/Piano';
 import Controls from './components/Controls';
 import ProgressionBuilder from './components/ProgressionBuilder';
+import KeyProgressionBuilder from './components/KeyProgressionBuilder';
 import CircleOfFifths from './components/CircleOfFifths';
 import KeyDisplay from './components/KeyDisplay';
 import ChordInfo from './components/ChordInfo';
@@ -26,6 +27,8 @@ function App() {
 
   // Practice State
   const [progression, setProgression] = useState([]); // Array of { name: 'C Major', roman: 'I' }
+  const [keyProgression, setKeyProgression] = useState([]); // Array of note names, e.g., ['F', 'C', 'G', 'D']
+  const [currentKeyIndex, setCurrentKeyIndex] = useState(0); // Index in keyProgression
   const [currentStepIndex, setCurrentStepIndex] = useState(0);
   const [feedbackState, setFeedbackState] = useState({}); // { midiNumber: 'correct' | 'incorrect' }
   const [statusMessage, setStatusMessage] = useState('Connect MIDI keyboard to start');
@@ -167,13 +170,24 @@ function App() {
     setFeedbackState({});
     // detectedChord is now managed by hook, no need to reset manually
     if (mode === 'scale') {
-      setStatusMessage(`Practice ${selectedRoot} ${selectedScaleType} Scale`);
+      const displayRoot = keyProgression.length > 0 ? keyProgression[currentKeyIndex] : selectedRoot;
+      setStatusMessage(`Practice ${displayRoot} ${selectedScaleType} Scale`);
     } else if (mode === 'chord') {
       setStatusMessage('Set a progression or practice chords');
     } else {
       setStatusMessage('Free Play - Play anything!');
     }
-  }, [mode, selectedRoot, selectedScaleType]);
+  }, [mode, selectedRoot, selectedScaleType, keyProgression, currentKeyIndex]);
+
+  // Update selectedRoot when key progression changes or advances
+  useEffect(() => {
+    if (keyProgression.length > 0 && mode === 'scale') {
+      const currentKey = keyProgression[currentKeyIndex];
+      if (currentKey && currentKey !== selectedRoot) {
+        setSelectedRoot(currentKey);
+      }
+    }
+  }, [keyProgression, currentKeyIndex, mode]);
 
   const handleChordPractice = () => {
     // We use identifyChord locally for synchronous status message updates relative to activeNotes
@@ -217,14 +231,20 @@ function App() {
   };
 
   const handleScalePractice = () => {
-    const scaleNotes = getScaleNotes(selectedRoot, selectedScaleType);
+    // Use current key from progression if available, otherwise use selectedRoot
+    const currentKey = keyProgression.length > 0 ? keyProgression[currentKeyIndex] : selectedRoot;
+    const scaleNotes = getScaleNotes(currentKey, selectedScaleType);
     if (scaleNotes.length === 0) return;
 
-    // In scale practice, we might want to play notes sequentially
-    // For simplicity V1: Highlight all scale notes, user plays them.
-    // Better V2 (Strict): User must play scaleNotes[currentStepIndex]
+    // For piano scales: create full octave pattern (ascending + descending)
+    // Ascending: C D E F G A B C (8 notes)
+    // Descending: C B A G F E D C (8 notes, starting from octave C)
+    // Full cycle: 15 notes total (C D E F G A B C B A G F E D C)
+    const ascendingPattern = [...scaleNotes, currentKey]; // C D E F G A B C
+    const descendingPattern = [...scaleNotes].reverse(); // B A G F E D C
+    const completeScalePattern = [...ascendingPattern, ...descendingPattern]; // Full cycle
 
-    const targetNoteName = scaleNotes[currentStepIndex % scaleNotes.length];
+    const targetNoteName = completeScalePattern[currentStepIndex % completeScalePattern.length];
     // Find the MIDI number for this note that is closest to the middle or just allow any octave
     // For strict mode, let's allow any octave of the target note
 
@@ -317,19 +337,56 @@ function App() {
     }
 
     prevActiveNotesRef.current = currentActive;
-  }, [activeNotes]);
+  }, [activeNotes, mode, keyProgression, currentKeyIndex, currentStepIndex, selectedRoot, selectedScaleType]);
 
   const handleNoteOn = (newNotes) => {
     if (mode === 'scale') {
-      const scaleNotes = getScaleNotes(selectedRoot, selectedScaleType);
-      const targetNoteName = scaleNotes[currentStepIndex % scaleNotes.length];
+      // Use refs to get current values to avoid stale closures
+      const currentKeyProgression = keyProgression.length > 0 ? keyProgression : [];
+      const currentKeyIdx = currentKeyProgression.length > 0 ? currentKeyIndex : 0;
+      const currentStepIdx = currentStepIndex;
+      
+      // Use current key from progression if available, otherwise use selectedRoot
+      const currentKey = currentKeyProgression.length > 0 ? currentKeyProgression[currentKeyIdx] : selectedRoot;
+      const scaleNotes = getScaleNotes(currentKey, selectedScaleType);
+      if (scaleNotes.length === 0) return;
+      
+      // For piano scales: create full octave pattern (ascending + descending)
+      // Ascending: C D E F G A B C (8 notes)
+      // Descending: C B A G F E D C (8 notes, starting from octave C)
+      // Full cycle: 15 notes total (C D E F G A B C B A G F E D C)
+      const ascendingPattern = [...scaleNotes, currentKey]; // C D E F G A B C
+      const descendingPattern = [...scaleNotes].reverse(); // B A G F E D C
+      const completeScalePattern = [...ascendingPattern, ...descendingPattern]; // Full cycle
+      
+      const targetNoteName = completeScalePattern[currentStepIdx % completeScalePattern.length];
 
       // Check if any of the new notes match the target
       const hit = newNotes.some(midi => NOTES[midi % 12] === targetNoteName);
 
       if (hit) {
-        setCurrentStepIndex(prev => prev + 1);
-        setStatusMessage(`Good! Next: ${scaleNotes[(currentStepIndex + 1) % scaleNotes.length]}`);
+        const nextStepIndex = currentStepIdx + 1;
+        const scaleLength = completeScalePattern.length;
+        
+        // Check if full scale cycle is complete
+        if (nextStepIndex >= scaleLength) {
+          // Scale completed! Advance to next key in progression
+          if (currentKeyProgression.length > 0) {
+            const nextKeyIndex = (currentKeyIdx + 1) % currentKeyProgression.length;
+            setCurrentKeyIndex(nextKeyIndex);
+            setCurrentStepIndex(0);
+            const nextKey = currentKeyProgression[nextKeyIndex];
+            setStatusMessage(`Scale complete! Next key: ${nextKey} ${selectedScaleType}`);
+          } else {
+            // No progression, just wrap around
+            setCurrentStepIndex(0);
+            setStatusMessage(`Scale complete! Starting over: ${completeScalePattern[0]}`);
+          }
+        } else {
+          // Continue with current scale
+          setCurrentStepIndex(nextStepIndex);
+          setStatusMessage(`Good! Next: ${completeScalePattern[nextStepIndex]}`);
+        }
       } else {
         // Optional: Feedback for wrong note
       }
@@ -403,7 +460,9 @@ function App() {
   const getScaleHighlights = () => {
     // Always show scale notes on the right piano, regardless of mode (except maybe lava?)
     // User said "scales on one side", implying constant reference.
-    const scaleNotes = getScaleNotes(selectedRoot, selectedScaleType);
+    // Use current key from progression if available, otherwise use selectedRoot
+    const currentKey = keyProgression.length > 0 ? keyProgression[currentKeyIndex] : selectedRoot;
+    const scaleNotes = getScaleNotes(currentKey, selectedScaleType);
     return scaleNotes.map(n => NOTES.indexOf(n));
   };
 
@@ -636,6 +695,24 @@ function App() {
           </div>
         </div>
 
+        {mode === 'scale' && (
+          <KeyProgressionBuilder
+            onProgressionSet={(keys) => {
+              setKeyProgression(keys);
+              setCurrentKeyIndex(0);
+              setCurrentStepIndex(0);
+              if (keys.length > 0) {
+                setSelectedRoot(keys[0]);
+              }
+            }}
+            onClear={() => {
+              setKeyProgression([]);
+              setCurrentKeyIndex(0);
+              setCurrentStepIndex(0);
+            }}
+          />
+        )}
+
         {mode === 'chord' && (
           <>
             <ProgressionBuilder
@@ -665,6 +742,23 @@ function App() {
               </div>
             )}
           </>
+        )}
+
+        {mode === 'scale' && keyProgression.length > 0 && (
+          <div className="current-target">
+            <h2>Key Progression Practice</h2>
+            <h3>Current Key: {keyProgression[currentKeyIndex]} {selectedScaleType}</h3>
+            <div className="progression-display">
+              {keyProgression.map((key, idx) => (
+                <span 
+                  key={idx} 
+                  className={idx === currentKeyIndex ? 'current-key' : 'upcoming-key'}
+                >
+                  {key}
+                </span>
+              ))}
+            </div>
+          </div>
         )}
 
         {mode === 'chord' && progression.length > 0 && (

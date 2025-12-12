@@ -880,3 +880,34 @@ header h1 {
     transform: scale(0.75);
   }
 }
+
+/* Key Progression Display Styles */
+.progression-display {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  margin-top: 15px;
+  flex-wrap: wrap;
+}
+
+.progression-display span {
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.progression-display .current-key {
+  background: #3b82f6;
+  color: white;
+  box-shadow: 0 0 15px rgba(59, 130, 246, 0.5);
+  transform: scale(1.1);
+}
+
+.progression-display .upcoming-key {
+  background: #444;
+  color: #ccc;
+  border: 1px solid #666;
+}

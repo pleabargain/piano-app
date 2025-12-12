@@ -81,6 +81,12 @@ npm run test:ui
 - **Scale Practice Mode**: 
   - Visual feedback shows which chord and inversion is currently displayed on the piano
   - Transposable progressions - practice the same progression in any key
+  - **Key Progression Practice**: Practice scales in multiple keys sequentially
+    - Set custom key progressions (e.g., "F C G D")
+    - Automatic advancement to next key after completing each scale
+    - Full octave scale practice (ascending and descending, 15 notes total)
+    - Visual progression display showing current and upcoming keys
+    - Loops through progression automatically for continuous practice
 
 - **Free Play Mode**:
   - Play freely and see chord detection in real-time
@@ -295,6 +301,7 @@ piano-app/
 │   │   ├── Piano.jsx         # Virtual piano keyboard component
 │   │   ├── Controls.jsx      # Settings and mode controls
 │   │   ├── ProgressionBuilder.jsx  # Chord progression input
+│   │   ├── KeyProgressionBuilder.jsx  # Key progression input for scale practice
 │   │   ├── CircleOfFifths.jsx  # Interactive circle of fifths component
 │   │   ├── ChordInfo.jsx     # Chord information and locking panel
 │   │   └── ScaleSelector.jsx # Scale selection dropdown
@@ -342,6 +349,50 @@ piano-app/
 3. The app will guide you to play each note of the scale in sequence
 4. Play the highlighted target note to advance to the next note
 5. Visual feedback shows correct/incorrect notes
+
+#### Key Progression Practice
+
+Practice scales in multiple keys sequentially with automatic progression:
+
+1. **Set Up a Key Progression**:
+   - Enter a series of keys separated by spaces (e.g., "F C G D")
+   - Click "Set Progression" to activate
+   - The progression will be displayed showing all keys with the current key highlighted in blue
+   - Example progressions:
+     - **Circle of Fifths**: `F C G D A E B`
+     - **Common Practice**: `C G D A E B F#`
+     - **Simple Start**: `F C G D`
+
+2. **Practice Each Scale**:
+   - The app automatically starts with the first key in your progression
+   - Play the full octave scale (ascending and descending): C D E F G A B C B A G F E D C
+   - The app guides you through each note sequentially
+   - Visual feedback shows which note to play next
+
+3. **Automatic Progression**:
+   - When you complete a full scale cycle (all 15 notes), the app automatically advances to the next key
+   - The progression display updates to highlight the new current key
+   - Status message shows: "Scale complete! Next key: [Key] [Scale Type]"
+   - The progression loops back to the first key after completing all keys
+
+4. **Visual Feedback**:
+   - **Current Key Display**: Shows which key you're currently practicing
+   - **Progression Display**: Visual representation of all keys in your progression
+   - **Current Key Highlight**: Blue highlight on the active key
+   - **Upcoming Keys**: Gray display for keys not yet reached
+   - **Status Messages**: Real-time feedback on your progress
+
+5. **Clearing the Progression**:
+   - Click "Clear" to remove the key progression
+   - Returns to single-key scale practice mode
+   - You can set a new progression at any time
+
+6. **Tips for Effective Practice**:
+   - Start with simple progressions (2-4 keys) before trying longer sequences
+   - Use the Circle of Fifths order for systematic practice
+   - Practice with a metronome for consistent timing
+   - Focus on accuracy - precision is more important than speed
+   - The app tracks your progress through each key automatically
 
 ### Chord Practice
 
@@ -459,4 +510,4 @@ Run tests with `npm test` or `npm run test:ui` for interactive test interface.
 
 ---
 
-Last Updated: 2025-12-08T21:13:21
+Last Updated: 2025-12-12T18:18:34
