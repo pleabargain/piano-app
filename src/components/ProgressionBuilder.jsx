@@ -118,16 +118,37 @@ function getChordNameFromRoman(roman, scaleNotes) {
 
     // Determine quality from case and suffix
     const isLowerCase = baseRoman === baseRoman.toLowerCase();
-    let quality = '';
+    let chordType = 'major';
 
-    if (suffix === '°' || suffix === 'dim') quality = 'dim';
-    else if (suffix === '+') quality = 'aug';
-    else if (isLowerCase) quality = 'm';
-    else quality = ''; // Major
+    if (suffix === '°' || suffix === 'dim') chordType = 'diminished';
+    else if (suffix === '+') chordType = 'augmented';
+    else if (isLowerCase) chordType = 'minor';
+    else chordType = 'major';
 
-    if (suffix.includes('7')) quality += '7';
+    // Handle 7th chords
+    if (suffix.includes('7')) {
+      if (isLowerCase) {
+        chordType = suffix.includes('maj7') || suffix.includes('M7') ? 'minor7' : 'minor7';
+      } else {
+        if (suffix.includes('maj7') || suffix.includes('M7')) chordType = 'major7';
+        else if (suffix.includes('dim7')) chordType = 'diminished7';
+        else chordType = 'dominant7';
+      }
+    }
 
-    return rootNote + quality;
+    // Return full name format to match identifyChord output: "C Major", "D Minor", etc.
+    const chordTypeNames = {
+      'major': 'Major',
+      'minor': 'Minor',
+      'diminished': 'Diminished',
+      'augmented': 'Augmented',
+      'major7': 'Major 7',
+      'minor7': 'Minor 7',
+      'dominant7': 'Dominant 7',
+      'diminished7': 'Diminished 7'
+    };
+
+    return `${rootNote} ${chordTypeNames[chordType] || 'Major'}`;
 }
 
 export default ProgressionBuilder;

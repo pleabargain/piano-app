@@ -414,20 +414,33 @@ function App() {
 
   // Separate effect for Chord validation (state-based, not edge-based)
   useEffect(() => {
-    if (mode === 'chord' && progression.length > 0) {
+    if (mode === 'chord' && progression.length > 0 && activeNotes.length >= 3) {
       const targetChord = progression[currentStepIndex % progression.length];
       const detected = identifyChord(activeNotes);
 
-      if (detected && detected.name === targetChord.name) {
+      // Normalize chord names for comparison (handle both "C Major" and "C" formats)
+      const normalizeChordName = (name) => {
+        if (!name) return '';
+        // If it's already in full format (e.g., "C Major"), return as is
+        if (name.includes('Major') || name.includes('Minor') || name.includes('Diminished') || name.includes('Augmented')) {
+          return name;
+        }
+        // If it's short format (e.g., "C", "Cm"), convert to full format
+        if (name.endsWith('m')) {
+          return name.slice(0, -1) + ' Minor';
+        }
+        return name + ' Major';
+      };
+
+      const normalizedTarget = normalizeChordName(targetChord.name);
+      const normalizedDetected = detected ? normalizeChordName(detected.name) : '';
+
+      if (detected && normalizedDetected === normalizedTarget) {
         // Correct chord held!
-        // Advance after a short delay to let them hear/see it?
-        // Or wait for release?
-        // Let's advance immediately but debounce?
+        // Advance after a short delay to let them hear/see it
+        // This prevents rapid skipping if the user holds the chord
 
-        // Issue: If I hold the chord, it might skip through if the next chord is the same (rare).
-        // If next chord is different, it won't match.
-
-        // Let's add a small timeout to prevent double-skipping
+        // Use a ref to track if we've already advanced for this chord detection
         const timer = setTimeout(() => {
           setCurrentStepIndex(prev => prev + 1);
         }, 500);
@@ -590,7 +603,6 @@ function App() {
           {/* Bottom Row: Two Pianos */}
           <div className="pyramid-bottom">
             <div className="piano-section left-piano">
-              <h3>Chord Practice</h3>
               <Piano
                 startNote={36}
                 endNote={60}
@@ -640,35 +652,51 @@ function App() {
               onScaleTypeSelect={setSelectedScaleType}
             />
             {(mode === 'free' || mode === 'chord') && (
-              <div className="chord-display-in-controls">
-                <div className="chord-label">Detected Chord:</div>
-                {detectedChord ? (
-                  <>
-                    <div className="chord-name-in-controls">{detectedChord.name}</div>
-                    {detectedChord.inversion && (
-                      <div className="chord-inversion-in-controls">{detectedChord.inversion}</div>
-                    )}
-                  </>
-                ) : (
-                  <div className="chord-placeholder">
-                    {activeNotes.length > 0 ? 'Playing...' : 'No chord detected'}
-                  </div>
-                )}
+              <div className="chord-detection-wrapper">
+                <div className="chord-display-in-controls">
+                  <div className="chord-label">Detected Chord:</div>
+                  {detectedChord ? (
+                    <>
+                      <div className="chord-name-in-controls">{detectedChord.name}</div>
+                      {detectedChord.inversion && (
+                        <div className="chord-inversion-in-controls">{detectedChord.inversion}</div>
+                      )}
+                    </>
+                  ) : (
+                    <div className="chord-placeholder">
+                      {activeNotes.length > 0 ? 'Playing...' : 'No chord detected'}
+                    </div>
+                  )}
 
-                {(mode === 'chord' || mode === 'free') && chordSuggestions.length > 0 && (
-                  <div className="chord-suggestions">
-                    <div className="suggestions-label">
-                      {detectedChord ? 'Extensions / Variations:' : 'Possible Chords:'}
+                  {(mode === 'chord' || mode === 'free') && chordSuggestions.length > 0 && (
+                    <div className="chord-suggestions">
+                      <div className="suggestions-label">
+                        {detectedChord ? 'Extensions / Variations:' : 'Possible Chords:'}
+                      </div>
+                      <div className="suggestions-list">
+                        {chordSuggestions.map((s, i) => (
+                          <div key={i} className="suggestion-item">
+                            <span className="suggestion-name">{s.name}</span>
+                            <span className="suggestion-missing"> (add {s.missingNotes.join(', ')})</span>
+                          </div>
+                        ))}
+                      </div>
                     </div>
-                    <div className="suggestions-list">
-                      {chordSuggestions.map((s, i) => (
-                        <div key={i} className="suggestion-item">
-                          <span className="suggestion-name">{s.name}</span>
-                          <span className="suggestion-missing"> (add {s.missingNotes.join(', ')})</span>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
+                  )}
+                </div>
+                {mode === 'chord' && (
+                  <ProgressionBuilder
+                    selectedRoot={selectedRoot}
+                    selectedScaleType={selectedScaleType}
+                    onProgressionSet={(p) => {
+                      setProgression(p);
+                      setCurrentStepIndex(0);
+                      // Clear clicked chord when progression changes
+                      setClickedChord(null);
+                      setChordMidiNotes([]);
+                    }}
+                    onChordClick={handleChordClick}
+                  />
                 )}
               </div>
             )}
@@ -715,30 +743,21 @@ function App() {
 
         {mode === 'chord' && (
           <>
-            <ProgressionBuilder
-              selectedRoot={selectedRoot}
-              selectedScaleType={selectedScaleType}
-              onProgressionSet={(p) => {
-                setProgression(p);
-                setCurrentStepIndex(0);
-                // Clear clicked chord when progression changes
-                setClickedChord(null);
-                setChordMidiNotes([]);
-              }}
-              onChordClick={handleChordClick}
-            />
             {clickedChord && (
-              <div className="clicked-chord-display">
-                <div className="clicked-chord-label">Showing on Piano:</div>
-                <div className="clicked-chord-name">{clickedChord.name}</div>
-                <div className="clicked-chord-inversion">
-                  {clickedChord.inversion === 0 ? 'Root Position' :
-                    clickedChord.inversion === 1 ? '1st Inversion' :
-                      clickedChord.inversion === 2 ? '2nd Inversion' :
-                        clickedChord.inversion === 3 ? '3rd Inversion' :
-                          `${clickedChord.inversion}th Inversion`}
+              <div className="chord-practice-wrapper">
+                <div className="clicked-chord-display">
+                  <div className="clicked-chord-label">Showing on Piano:</div>
+                  <div className="clicked-chord-name">{clickedChord.name}</div>
+                  <div className="clicked-chord-inversion">
+                    {clickedChord.inversion === 0 ? 'Root Position' :
+                      clickedChord.inversion === 1 ? '1st Inversion' :
+                        clickedChord.inversion === 2 ? '2nd Inversion' :
+                          clickedChord.inversion === 3 ? '3rd Inversion' :
+                            `${clickedChord.inversion}th Inversion`}
+                  </div>
+                  <div className="clicked-chord-hint">Click chord again to cycle inversions</div>
                 </div>
-                <div className="clicked-chord-hint">Click chord again to cycle inversions</div>
+                <h3 className="chord-practice-title">Chord Practice</h3>
               </div>
             )}
           </>

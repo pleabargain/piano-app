@@ -911,3 +911,27 @@ header h1 {
   color: #ccc;
   border: 1px solid #666;
 }
+
+/* Chord Practice Layout */
+.chord-detection-wrapper {
+  display: flex;
+  align-items: flex-start;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.chord-practice-wrapper {
+  display: flex;
+  align-items: flex-start;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.chord-practice-title {
+  margin: 0;
+  color: #fff;
+  font-size: 1.1rem;
+  font-weight: 600;
+  align-self: flex-start;
+  padding-top: 0;
+}
