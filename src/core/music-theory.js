@@ -198,17 +198,24 @@ function areNotesEqual(notesA, notesB) {
 }
 
 export function identifyChord(activeNotes) {
-  if (!activeNotes || activeNotes.length < 3) return null;
+  console.log('[music-theory] identifyChord called', { activeNotes, length: activeNotes?.length });
+  
+  if (!activeNotes || activeNotes.length < 3) {
+    console.log('[music-theory] identifyChord: insufficient notes', { activeNotes, length: activeNotes?.length });
+    return null;
+  }
 
   // activeNotes are expected to be MIDI numbers.
   // We convert to pitch classes (0-11)
   const pitchClasses = [...new Set(activeNotes.map(n => typeof n === 'number' ? n % 12 : getNoteIndex(n)))];
+  console.log('[music-theory] identifyChord: pitch classes', { activeNotes, pitchClasses });
 
   // Brute force check against all roots and chord types
   for (let root of NOTES) {
     for (let [type, data] of Object.entries(CHORD_TYPES)) {
       const targetNotes = getChordNotes(root, type);
       if (areNotesEqual(pitchClasses, targetNotes)) {
+        console.log('[music-theory] identifyChord: MATCH FOUND!', { root, type, pitchClasses, targetNotes });
         // Match found! Now determine inversion.
         let inversion = 'Root Position';
 
@@ -222,6 +229,7 @@ export function identifyChord(activeNotes) {
 
           // Calculate interval from root to bass (0-11)
           let interval = (bassNoteIndex - rootIndex + 12) % 12;
+          console.log('[music-theory] identifyChord: inversion calculation', { bassMidi, bassNoteIndex, rootIndex, interval });
 
           // Map interval to inversion
           // This depends on the chord type (triad vs 7th)
@@ -236,11 +244,14 @@ export function identifyChord(activeNotes) {
           }
         }
 
-        return { root, type, name: `${root} ${data.name}`, inversion };
+        const result = { root, type, name: `${root} ${data.name}`, inversion };
+        console.log('[music-theory] identifyChord: returning', result);
+        return result;
       }
     }
   }
 
+  console.log('[music-theory] identifyChord: NO MATCH found for pitch classes', pitchClasses);
   return null;
 }
 

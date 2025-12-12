@@ -49,19 +49,31 @@ class MIDIManager {
     handleMessage(message) {
         const [status, note, velocity] = message.data;
         const command = status & 0xf0; // Mask channel
+        console.log('[MIDIManager] handleMessage', { status, note, velocity, command, activeNotes: Array.from(this.activeNotes) });
 
         // Note On: 144 (0x90), Note Off: 128 (0x80)
         if (command === 144 && velocity > 0) {
+            console.log('[MIDIManager] Note ON', { note, velocity });
             this.activeNotes.add(note);
+            const activeNotesArray = Array.from(this.activeNotes);
+            console.log('[MIDIManager] Active notes after add:', activeNotesArray);
             this.notifyListeners({ type: 'noteOn', note, velocity });
         } else if (command === 128 || (command === 144 && velocity === 0)) {
+            console.log('[MIDIManager] Note OFF', { note });
             this.activeNotes.delete(note);
+            const activeNotesArray = Array.from(this.activeNotes);
+            console.log('[MIDIManager] Active notes after delete:', activeNotesArray);
             this.notifyListeners({ type: 'noteOff', note, velocity: 0 });
         }
     }
 
     notifyListeners(event) {
-        this.listeners.forEach(cb => cb(event, Array.from(this.activeNotes)));
+        const activeNotesArray = Array.from(this.activeNotes);
+        console.log('[MIDIManager] notifyListeners', { eventType: event.type, activeNotes: activeNotesArray, listenerCount: this.listeners.size });
+        this.listeners.forEach(cb => {
+            console.log('[MIDIManager] Calling listener callback', { eventType: event.type, activeNotes: activeNotesArray });
+            cb(event, activeNotesArray);
+        });
     }
 
     addListener(cb) {

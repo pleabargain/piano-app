@@ -35,6 +35,22 @@ function App() {
 
   // Use custom hook for chord detection
   const { detectedChord, chordSuggestions } = useChordDetection(activeNotes);
+  
+  // Log detected chord changes with maximum verbosity
+  useEffect(() => {
+    if (detectedChord) {
+      console.log('[App] 🎵🎵🎵 CHORD DETECTED AND AVAILABLE:', {
+        name: detectedChord.name,
+        root: detectedChord.root,
+        type: detectedChord.type,
+        inversion: detectedChord.inversion,
+        activeNotes: activeNotes
+      });
+      console.log(`[App] 🎵 CHORD NAME: ${detectedChord.name} ${detectedChord.inversion ? `(${detectedChord.inversion})` : ''}`);
+    } else {
+      console.log('[App] ⚠️ No chord detected', { activeNotes, activeNotesLength: activeNotes?.length });
+    }
+  }, [detectedChord, activeNotes]);
 
   // Chord display state
   const [clickedChord, setClickedChord] = useState(null); // { name: 'C Major', inversion: 0 }
@@ -97,11 +113,35 @@ function App() {
   }, [mode, selectedRoot, selectedScaleType]);
 
   const handleMidiMessage = useCallback((event, activeNotesList) => {
+    console.log('[App] 🎹 MIDI MESSAGE RECEIVED:', { 
+      eventType: event.type, 
+      activeNotesList, 
+      activeNotesCount: activeNotesList?.length,
+      event,
+      note: event.note,
+      velocity: event.velocity
+    });
     setActiveNotes(activeNotesList);
+    console.log('[App] ✅ activeNotes state updated to:', activeNotesList);
+    
+    // Immediately try to detect chord for logging
+    if (activeNotesList && activeNotesList.length >= 3) {
+      const { identifyChord } = require('./core/music-theory');
+      const immediateChord = identifyChord(activeNotesList);
+      if (immediateChord) {
+        console.log('[App] 🎵 IMMEDIATE CHORD DETECTION:', immediateChord.name, immediateChord.inversion);
+      } else {
+        console.log('[App] ⚠️ No chord detected from active notes:', activeNotesList);
+      }
+    } else {
+      console.log('[App] ⚠️ Insufficient notes for chord detection:', { count: activeNotesList?.length, notes: activeNotesList });
+    }
 
     // Update device name if inputs changed
     if (event.type === 'inputsChanged') {
+      console.log('[App] handleMidiMessage: inputs changed');
       const deviceName = midiManager.getFirstInputName();
+      console.log('[App] handleMidiMessage: device name', deviceName);
       setMidiDeviceName(deviceName);
       if (deviceName && midiEnabled) {
         setStatusMessage(`MIDI Connected: ${deviceName}`);
@@ -112,20 +152,23 @@ function App() {
 
     // Track lava game scoring - use refs to get latest values
     if (modeRef.current === 'lava' && event.type === 'noteOn') {
+      console.log('[App] handleMidiMessage: lava game noteOn', { note: event.note });
       const scaleNotes = getScaleNotes(selectedRootRef.current, selectedScaleTypeRef.current);
       const scaleNoteIndices = scaleNotes.map(n => NOTES.indexOf(n));
       const note = event.note;
       const pitchClass = note % 12;
 
       if (scaleNoteIndices.includes(pitchClass)) {
+        console.log('[App] handleMidiMessage: good key hit', { note, pitchClass });
         // Good key - increment good score
         setLavaScore(prev => ({ ...prev, good: prev.good + 1 }));
       } else {
+        console.log('[App] handleMidiMessage: lava key hit', { note, pitchClass });
         // Bad key (lava) - increment bad score
         setLavaScore(prev => ({ ...prev, bad: prev.bad + 1 }));
       }
     }
-  }, []);
+  }, [midiEnabled]);
 
   useEffect(() => {
     // Initialize MIDI
@@ -190,24 +233,50 @@ function App() {
   }, [keyProgression, currentKeyIndex, mode]);
 
   const handleChordPractice = () => {
+    console.log('[App] handleChordPractice called', { 
+      activeNotes, 
+      activeNotesLength: activeNotes?.length,
+      progression, 
+      progressionLength: progression?.length,
+      currentStepIndex, 
+      mode 
+    });
     // We use identifyChord locally for synchronous status message updates relative to activeNotes
     const detected = identifyChord(activeNotes);
+    if (detected) {
+      console.log('[App] 🎵 CHORD DETECTED IN handleChordPractice:', detected.name, detected.inversion);
+    } else {
+      console.log('[App] ❌ NO CHORD in handleChordPractice', { activeNotes, activeNotesLength: activeNotes?.length });
+    }
+    console.log('[App] handleChordPractice: detected chord', detected);
 
     if (progression.length > 0) {
       const target = progression[currentStepIndex % progression.length];
+      console.log('[App] handleChordPractice: target chord', target);
       if (detected) {
-        setStatusMessage(`Target: ${target.name} (${target.roman}) | Playing: ${detected.name} ${detected.inversion ? `(${detected.inversion})` : ''}`);
+        const message = `Target: ${target.name} (${target.roman}) | Playing: ${detected.name} ${detected.inversion ? `(${detected.inversion})` : ''}`;
+        console.log('[App] handleChordPractice: status message', message);
+        setStatusMessage(message);
       } else if (activeNotes.length > 0) {
-        setStatusMessage(`Target: ${target.name} (${target.roman}) | Playing...`);
+        const message = `Target: ${target.name} (${target.roman}) | Playing...`;
+        console.log('[App] handleChordPractice: status message (playing)', message);
+        setStatusMessage(message);
       } else {
-        setStatusMessage(`Target: ${target.name} (${target.roman})`);
+        const message = `Target: ${target.name} (${target.roman})`;
+        console.log('[App] handleChordPractice: status message (idle)', message);
+        setStatusMessage(message);
       }
     } else {
+      console.log('[App] handleChordPractice: no progression set');
       if (detected) {
-        setStatusMessage(`Playing: ${detected.name} ${detected.inversion ? `(${detected.inversion})` : ''}`);
+        const message = `Playing: ${detected.name} ${detected.inversion ? `(${detected.inversion})` : ''}`;
+        console.log('[App] handleChordPractice: status message (no progression)', message);
+        setStatusMessage(message);
       } else if (activeNotes.length > 0) {
+        console.log('[App] handleChordPractice: playing but no chord detected');
         setStatusMessage('Playing... (no chord detected)');
       } else {
+        console.log('[App] handleChordPractice: idle, no progression');
         setStatusMessage('Set a progression to start');
       }
     }
@@ -414,39 +483,88 @@ function App() {
 
   // Separate effect for Chord validation (state-based, not edge-based)
   useEffect(() => {
+    console.log('[App] Chord validation useEffect triggered', { 
+      mode, 
+      progressionLength: progression.length, 
+      activeNotesLength: activeNotes.length,
+      currentStepIndex,
+      activeNotes 
+    });
+    
     if (mode === 'chord' && progression.length > 0 && activeNotes.length >= 3) {
       const targetChord = progression[currentStepIndex % progression.length];
+      console.log('[App] Chord validation: target chord', targetChord);
+      
       const detected = identifyChord(activeNotes);
+      console.log('[App] Chord validation: detected chord', detected);
 
       // Normalize chord names for comparison (handle both "C Major" and "C" formats)
       const normalizeChordName = (name) => {
-        if (!name) return '';
+        if (!name) {
+          console.log('[App] normalizeChordName: empty name');
+          return '';
+        }
         // If it's already in full format (e.g., "C Major"), return as is
         if (name.includes('Major') || name.includes('Minor') || name.includes('Diminished') || name.includes('Augmented')) {
+          console.log('[App] normalizeChordName: already full format', name);
           return name;
         }
         // If it's short format (e.g., "C", "Cm"), convert to full format
         if (name.endsWith('m')) {
-          return name.slice(0, -1) + ' Minor';
+          const result = name.slice(0, -1) + ' Minor';
+          console.log('[App] normalizeChordName: converted minor', { name, result });
+          return result;
         }
-        return name + ' Major';
+        const result = name + ' Major';
+        console.log('[App] normalizeChordName: converted major', { name, result });
+        return result;
       };
 
       const normalizedTarget = normalizeChordName(targetChord.name);
       const normalizedDetected = detected ? normalizeChordName(detected.name) : '';
+      
+      console.log('[App] Chord validation: name comparison', {
+        targetChordName: targetChord.name,
+        detectedName: detected?.name,
+        normalizedTarget,
+        normalizedDetected,
+        match: detected && normalizedDetected === normalizedTarget
+      });
 
       if (detected && normalizedDetected === normalizedTarget) {
+        console.log('[App] Chord validation: MATCH! Advancing to next chord');
         // Correct chord held!
         // Advance after a short delay to let them hear/see it
         // This prevents rapid skipping if the user holds the chord
 
         // Use a ref to track if we've already advanced for this chord detection
         const timer = setTimeout(() => {
-          setCurrentStepIndex(prev => prev + 1);
+          console.log('[App] Chord validation: timeout fired, advancing step index');
+          setCurrentStepIndex(prev => {
+            const next = prev + 1;
+            console.log('[App] Chord validation: step index', { prev, next });
+            return next;
+          });
         }, 500);
 
-        return () => clearTimeout(timer);
+        return () => {
+          console.log('[App] Chord validation: cleanup timeout');
+          clearTimeout(timer);
+        };
+      } else {
+        console.log('[App] Chord validation: NO MATCH', {
+          detected: !!detected,
+          normalizedDetected,
+          normalizedTarget,
+          areEqual: normalizedDetected === normalizedTarget
+        });
       }
+    } else {
+      console.log('[App] Chord validation: conditions not met', {
+        modeIsChord: mode === 'chord',
+        hasProgression: progression.length > 0,
+        hasEnoughNotes: activeNotes.length >= 3
+      });
     }
   }, [activeNotes, mode, progression, currentStepIndex]);
 
@@ -482,24 +600,34 @@ function App() {
 
 
   const handleChordClick = (chordName) => {
+    console.log('[App] handleChordClick called', { chordName, currentClickedChord: clickedChord });
     // Handle chord click - cycle through inversions
     const parsed = parseChordName(chordName);
-    if (!parsed) return;
+    console.log('[App] handleChordClick: parsed chord', parsed);
+    if (!parsed) {
+      console.warn('[App] handleChordClick: failed to parse chord name', chordName);
+      return;
+    }
 
     // Check if this is the same chord that was clicked before
     if (clickedChord && clickedChord.name === chordName) {
+      console.log('[App] handleChordClick: same chord clicked, cycling inversion');
       // Cycle to next inversion
       const maxInversions = CHORD_TYPES[parsed.chordType].intervals.length + 1;
       const nextInversion = (clickedChord.inversion + 1) % maxInversions;
+      console.log('[App] handleChordClick: next inversion', { current: clickedChord.inversion, next: nextInversion, max: maxInversions });
       setClickedChord({ name: chordName, inversion: nextInversion });
 
       // Calculate MIDI notes for this inversion (use octave 3 to fit in Left Piano 36-60)
       const midiNotes = getChordNotesAsMidi(parsed.root, parsed.chordType, nextInversion, 3);
+      console.log('[App] handleChordClick: MIDI notes for inversion', midiNotes);
       setChordMidiNotes(midiNotes);
     } else {
+      console.log('[App] handleChordClick: new chord clicked, starting with root position');
       // New chord clicked - start with root position
       setClickedChord({ name: chordName, inversion: 0 });
       const midiNotes = getChordNotesAsMidi(parsed.root, parsed.chordType, 0, 3);
+      console.log('[App] handleChordClick: MIDI notes for root position', midiNotes);
       setChordMidiNotes(midiNotes);
     }
   };
@@ -657,14 +785,24 @@ function App() {
                   <div className="chord-label">Detected Chord:</div>
                   {detectedChord ? (
                     <>
-                      <div className="chord-name-in-controls">{detectedChord.name}</div>
+                      <div className="chord-name-in-controls">
+                        {(() => {
+                          const chordName = detectedChord.name;
+                          console.log('[App] 🎵 DISPLAYING CHORD IN UI:', chordName, detectedChord.inversion);
+                          return chordName;
+                        })()}
+                      </div>
                       {detectedChord.inversion && (
                         <div className="chord-inversion-in-controls">{detectedChord.inversion}</div>
                       )}
                     </>
                   ) : (
                     <div className="chord-placeholder">
-                      {activeNotes.length > 0 ? 'Playing...' : 'No chord detected'}
+                      {(() => {
+                        const status = activeNotes.length > 0 ? 'Playing...' : 'No chord detected';
+                        console.log('[App] Chord display status:', status, { activeNotes, activeNotesLength: activeNotes.length });
+                        return status;
+                      })()}
                     </div>
                   )}
 
@@ -689,11 +827,13 @@ function App() {
                     selectedRoot={selectedRoot}
                     selectedScaleType={selectedScaleType}
                     onProgressionSet={(p) => {
+                      console.log('[App] onProgressionSet called (chord progression)', p);
                       setProgression(p);
                       setCurrentStepIndex(0);
                       // Clear clicked chord when progression changes
                       setClickedChord(null);
                       setChordMidiNotes([]);
+                      console.log('[App] Chord progression set, step index reset to 0');
                     }}
                     onChordClick={handleChordClick}
                   />

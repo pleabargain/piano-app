@@ -15,22 +15,31 @@ const ProgressionBuilder = ({ selectedRoot, selectedScaleType, onProgressionSet,
     }, [input, selectedRoot, selectedScaleType]);
 
     const validateAndParse = (text) => {
+        console.log('[ProgressionBuilder] validateAndParse called', { text, selectedRoot, selectedScaleType });
         if (!text.trim()) {
+            console.log('[ProgressionBuilder] Empty input, clearing parsedChords');
             setParsedChords([]);
             setError('');
             return;
         }
 
         const tokens = text.trim().split(/\s+/);
+        console.log('[ProgressionBuilder] Tokens:', tokens);
         const scaleNotes = getScaleNotes(selectedRoot, selectedScaleType);
+        console.log('[ProgressionBuilder] Scale notes:', scaleNotes);
 
-        if (scaleNotes.length === 0) return;
+        if (scaleNotes.length === 0) {
+            console.warn('[ProgressionBuilder] No scale notes found for', { selectedRoot, selectedScaleType });
+            return;
+        }
 
         const results = [];
         let isValid = true;
 
         for (let token of tokens) {
+            console.log('[ProgressionBuilder] Processing token:', token);
             if (!ROMAN_REGEX.test(token)) {
+                console.error('[ProgressionBuilder] Invalid token:', token);
                 isValid = false;
                 setError(`Invalid symbol: ${token}`);
                 break;
@@ -40,20 +49,33 @@ const ProgressionBuilder = ({ selectedRoot, selectedScaleType, onProgressionSet,
             // This is a basic implementation to show the chord name
             // Real implementation would need a robust Roman Numeral parser
             const chordName = getChordNameFromRoman(token, scaleNotes);
+            console.log('[ProgressionBuilder] Token -> Chord:', { token, chordName });
             results.push({ roman: token, name: chordName });
         }
 
         if (isValid) {
+            console.log('[ProgressionBuilder] Validation successful, parsed chords:', results);
             setError('');
             setParsedChords(results);
         } else {
+            console.warn('[ProgressionBuilder] Validation failed');
             setParsedChords([]);
         }
     };
 
     const handleSet = () => {
+        console.log('[ProgressionBuilder] handleSet called', { error, parsedChords, input, parsedChordsLength: parsedChords.length });
         if (!error && parsedChords.length > 0) {
+            console.log('[ProgressionBuilder] Setting progression:', parsedChords);
             onProgressionSet(parsedChords);
+        } else {
+            console.warn('[ProgressionBuilder] Cannot set progression:', { 
+                hasError: !!error, 
+                parsedChordsLength: parsedChords.length,
+                error,
+                parsedChords,
+                input
+            });
         }
     };
 
@@ -67,7 +89,15 @@ const ProgressionBuilder = ({ selectedRoot, selectedScaleType, onProgressionSet,
                     onChange={(e) => setInput(e.target.value)}
                     placeholder="e.g., I IV V ii"
                 />
-                <button onClick={handleSet} disabled={!!error || !input}>
+                <button 
+                    onClick={(e) => {
+                        console.log('[ProgressionBuilder] Button clicked', { error, parsedChords, input, disabled: !!error || !input });
+                        e.preventDefault();
+                        e.stopPropagation();
+                        handleSet();
+                    }} 
+                    disabled={!!error || !input || parsedChords.length === 0}
+                >
                     Set Progression
                 </button>
             </div>
@@ -94,6 +124,7 @@ const ProgressionBuilder = ({ selectedRoot, selectedScaleType, onProgressionSet,
 // Helper to guess chord name from Roman Numeral
 // This is a simplified version.
 function getChordNameFromRoman(roman, scaleNotes) {
+    console.log('[ProgressionBuilder] getChordNameFromRoman called', { roman, scaleNotes });
     const degreeMap = {
         'i': 0, 'ii': 1, 'iii': 2, 'iv': 3, 'v': 4, 'vi': 5, 'vii': 6,
         'I': 0, 'II': 1, 'III': 2, 'IV': 3, 'V': 4, 'VI': 5, 'VII': 6
@@ -101,13 +132,17 @@ function getChordNameFromRoman(roman, scaleNotes) {
 
     // Extract base degree (case insensitive match for I, II, etc)
     const match = roman.match(/^(b|#)?(VII|III|IV|VI|II|V|I)/i);
-    if (!match) return '?';
+    if (!match) {
+        console.warn('[ProgressionBuilder] No match for roman:', roman);
+        return '?';
+    }
 
     const accidental = match[1] || '';
     const baseRoman = match[2];
     const suffix = roman.substring(match[0].length);
 
     let degreeIndex = degreeMap[baseRoman];
+    console.log('[ProgressionBuilder] Parsed roman:', { roman, accidental, baseRoman, suffix, degreeIndex });
 
     // Handle accidental on the root (e.g. bIII)
     // This is complex because scaleNotes are fixed. 
@@ -115,6 +150,7 @@ function getChordNameFromRoman(roman, scaleNotes) {
     // A real implementation would handle chromatic alterations.
 
     let rootNote = scaleNotes[degreeIndex];
+    console.log('[ProgressionBuilder] Root note:', rootNote);
 
     // Determine quality from case and suffix
     const isLowerCase = baseRoman === baseRoman.toLowerCase();
@@ -148,7 +184,9 @@ function getChordNameFromRoman(roman, scaleNotes) {
       'diminished7': 'Diminished 7'
     };
 
-    return `${rootNote} ${chordTypeNames[chordType] || 'Major'}`;
+    const result = `${rootNote} ${chordTypeNames[chordType] || 'Major'}`;
+    console.log('[ProgressionBuilder] Final chord name:', result);
+    return result;
 }
 
 export default ProgressionBuilder;
