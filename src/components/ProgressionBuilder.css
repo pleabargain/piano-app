@@ -83,3 +83,82 @@
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
     background: #3a3a3a;
 }
+
+.predefined-progressions {
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 1px solid #444;
+}
+
+.predefined-progressions h4 {
+    margin: 0 0 12px 0;
+    font-size: 0.9rem;
+    color: #aaa;
+    font-weight: normal;
+}
+
+.progression-list {
+    max-height: 400px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.progression-list::-webkit-scrollbar {
+    width: 8px;
+}
+
+.progression-list::-webkit-scrollbar-track {
+    background: #1a1a1a;
+    border-radius: 4px;
+}
+
+.progression-list::-webkit-scrollbar-thumb {
+    background: #555;
+    border-radius: 4px;
+}
+
+.progression-list::-webkit-scrollbar-thumb:hover {
+    background: #666;
+}
+
+.progression-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 8px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    font-size: 0.85rem;
+}
+
+.progression-item:hover {
+    background-color: #333;
+}
+
+.progression-play-icon {
+    color: #666;
+    font-size: 0.7rem;
+    width: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.progression-name {
+    color: #aaa;
+    flex-shrink: 0;
+}
+
+.progression-chords {
+    color: #a855f7;
+    font-weight: bold;
+    flex: 1;
+}
+
+.progression-length {
+    color: #aaa;
+    font-size: 0.8rem;
+}
