@@ -161,46 +161,47 @@ const RecordingControls = ({
 
     return (
         <div className="recording-controls">
-            <div className="recording-section">
-                <h3>Recording</h3>
-                <div className="recording-controls-row">
-                    {!isRecording ? (
-                        <button
-                            className="btn btn-record"
-                            onClick={handleStartRecording}
-                            disabled={isPlaying}
-                        >
-                            ⏺ Record
-                        </button>
-                    ) : (
-                        <button
-                            className="btn btn-stop"
-                            onClick={handleStopRecording}
-                        >
-                            ⏹ Stop
-                        </button>
-                    )}
+            <div className="recording-playback-container">
+                <div className="recording-section">
+                    <div className="recording-controls-row">
+                        <h3>Recording</h3>
+                        {!isRecording ? (
+                            <button
+                                className="btn btn-record"
+                                onClick={handleStartRecording}
+                                disabled={isPlaying}
+                            >
+                                ⏺ Record
+                            </button>
+                        ) : (
+                            <button
+                                className="btn btn-stop"
+                                onClick={handleStopRecording}
+                            >
+                                ⏹ Stop
+                            </button>
+                        )}
+                        {isRecording && (
+                            <div className="recording-indicator">
+                                <span className="recording-dot"></span>
+                                <span>{formatDuration(recordingDuration)}</span>
+                            </div>
+                        )}
+                    </div>
                     {isRecording && (
-                        <div className="recording-indicator">
-                            <span className="recording-dot"></span>
-                            <span>{formatDuration(recordingDuration)}</span>
-                        </div>
+                        <input
+                            type="text"
+                            className="recording-name-input"
+                            placeholder="Recording name..."
+                            value={recordingName}
+                            onChange={(e) => setRecordingName(e.target.value)}
+                        />
                     )}
                 </div>
-                {isRecording && (
-                    <input
-                        type="text"
-                        className="recording-name-input"
-                        placeholder="Recording name..."
-                        value={recordingName}
-                        onChange={(e) => setRecordingName(e.target.value)}
-                    />
-                )}
-            </div>
 
-            <div className="playback-section">
-                <h3>Playback</h3>
+                <div className="playback-section">
                 <div className="playback-controls-row">
+                    <h3>Playback</h3>
                     {!isPlaying && !isPaused ? (
                         <button
                             className="btn btn-play"
@@ -247,62 +248,69 @@ const RecordingControls = ({
                         <span className="progress-text">{Math.round(playbackProgress)}%</span>
                     </div>
                 )}
+                </div>
             </div>
 
-            <div className="play-along-section">
-                <label className="play-along-toggle">
-                    <input
-                        type="checkbox"
-                        checked={isPlayAlongMode}
-                        onChange={(e) => {
-                            if (onPlayAlongToggle) {
-                                onPlayAlongToggle(e.target.checked);
-                            }
-                        }}
-                    />
-                    <span>Play-Along Mode</span>
-                </label>
-                {isPlayAlongMode && (
-                    <div className="play-along-hint">
-                        Play the highlighted keys along with the recording
-                    </div>
-                )}
+            <div className="toggle-controls-row">
+                <div className="toggle-control-item">
+                    <label className="play-along-toggle">
+                        <input
+                            type="checkbox"
+                            checked={isPlayAlongMode}
+                            onChange={(e) => {
+                                if (onPlayAlongToggle) {
+                                    onPlayAlongToggle(e.target.checked);
+                                }
+                            }}
+                        />
+                        <span>Play-Along Mode</span>
+                    </label>
+                    {isPlayAlongMode && (
+                        <div className="play-along-hint">
+                            Play the highlighted keys along with the recording
+                        </div>
+                    )}
+                </div>
                 
-                <label className="play-along-toggle" style={{ marginTop: '10px' }}>
-                    <input
-                        type="checkbox"
-                        checked={isWaitForInput}
-                        onChange={(e) => {
-                            if (onWaitForInputToggle) {
-                                onWaitForInputToggle(e.target.checked);
-                            }
-                        }}
-                    />
-                    <span>Wait for Input Mode</span>
-                </label>
-                {isWaitForInput && (
-                    <div className="play-along-hint">
-                        Playback will wait for you to play the correct note before advancing
-                    </div>
-                )}
+                <div className="toggle-control-item">
+                    <label className="play-along-toggle">
+                        <input
+                            type="checkbox"
+                            checked={isWaitForInput}
+                            onChange={(e) => {
+                                if (onWaitForInputToggle) {
+                                    onWaitForInputToggle(e.target.checked);
+                                }
+                            }}
+                        />
+                        <span>Wait for Input Mode</span>
+                    </label>
+                    {isWaitForInput && (
+                        <div className="play-along-hint">
+                            Playback will wait for you to play the correct note before advancing
+                        </div>
+                    )}
+                </div>
                 
-                <label className="play-along-toggle" style={{ marginTop: '10px' }}>
-                    <input
-                        type="checkbox"
-                        checked={isLoop}
-                        onChange={(e) => {
-                            if (onLoopToggle) {
-                                onLoopToggle(e.target.checked);
-                            }
-                        }}
-                    />
-                    <span>Loop Playback</span>
-                </label>
-                {isLoop && (
-                    <div className="play-along-hint">
-                        Recording will automatically repeat until stopped
-                    </div>
-                )}
+                <div className="toggle-control-item">
+                    <label className="play-along-toggle">
+                        <input
+                            type="checkbox"
+                            checked={isLoop}
+                            onChange={(e) => {
+                                if (onLoopToggle) {
+                                    onLoopToggle(e.target.checked);
+                                }
+                            }}
+                        />
+                        <span>Loop Playback</span>
+                    </label>
+                    {isLoop && (
+                        <div className="play-along-hint">
+                            Recording will automatically repeat until stopped
+                        </div>
+                    )}
+                </div>
             </div>
         </div>
     );

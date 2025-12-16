@@ -864,22 +864,20 @@ function App() {
             <div className="extensions-panel">
               <h3>Extensions</h3>
               {chordSuggestions.length > 0 ? (
-                <div className="extensions-content">
+                <>
                   <div className="section-label">
                     {detectedChord
                       ? `🎵 Add to ${detectedChord.name.split(' ')[0]}`
                       : `💡 Potential Chords`
                     }
                   </div>
-                  <div className="suggestions-list">
-                    {chordSuggestions.slice(0, 4).map((suggestion, index) => (
-                      <div key={index} className="suggestion-item">
-                        <span className="suggestion-name">{suggestion.name}</span>
-                        <span className="suggestion-missing">+{suggestion.missingNotes.join(', ')}</span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
+                  {chordSuggestions.slice(0, 4).map((suggestion, index) => (
+                    <div key={index} className="suggestion-item">
+                      <span className="suggestion-name">{suggestion.name}</span>
+                      <span className="suggestion-missing">+{suggestion.missingNotes.join(', ')}</span>
+                    </div>
+                  ))}
+                </>
               ) : (
                 <div className="extensions-placeholder">
                   Play 2+ notes to see chord suggestions
