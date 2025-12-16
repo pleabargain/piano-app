@@ -8,7 +8,12 @@ import CircleOfFifths from './components/CircleOfFifths';
 import KeyDisplay from './components/KeyDisplay';
 import ChordInfo from './components/ChordInfo';
 import ScaleSelector from './components/ScaleSelector';
+import RecordingControls from './components/RecordingControls';
+import RecordingList from './components/RecordingList';
 import { midiManager } from './core/midi-manager';
+import RecordingManager from './core/recording-manager';
+import PlaybackManager from './core/playback-manager';
+import RecordingStorage from './core/recording-storage';
 import { getScaleNotes, getChordNotes, identifyChord, getChordNotesAsMidi, parseChordName, findPotentialChords, NOTES, CHORD_TYPES } from './core/music-theory';
 import { useChordDetection } from './hooks/useChordDetection';
 import './App.css';
@@ -63,6 +68,16 @@ function App() {
   const [lavaScore, setLavaScore] = useState({ good: 0, bad: 0 });
   const [lavaKeys, setLavaKeys] = useState([]); // MIDI numbers that are "lava" (bad keys)
 
+  // Recording/Playback state
+  const recordingManagerRef = useRef(null);
+  const playbackManagerRef = useRef(null);
+  const recordingStorageRef = useRef(null);
+  const [expectedNotes, setExpectedNotes] = useState([]); // Notes expected from playback
+  const [isPlayAlongMode, setIsPlayAlongMode] = useState(false);
+  const [isWaitForInputMode, setIsWaitForInputMode] = useState(false);
+  const [isLoopMode, setIsLoopMode] = useState(false);
+  const [currentRecording, setCurrentRecording] = useState(null);
+
   // Clear clicked chord when mode changes
   useEffect(() => {
     if (mode !== 'chord') {
@@ -100,6 +115,89 @@ function App() {
     }
   }, [mode, selectedRoot, selectedScaleType, keyboardSize]);
 
+  // Initialize recording/playback managers
+  useEffect(() => {
+    recordingManagerRef.current = new RecordingManager();
+    playbackManagerRef.current = new PlaybackManager();
+    recordingStorageRef.current = new RecordingStorage();
+    
+    // Initialize storage
+    recordingStorageRef.current.init().catch(err => {
+      console.error('[App] Failed to initialize recording storage:', err);
+    });
+
+    // Set up recording callback
+    const handleRecordingEvent = (event) => {
+      if (recordingManagerRef.current && recordingManagerRef.current.getState() === 'recording') {
+        recordingManagerRef.current.recordEvent(event);
+      }
+    };
+    midiManager.setRecordingCallback(handleRecordingEvent);
+
+    // Set up playback event listeners
+    const handlePlaybackEvent = (data) => {
+      console.log('[App] Playback event received:', data);
+      // Update expected notes based on playback (only if not in wait-for-input mode)
+      // In wait-for-input mode, expected notes are managed by handleWaitingForInput
+      if (!playbackManagerRef.current?.waitForInput) {
+        if (data.type === 'noteOn') {
+          setExpectedNotes(prev => {
+            const updated = [...prev.filter(n => n !== data.note), data.note];
+            console.log('[App] Expected notes after noteOn:', updated);
+            return updated;
+          });
+        } else if (data.type === 'noteOff') {
+          setExpectedNotes(prev => {
+            const updated = prev.filter(n => n !== data.note);
+            console.log('[App] Expected notes after noteOff:', updated);
+            return updated;
+          });
+        }
+      }
+    };
+
+    const handlePlaybackComplete = () => {
+      setExpectedNotes([]);
+    };
+
+    const handlePlaybackStop = () => {
+      setExpectedNotes([]);
+    };
+
+    const handleWaitingForInput = (data) => {
+      console.log('[App] Waiting for input, expected note:', data.expectedNote);
+      // Show only the current expected note when waiting for input
+      setExpectedNotes([data.expectedNote]);
+    };
+
+    const handleCorrectNote = () => {
+      console.log('[App] Correct note played!');
+      // Visual feedback could be added here
+    };
+
+    const handleIncorrectNote = (data) => {
+      console.log('[App] Incorrect note played:', data.played, 'expected:', data.expected);
+      // Visual feedback could be added here
+    };
+
+    playbackManagerRef.current.on('event', handlePlaybackEvent);
+    playbackManagerRef.current.on('complete', handlePlaybackComplete);
+    playbackManagerRef.current.on('stop', handlePlaybackStop);
+    playbackManagerRef.current.on('waitingForInput', handleWaitingForInput);
+    playbackManagerRef.current.on('correctNote', handleCorrectNote);
+    playbackManagerRef.current.on('incorrectNote', handleIncorrectNote);
+
+    return () => {
+      midiManager.setRecordingCallback(null);
+      playbackManagerRef.current.off('event', handlePlaybackEvent);
+      playbackManagerRef.current.off('complete', handlePlaybackComplete);
+      playbackManagerRef.current.off('stop', handlePlaybackStop);
+      playbackManagerRef.current.off('waitingForInput', handleWaitingForInput);
+      playbackManagerRef.current.off('correctNote', handleCorrectNote);
+      playbackManagerRef.current.off('incorrectNote', handleIncorrectNote);
+    };
+  }, []);
+
   // Refs for state access in callbacks to avoid stale closures
   const modeRef = useRef(mode);
   const selectedRootRef = useRef(selectedRoot);
@@ -123,6 +221,16 @@ function App() {
     });
     setActiveNotes(activeNotesList);
     console.log('[App] ✅ activeNotes state updated to:', activeNotesList);
+    
+    // Check if we're in wait-for-input mode and user played a note
+    if (isWaitForInputMode && playbackManagerRef.current && event.type === 'noteOn' && event.note !== undefined) {
+      const correct = playbackManagerRef.current.checkUserInput(event.note);
+      if (correct) {
+        console.log('[App] ✅ Correct note played, advancing playback');
+      } else {
+        console.log('[App] ❌ Incorrect note played');
+      }
+    }
     
     // Immediately try to detect chord for logging
     if (activeNotesList && activeNotesList.length >= 3) {
@@ -168,7 +276,7 @@ function App() {
         setLavaScore(prev => ({ ...prev, bad: prev.bad + 1 }));
       }
     }
-  }, [midiEnabled]);
+  }, [midiEnabled, isWaitForInputMode]);
 
   useEffect(() => {
     // Initialize MIDI
@@ -653,6 +761,77 @@ function App() {
     setLockedChord(null);
   };
 
+  // Recording/Playback handlers
+  const handleRecordingStart = () => {
+    console.log('[App] Recording started');
+  };
+
+  const handleRecordingStop = async (recording) => {
+    console.log('[App] Recording stopped', recording);
+    if (recording && recordingStorageRef.current) {
+      try {
+        await recordingStorageRef.current.save(recording);
+        console.log('[App] Recording saved');
+      } catch (error) {
+        console.error('[App] Failed to save recording:', error);
+        alert('Failed to save recording');
+      }
+    }
+  };
+
+  const handlePlaybackStart = () => {
+    console.log('[App] Playback started');
+  };
+
+  const handlePlaybackStop = () => {
+    console.log('[App] Playback stopped');
+    setExpectedNotes([]);
+  };
+
+  const handlePlaybackPause = () => {
+    console.log('[App] Playback paused');
+  };
+
+  const handlePlaybackResume = () => {
+    console.log('[App] Playback resumed');
+  };
+
+  const handleRecordingSelect = (recording) => {
+    console.log('[App] Recording selected', recording);
+    setCurrentRecording(recording);
+  };
+
+  const handleRecordingDelete = (id) => {
+    console.log('[App] Recording deleted', id);
+    if (currentRecording && currentRecording.id === id) {
+      setCurrentRecording(null);
+    }
+  };
+
+  const handlePlayAlongToggle = (enabled) => {
+    setIsPlayAlongMode(enabled);
+    if (!enabled) {
+      setExpectedNotes([]);
+    }
+  };
+
+  const handleWaitForInputToggle = (enabled) => {
+    setIsWaitForInputMode(enabled);
+    if (playbackManagerRef.current) {
+      playbackManagerRef.current.setWaitForInput(enabled);
+    }
+    if (!enabled) {
+      setExpectedNotes([]);
+    }
+  };
+
+  const handleLoopToggle = (enabled) => {
+    setIsLoopMode(enabled);
+    if (playbackManagerRef.current) {
+      playbackManagerRef.current.setLoop(enabled);
+    }
+  };
+
   return (
     <div className="app-container">
       <header>
@@ -739,6 +918,7 @@ function App() {
                 chordMidiNotes={getChordHighlights()}
                 lavaKeys={mode === 'lava' ? lavaKeys : []}
                 feedbackState={feedbackState}
+                expectedNotes={isPlayAlongMode ? expectedNotes : []}
               />
             </div>
 
@@ -752,6 +932,7 @@ function App() {
                 chordMidiNotes={[]}
                 lavaKeys={mode === 'lava' ? lavaKeys : []}
                 feedbackState={feedbackState}
+                expectedNotes={isPlayAlongMode ? expectedNotes : []}
               />
             </div>
           </div>
@@ -768,6 +949,30 @@ function App() {
             onModeChange={setMode}
             keyboardSize={keyboardSize}
             onKeyboardSizeChange={setKeyboardSize}
+          />
+
+          <RecordingControls
+            recordingManager={recordingManagerRef.current}
+            playbackManager={playbackManagerRef.current}
+            onRecordingStart={handleRecordingStart}
+            onRecordingStop={handleRecordingStop}
+            onPlaybackStart={handlePlaybackStart}
+            onPlaybackStop={handlePlaybackStop}
+            onPlaybackPause={handlePlaybackPause}
+            onPlaybackResume={handlePlaybackResume}
+            isPlayAlongMode={isPlayAlongMode}
+            onPlayAlongToggle={handlePlayAlongToggle}
+            isWaitForInput={isWaitForInputMode}
+            onWaitForInputToggle={handleWaitForInputToggle}
+            isLoop={isLoopMode}
+            onLoopToggle={handleLoopToggle}
+          />
+
+          <RecordingList
+            recordingStorage={recordingStorageRef.current}
+            playbackManager={playbackManagerRef.current}
+            onRecordingSelect={handleRecordingSelect}
+            onRecordingDelete={handleRecordingDelete}
           />
 
           <div className="circle-and-chord-container">

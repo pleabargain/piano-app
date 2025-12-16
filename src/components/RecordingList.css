@@ -1,0 +1,156 @@
+/* https://github.com/pleabargain/piano-app */
+.recording-list {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  padding: 20px;
+  background: #2a2a2a;
+  border-radius: 8px;
+  margin: 20px 0;
+}
+
+.recording-list-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.recording-list-header h3 {
+  margin: 0;
+  color: #fff;
+  font-size: 18px;
+}
+
+.recording-list-actions {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.btn-import {
+  padding: 8px 16px;
+  background: #3b82f6;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background 0.2s;
+}
+
+.btn-import:hover {
+  background: #2563eb;
+}
+
+.sort-select {
+  padding: 8px 12px;
+  background: #1a1a1a;
+  color: #fff;
+  border: 1px solid #444;
+  border-radius: 5px;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.sort-select:focus {
+  outline: none;
+  border-color: #3b82f6;
+}
+
+.loading,
+.no-recordings {
+  color: #aaa;
+  text-align: center;
+  padding: 20px;
+  font-style: italic;
+}
+
+.recording-items {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.recording-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px;
+  background: #1a1a1a;
+  border: 2px solid transparent;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.recording-item:hover {
+  background: #222;
+  border-color: #444;
+}
+
+.recording-item.selected {
+  border-color: #3b82f6;
+  background: #1e3a5f;
+}
+
+.recording-item-main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.recording-name {
+  color: #fff;
+  font-size: 16px;
+  font-weight: 500;
+}
+
+.recording-name-edit {
+  padding: 5px 10px;
+  background: #2a2a2a;
+  color: #fff;
+  border: 1px solid #3b82f6;
+  border-radius: 4px;
+  font-size: 16px;
+  width: 100%;
+}
+
+.recording-name-edit:focus {
+  outline: none;
+  border-color: #60a5fa;
+}
+
+.recording-meta {
+  display: flex;
+  gap: 8px;
+  color: #aaa;
+  font-size: 12px;
+  flex-wrap: wrap;
+}
+
+.recording-item-actions {
+  display: flex;
+  gap: 5px;
+}
+
+.btn-icon {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  font-size: 18px;
+  padding: 5px;
+  border-radius: 4px;
+  transition: background 0.2s;
+}
+
+.btn-icon:hover {
+  background: #333;
+}
+
+.btn-icon.btn-delete:hover {
+  background: #7f1d1d;
+}
+

@@ -1,0 +1,58 @@
+{
+  "version": "1.0",
+  "id": "550e8400-e29b-41d4-a716-446655440000",
+  "name": "Example Recording",
+  "createdAt": 1704067200000,
+  "duration": 5000,
+  "metadata": {
+    "description": "This is an example recording template showing the JSON schema format",
+    "tags": ["example", "template"],
+    "bpm": 120,
+    "timeSignature": "4/4"
+  },
+  "events": [
+    {
+      "type": "noteOn",
+      "note": 60,
+      "velocity": 100,
+      "timestamp": 0.0,
+      "channel": 0
+    },
+    {
+      "type": "noteOff",
+      "note": 60,
+      "velocity": 0,
+      "timestamp": 500.5,
+      "channel": 0
+    },
+    {
+      "type": "noteOn",
+      "note": 64,
+      "velocity": 95,
+      "timestamp": 501.2,
+      "channel": 0
+    },
+    {
+      "type": "noteOn",
+      "note": 67,
+      "velocity": 90,
+      "timestamp": 502.0,
+      "channel": 0
+    },
+    {
+      "type": "noteOff",
+      "note": 64,
+      "velocity": 0,
+      "timestamp": 1000.0,
+      "channel": 0
+    },
+    {
+      "type": "noteOff",
+      "note": 67,
+      "velocity": 0,
+      "timestamp": 1000.5,
+      "channel": 0
+    }
+  ]
+}
+

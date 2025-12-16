@@ -1,0 +1,212 @@
+{
+  "version": "1.0",
+  "id": "a1b2c3d4-e5f6-4789-a012-3456789abcde",
+  "name": "Twinkle",
+  "createdAt": 1704067200000,
+  "duration": 8000,
+  "metadata": {
+    "description": "Twinkle, Twinkle, Little Star - First phrase",
+    "tags": ["nursery-rhyme", "beginner"],
+    "bpm": 120,
+    "timeSignature": "4/4"
+  },
+  "events": [
+    {
+      "type": "noteOn",
+      "note": 60,
+      "velocity": 100,
+      "timestamp": 0.0,
+      "channel": 0
+    },
+    {
+      "type": "noteOff",
+      "note": 60,
+      "velocity": 0,
+      "timestamp": 500.0,
+      "channel": 0
+    },
+    {
+      "type": "noteOn",
+      "note": 60,
+      "velocity": 100,
+      "timestamp": 500.0,
+      "channel": 0
+    },
+    {
+      "type": "noteOff",
+      "note": 60,
+      "velocity": 0,
+      "timestamp": 1000.0,
+      "channel": 0
+    },
+    {
+      "type": "noteOn",
+      "note": 67,
+      "velocity": 100,
+      "timestamp": 1000.0,
+      "channel": 0
+    },
+    {
+      "type": "noteOff",
+      "note": 67,
+      "velocity": 0,
+      "timestamp": 1500.0,
+      "channel": 0
+    },
+    {
+      "type": "noteOn",
+      "note": 67,
+      "velocity": 100,
+      "timestamp": 1500.0,
+      "channel": 0
+    },
+    {
+      "type": "noteOff",
+      "note": 67,
+      "velocity": 0,
+      "timestamp": 2000.0,
+      "channel": 0
+    },
+    {
+      "type": "noteOn",
+      "note": 69,
+      "velocity": 100,
+      "timestamp": 2000.0,
+      "channel": 0
+    },
+    {
+      "type": "noteOff",
+      "note": 69,
+      "velocity": 0,
+      "timestamp": 2500.0,
+      "channel": 0
+    },
+    {
+      "type": "noteOn",
+      "note": 69,
+      "velocity": 100,
+      "timestamp": 2500.0,
+      "channel": 0
+    },
+    {
+      "type": "noteOff",
+      "note": 69,
+      "velocity": 0,
+      "timestamp": 3000.0,
+      "channel": 0
+    },
+    {
+      "type": "noteOn",
+      "note": 67,
+      "velocity": 100,
+      "timestamp": 3000.0,
+      "channel": 0
+    },
+    {
+      "type": "noteOff",
+      "note": 67,
+      "velocity": 0,
+      "timestamp": 4000.0,
+      "channel": 0
+    },
+    {
+      "type": "noteOn",
+      "note": 65,
+      "velocity": 100,
+      "timestamp": 4000.0,
+      "channel": 0
+    },
+    {
+      "type": "noteOff",
+      "note": 65,
+      "velocity": 0,
+      "timestamp": 4500.0,
+      "channel": 0
+    },
+    {
+      "type": "noteOn",
+      "note": 65,
+      "velocity": 100,
+      "timestamp": 4500.0,
+      "channel": 0
+    },
+    {
+      "type": "noteOff",
+      "note": 65,
+      "velocity": 0,
+      "timestamp": 5000.0,
+      "channel": 0
+    },
+    {
+      "type": "noteOn",
+      "note": 64,
+      "velocity": 100,
+      "timestamp": 5000.0,
+      "channel": 0
+    },
+    {
+      "type": "noteOff",
+      "note": 64,
+      "velocity": 0,
+      "timestamp": 5500.0,
+      "channel": 0
+    },
+    {
+      "type": "noteOn",
+      "note": 64,
+      "velocity": 100,
+      "timestamp": 5500.0,
+      "channel": 0
+    },
+    {
+      "type": "noteOff",
+      "note": 64,
+      "velocity": 0,
+      "timestamp": 6000.0,
+      "channel": 0
+    },
+    {
+      "type": "noteOn",
+      "note": 62,
+      "velocity": 100,
+      "timestamp": 6000.0,
+      "channel": 0
+    },
+    {
+      "type": "noteOff",
+      "note": 62,
+      "velocity": 0,
+      "timestamp": 6500.0,
+      "channel": 0
+    },
+    {
+      "type": "noteOn",
+      "note": 62,
+      "velocity": 100,
+      "timestamp": 6500.0,
+      "channel": 0
+    },
+    {
+      "type": "noteOff",
+      "note": 62,
+      "velocity": 0,
+      "timestamp": 7000.0,
+      "channel": 0
+    },
+    {
+      "type": "noteOn",
+      "note": 60,
+      "velocity": 100,
+      "timestamp": 7000.0,
+      "channel": 0
+    },
+    {
+      "type": "noteOff",
+      "note": 60,
+      "velocity": 0,
+      "timestamp": 8000.0,
+      "channel": 0
+    }
+  ]
+}
+

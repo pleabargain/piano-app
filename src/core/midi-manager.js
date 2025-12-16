@@ -5,6 +5,7 @@ class MIDIManager {
         this.inputs = [];
         this.listeners = new Set();
         this.activeNotes = new Set(); // Keep track of currently active MIDI note numbers
+        this.recordingCallback = null; // Optional callback for recording MIDI events
     }
 
     async requestAccess() {
@@ -49,6 +50,7 @@ class MIDIManager {
     handleMessage(message) {
         const [status, note, velocity] = message.data;
         const command = status & 0xf0; // Mask channel
+        const channel = status & 0x0f; // Extract channel
         console.log('[MIDIManager] handleMessage', { status, note, velocity, command, activeNotes: Array.from(this.activeNotes) });
 
         // Note On: 144 (0x90), Note Off: 128 (0x80)
@@ -57,13 +59,23 @@ class MIDIManager {
             this.activeNotes.add(note);
             const activeNotesArray = Array.from(this.activeNotes);
             console.log('[MIDIManager] Active notes after add:', activeNotesArray);
-            this.notifyListeners({ type: 'noteOn', note, velocity });
+            const event = { type: 'noteOn', note, velocity, channel };
+            this.notifyListeners(event);
+            // Call recording callback if set
+            if (this.recordingCallback) {
+                this.recordingCallback(event);
+            }
         } else if (command === 128 || (command === 144 && velocity === 0)) {
             console.log('[MIDIManager] Note OFF', { note });
             this.activeNotes.delete(note);
             const activeNotesArray = Array.from(this.activeNotes);
             console.log('[MIDIManager] Active notes after delete:', activeNotesArray);
-            this.notifyListeners({ type: 'noteOff', note, velocity: 0 });
+            const event = { type: 'noteOff', note, velocity: 0, channel };
+            this.notifyListeners(event);
+            // Call recording callback if set
+            if (this.recordingCallback) {
+                this.recordingCallback(event);
+            }
         }
     }
 
@@ -94,6 +106,14 @@ class MIDIManager {
 
     getFirstInputName() {
         return this.inputs.length > 0 ? this.inputs[0].name : null;
+    }
+
+    /**
+     * Set optional recording callback
+     * @param {Function|null} callback - Callback function that receives MIDI events { type, note, velocity, channel }
+     */
+    setRecordingCallback(callback) {
+        this.recordingCallback = callback;
     }
 }
 

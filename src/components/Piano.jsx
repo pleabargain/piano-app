@@ -11,7 +11,8 @@ const Piano = ({
     chordMidiNotes = [], // Specific MIDI notes to highlight for chord display
     lavaKeys = [], // MIDI numbers that are "lava" (bad keys) in lava game mode
     mode = 'free', // Current mode to determine styling
-    feedbackState = {} // { noteNumber: 'correct' | 'incorrect' }
+    feedbackState = {}, // { noteNumber: 'correct' | 'incorrect' }
+    expectedNotes = [] // MIDI note numbers that should be played (from playback)
 }) => {
     const keys = [];
 
@@ -32,7 +33,8 @@ const Piano = ({
             isChordNote: chordMidiNotes.includes(i), // Specific chord note highlighting
             isLavaKey: isLavaKey, // Lava key (bad key) in lava game
             isLavaGoodKey: isLavaGoodKey, // Good key in lava game (ice blue)
-            status: feedbackState[i] || null
+            status: feedbackState[i] || null,
+            isExpected: expectedNotes.includes(i) // Expected note from playback
         });
     }
 
@@ -48,6 +50,7 @@ const Piano = ({
               ${key.isChordNote ? 'chord-note' : ''}
               ${key.isLavaKey ? 'lava-key' : ''}
               ${key.isLavaGoodKey ? 'lava-good-key' : ''}
+              ${key.isExpected ? 'expected' : ''}
               ${key.status ? key.status : ''}
             `}
                         data-note={key.noteName}

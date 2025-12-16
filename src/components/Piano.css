@@ -115,6 +115,40 @@
   }
 }
 
+/* Expected Notes (from playback) */
+.key.expected:not(.active) {
+  background: #a78bfa !important; /* Purple for white keys */
+  box-shadow: 0 0 10px rgba(167, 139, 250, 0.6);
+  animation: expected-pulse 1.5s ease-in-out infinite;
+}
+.key.black.expected:not(.active) {
+  background: #6d28d9 !important; /* Dark Purple for black keys */
+  box-shadow: 0 0 10px rgba(109, 40, 217, 0.6);
+  animation: expected-pulse-black 1.5s ease-in-out infinite;
+}
+
+@keyframes expected-pulse {
+  0%, 100% {
+    box-shadow: 0 0 10px rgba(167, 139, 250, 0.6);
+    opacity: 1;
+  }
+  50% {
+    box-shadow: 0 0 20px rgba(167, 139, 250, 0.9);
+    opacity: 0.8;
+  }
+}
+
+@keyframes expected-pulse-black {
+  0%, 100% {
+    box-shadow: 0 0 10px rgba(109, 40, 217, 0.6);
+    opacity: 1;
+  }
+  50% {
+    box-shadow: 0 0 20px rgba(109, 40, 217, 0.9);
+    opacity: 0.8;
+  }
+}
+
 /* Feedback States */
 .key.correct {
   background: #22c55e !important; /* Green */
