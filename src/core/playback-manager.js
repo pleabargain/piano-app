@@ -135,6 +135,12 @@ class PlaybackManager {
 
         // Schedule all remaining events
         for (let i = this.currentEventIndex; i < events.length; i++) {
+            // If we're already waiting for input, stop scheduling more events
+            if (this.state === 'waitingForInput') {
+                console.log('[PlaybackManager] Already waiting for input, stopping event scheduling at index', i);
+                break;
+            }
+
             const event = events[i];
             const adjustedTimestamp = event.timestamp / this.playbackRate;
             const targetTime = effectiveStartTime + adjustedTimestamp;
@@ -146,10 +152,12 @@ class PlaybackManager {
                 const wasWaitingForInput = this.state === 'waitingForInput';
                 this.fireEvent(event, i);
                 
-                // If we're now waiting for input, don't increment yet (wait for user)
+                // If we're now waiting for input, don't increment yet (wait for user) and stop scheduling
                 if (this.state === 'waitingForInput' && !wasWaitingForInput) {
                     // Event is waiting for user input, don't increment index yet
                     // The index will be incremented when user plays correct note
+                    console.log('[PlaybackManager] Now waiting for input, stopping event scheduling');
+                    break; // Stop scheduling more events
                 } else {
                     this.currentEventIndex = i + 1;
                     
@@ -161,7 +169,14 @@ class PlaybackManager {
             } else {
                 console.log('[PlaybackManager] Scheduling event at index', i, 'with delay', delay, 'ms');
                 const timeoutId = setTimeout(() => {
-                    if ((this.state === 'playing' || this.state === 'waitingForInput') && this.currentEventIndex === i) {
+                    // Don't process if we're already waiting for input (user needs to play first)
+                    if (this.state === 'waitingForInput') {
+                        console.log('[PlaybackManager] Skipping scheduled event at index', i, '- waiting for user input');
+                        return;
+                    }
+                    
+                    // Check if we're still in a valid state and haven't advanced past this event
+                    if (this.state === 'playing' && this.currentEventIndex === i) {
                         const wasWaitingForInput = this.state === 'waitingForInput';
                         this.fireEvent(event, i);
                         
@@ -169,6 +184,7 @@ class PlaybackManager {
                         if (this.state === 'waitingForInput' && !wasWaitingForInput) {
                             // Event is waiting for user input, don't increment index yet
                             // The index will be incremented when user plays correct note
+                            console.log('[PlaybackManager] Now waiting for input from scheduled event');
                         } else {
                             this.currentEventIndex = i + 1;
 

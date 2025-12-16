@@ -1,0 +1,304 @@
+{
+  "version": "1.0",
+  "id": "d4157ea3-a1bf-4be9-ac3c-2db3d747bbbd",
+  "name": "Untitled Recording",
+  "createdAt": 1765896390377,
+  "duration": 10513.60000000149,
+  "metadata": {},
+  "events": [
+    {
+      "type": "noteOn",
+      "note": 55,
+      "velocity": 47,
+      "timestamp": 0,
+      "channel": 0
+    },
+    {
+      "type": "noteOn",
+      "note": 55,
+      "velocity": 47,
+      "timestamp": 0.19999999925494194,
+      "channel": 0
+    },
+    {
+      "type": "noteOn",
+      "note": 55,
+      "velocity": 47,
+      "timestamp": 0.3999999985098839,
+      "channel": 0
+    },
+    {
+      "type": "noteOn",
+      "note": 59,
+      "velocity": 51,
+      "timestamp": 861.5,
+      "channel": 0
+    },
+    {
+      "type": "noteOn",
+      "note": 59,
+      "velocity": 51,
+      "timestamp": 861.6999999992549,
+      "channel": 0
+    },
+    {
+      "type": "noteOn",
+      "note": 59,
+      "velocity": 51,
+      "timestamp": 861.8000000007451,
+      "channel": 0
+    },
+    {
+      "type": "noteOff",
+      "note": 55,
+      "velocity": 0,
+      "timestamp": 917.3000000007451,
+      "channel": 0
+    },
+    {
+      "type": "noteOff",
+      "note": 55,
+      "velocity": 0,
+      "timestamp": 917.5,
+      "channel": 0
+    },
+    {
+      "type": "noteOff",
+      "note": 55,
+      "velocity": 0,
+      "timestamp": 917.6999999992549,
+      "channel": 0
+    },
+    {
+      "type": "noteOn",
+      "note": 62,
+      "velocity": 49,
+      "timestamp": 2712.300000000745,
+      "channel": 0
+    },
+    {
+      "type": "noteOn",
+      "note": 62,
+      "velocity": 49,
+      "timestamp": 2712.5,
+      "channel": 0
+    },
+    {
+      "type": "noteOn",
+      "note": 62,
+      "velocity": 49,
+      "timestamp": 2712.5,
+      "channel": 0
+    },
+    {
+      "type": "noteOff",
+      "note": 59,
+      "velocity": 0,
+      "timestamp": 2757.800000000745,
+      "channel": 0
+    },
+    {
+      "type": "noteOff",
+      "note": 59,
+      "velocity": 0,
+      "timestamp": 2758,
+      "channel": 0
+    },
+    {
+      "type": "noteOff",
+      "note": 59,
+      "velocity": 0,
+      "timestamp": 2758.10000000149,
+      "channel": 0
+    },
+    {
+      "type": "noteOn",
+      "note": 59,
+      "velocity": 48,
+      "timestamp": 3523.10000000149,
+      "channel": 0
+    },
+    {
+      "type": "noteOn",
+      "note": 59,
+      "velocity": 48,
+      "timestamp": 3523.300000000745,
+      "channel": 0
+    },
+    {
+      "type": "noteOn",
+      "note": 59,
+      "velocity": 48,
+      "timestamp": 3523.39999999851,
+      "channel": 0
+    },
+    {
+      "type": "noteOff",
+      "note": 62,
+      "velocity": 0,
+      "timestamp": 3593.39999999851,
+      "channel": 0
+    },
+    {
+      "type": "noteOff",
+      "note": 62,
+      "velocity": 0,
+      "timestamp": 3593.5,
+      "channel": 0
+    },
+    {
+      "type": "noteOff",
+      "note": 62,
+      "velocity": 0,
+      "timestamp": 3593.60000000149,
+      "channel": 0
+    },
+    {
+      "type": "noteOn",
+      "note": 62,
+      "velocity": 50,
+      "timestamp": 5630.10000000149,
+      "channel": 0
+    },
+    {
+      "type": "noteOn",
+      "note": 62,
+      "velocity": 50,
+      "timestamp": 5630.199999999255,
+      "channel": 0
+    },
+    {
+      "type": "noteOn",
+      "note": 62,
+      "velocity": 50,
+      "timestamp": 5630.199999999255,
+      "channel": 0
+    },
+    {
+      "type": "noteOff",
+      "note": 59,
+      "velocity": 0,
+      "timestamp": 5645.699999999255,
+      "channel": 0
+    },
+    {
+      "type": "noteOff",
+      "note": 59,
+      "velocity": 0,
+      "timestamp": 5645.800000000745,
+      "channel": 0
+    },
+    {
+      "type": "noteOff",
+      "note": 59,
+      "velocity": 0,
+      "timestamp": 5646,
+      "channel": 0
+    },
+    {
+      "type": "noteOn",
+      "note": 59,
+      "velocity": 56,
+      "timestamp": 6430.60000000149,
+      "channel": 0
+    },
+    {
+      "type": "noteOn",
+      "note": 59,
+      "velocity": 56,
+      "timestamp": 6430.800000000745,
+      "channel": 0
+    },
+    {
+      "type": "noteOn",
+      "note": 59,
+      "velocity": 56,
+      "timestamp": 6431,
+      "channel": 0
+    },
+    {
+      "type": "noteOff",
+      "note": 62,
+      "velocity": 0,
+      "timestamp": 6482.300000000745,
+      "channel": 0
+    },
+    {
+      "type": "noteOff",
+      "note": 62,
+      "velocity": 0,
+      "timestamp": 6482.5,
+      "channel": 0
+    },
+    {
+      "type": "noteOff",
+      "note": 62,
+      "velocity": 0,
+      "timestamp": 6482.60000000149,
+      "channel": 0
+    },
+    {
+      "type": "noteOn",
+      "note": 55,
+      "velocity": 47,
+      "timestamp": 7249.60000000149,
+      "channel": 0
+    },
+    {
+      "type": "noteOn",
+      "note": 55,
+      "velocity": 47,
+      "timestamp": 7249.800000000745,
+      "channel": 0
+    },
+    {
+      "type": "noteOn",
+      "note": 55,
+      "velocity": 47,
+      "timestamp": 7249.89999999851,
+      "channel": 0
+    },
+    {
+      "type": "noteOff",
+      "note": 59,
+      "velocity": 0,
+      "timestamp": 7305.5,
+      "channel": 0
+    },
+    {
+      "type": "noteOff",
+      "note": 59,
+      "velocity": 0,
+      "timestamp": 7305.60000000149,
+      "channel": 0
+    },
+    {
+      "type": "noteOff",
+      "note": 59,
+      "velocity": 0,
+      "timestamp": 7305.699999999255,
+      "channel": 0
+    },
+    {
+      "type": "noteOff",
+      "note": 55,
+      "velocity": 0,
+      "timestamp": 8903.39999999851,
+      "channel": 0
+    },
+    {
+      "type": "noteOff",
+      "note": 55,
+      "velocity": 0,
+      "timestamp": 8903.60000000149,
+      "channel": 0
+    },
+    {
+      "type": "noteOff",
+      "note": 55,
+      "velocity": 0,
+      "timestamp": 8903.800000000745,
+      "channel": 0
+    }
+  ]
+}

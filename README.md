@@ -109,6 +109,21 @@ npm run test:ui
   - Perfect for practicing scale awareness and avoiding wrong notes
   - Animated lava keys with glowing red effect for visual feedback
 
+- **Recording and Playback**:
+  - **Record Your Performance**: Capture MIDI performances with precise timing
+  - **Playback Controls**: Play, pause, and stop recordings with progress tracking
+  - **Play-Along Mode**: Visual highlighting shows which keys to play along with recordings
+    - Purple highlighting with pulsing animation on expected keys
+    - Real-time updates as the recording plays
+    - Perfect for learning pieces by following visual guidance
+  - **Wait for Input Mode**: Interactive learning where playback pauses at each note
+    - Playback waits for you to play the correct note before advancing
+    - Ideal for note-by-note learning of difficult passages
+    - Can be combined with Play-Along Mode for maximum guidance
+  - **Loop Playback**: Automatically repeat recordings for continuous practice
+  - **Recording Management**: Save, load, and delete multiple recordings
+  - **Local Storage**: Recordings persist across browser sessions
+
 ### Pyramid Layout (split-keyboard branch)
 
 The application features an innovative pyramid layout for integrated chord and scale practice:
@@ -520,6 +535,150 @@ The Chord Practice interface has several key areas:
    - Challenge yourself by trying different keys and scale types
    - Great for developing muscle memory and scale awareness
 
+### Recording and Playback
+
+The app includes a comprehensive recording and playback system that allows you to record your performances and practice along with them.
+
+#### Recording Your Performance
+
+1. **Start Recording**:
+   - Click the "⏺ Record" button in the Recording Controls panel
+   - Play your piece on your MIDI keyboard
+   - The recording duration is displayed in real-time
+   - Optionally enter a name for your recording while recording
+
+2. **Stop Recording**:
+   - Click the "⏹ Stop" button to end the recording
+   - Your recording is automatically saved to local storage
+   - The recording appears in the Recording List for future playback
+
+3. **Recording Features**:
+   - Captures all MIDI events (note on/off, velocity, timing)
+   - Preserves exact timing and note durations
+   - Multiple recordings can be saved and managed
+   - Recordings persist across browser sessions
+
+#### Playing Back Recordings
+
+1. **Select a Recording**:
+   - Browse your saved recordings in the Recording List
+   - Click on a recording to load it for playback
+   - The selected recording is highlighted
+
+2. **Playback Controls**:
+   - **▶ Play**: Start playback from the beginning
+   - **⏸ Pause**: Pause playback (resume with Play button)
+   - **⏹ Stop**: Stop playback and return to the beginning
+   - **Progress Bar**: Shows playback progress as a percentage
+
+3. **Playback Features**:
+   - Accurate timing reproduction of your original performance
+   - Visual progress indicator
+   - Can be paused and resumed at any time
+   - Works with all practice modes
+
+#### Play-Along Mode
+
+Play-Along Mode helps you practice by visually showing which keys to play along with a recording.
+
+1. **Enable Play-Along Mode**:
+   - Load a recording from the Recording List
+   - Check the "Play-Along Mode" checkbox in the Recording Controls
+   - Start playback of your recording
+
+2. **Visual Feedback**:
+   - **Purple Highlighting**: Keys that are being played in the recording are highlighted in purple
+   - **Pulsing Animation**: Expected keys have a subtle pulsing animation to draw attention
+   - **Real-time Updates**: Highlights update in real-time as the recording plays
+   - **Multiple Keys**: All active notes from the recording are highlighted simultaneously
+
+3. **How It Works**:
+   - As the recording plays, each note that sounds is highlighted on the piano keyboard
+   - You can see exactly which keys to play along with
+   - Highlights appear when notes start and disappear when notes end
+   - Perfect for learning pieces by following along visually
+
+4. **Practice Tips**:
+   - Start by just watching the highlights to understand the piece
+   - Try playing along with the recording to practice timing
+   - Use it to learn new pieces by following the visual guide
+   - Combine with other modes (like Free Play) to see chord detection while playing along
+
+#### Wait for Input Mode
+
+Wait for Input Mode creates an interactive learning experience where playback pauses and waits for you to play the correct note.
+
+1. **Enable Wait for Input Mode**:
+   - Load a recording from the Recording List
+   - Check the "Wait for Input Mode" checkbox
+   - Start playback of your recording
+
+2. **How It Works**:
+   - Playback automatically pauses at each note
+   - The expected note is highlighted in purple on the keyboard
+   - You must play the correct note to continue playback
+   - If you play the wrong note, playback remains paused (no error message, but it won't advance)
+   - Once you play the correct note, playback automatically continues to the next note
+
+3. **Learning Benefits**:
+   - Forces you to learn each note individually
+   - Helps develop muscle memory for specific pieces
+   - Perfect for learning difficult passages note-by-note
+   - Self-paced learning - take your time on each note
+
+4. **Combining with Play-Along Mode**:
+   - You can enable both Play-Along Mode and Wait for Input Mode together
+   - Play-Along Mode shows you which note to play
+   - Wait for Input Mode ensures you play it correctly before advancing
+   - This combination provides the most guided learning experience
+
+#### Loop Playback
+
+Loop Playback automatically repeats your recording for continuous practice.
+
+1. **Enable Loop Playback**:
+   - Load a recording from the Recording List
+   - Check the "Loop Playback" checkbox
+   - Start playback - the recording will automatically restart when it reaches the end
+
+2. **Use Cases**:
+   - Practice a piece repeatedly without manually restarting
+   - Use with Play-Along Mode for continuous visual guidance
+   - Perfect for memorization and muscle memory development
+   - Great for warm-up exercises or technical drills
+
+3. **Stopping Loops**:
+   - Click the "⏹ Stop" button to stop playback and exit loop mode
+   - Uncheck the "Loop Playback" checkbox to disable looping
+
+#### Recording Management
+
+1. **Recording List**:
+   - All your saved recordings are displayed in the Recording List
+   - Each recording shows its name and creation date
+   - Click on a recording to load it for playback
+   - Recordings are stored in your browser's local storage
+
+2. **Deleting Recordings**:
+   - Each recording has a delete button
+   - Click to permanently remove a recording
+   - Deletion cannot be undone
+
+3. **Recording Storage**:
+   - Recordings are saved locally in your browser
+   - They persist across browser sessions
+   - Clearing browser data will remove recordings
+   - Consider exporting important recordings if needed
+
+#### Tips for Effective Practice
+
+- **Record Yourself**: Record your practice sessions to track progress over time
+- **Play Along**: Use Play-Along Mode to learn new pieces by following the visual guide
+- **Slow Learning**: Use Wait for Input Mode to learn difficult passages note-by-note
+- **Repetition**: Use Loop Playback to practice passages repeatedly
+- **Combine Modes**: Try different combinations of modes to find what works best for you
+- **Record Variations**: Record different versions of the same piece to compare approaches
+
 ## Browser Compatibility
 
 - **Chrome/Edge**: Full Web MIDI API support ✅
@@ -610,4 +769,4 @@ Run tests with `npm test` or `npm run test:ui` for interactive test interface.
 
 ---
 
-Last Updated: 2025-12-12T18:55:03
+Last Updated: 2025-12-16T18:50:59
