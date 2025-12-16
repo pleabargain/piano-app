@@ -731,6 +731,144 @@ See `agent-rules.md` for coding rules and guidelines.
   - Chord Practice mode displays multiple information panels side-by-side which may feel cramped
   - All core functionality works correctly despite UI limitations
 
+### UI Improvement Opportunities
+
+While the application is fully functional, there are several areas where the user interface could be enhanced for better usability and user experience:
+
+#### Layout and Spacing
+
+- **Chord Practice Mode Layout**: 
+  - Currently displays Detected Chord and Custom Progression panels side-by-side, which can feel cramped on smaller screens
+  - **Improvement**: Consider a vertical stack layout or collapsible panels for better space utilization
+  - **Improvement**: Add responsive breakpoints to switch between horizontal and vertical layouts based on screen size
+
+- **Information Hierarchy**:
+  - Multiple chord displays (Detected Chord, Target Chord, Detected Chord Card) can be confusing
+  - **Improvement**: Consolidate or better differentiate between different chord information displays
+  - **Improvement**: Use visual hierarchy (size, color, position) to emphasize the most important information
+
+- **Panel Spacing**:
+  - Some panels feel tightly packed together
+  - **Improvement**: Increase consistent spacing between panels and sections
+  - **Improvement**: Add visual separators or subtle borders to better define sections
+
+#### Visual Feedback
+
+- **Chord Detection Feedback**:
+  - While chord detection works correctly, visual feedback could be more prominent
+  - **Improvement**: Add animation or color transitions when a chord is detected
+  - **Improvement**: Use more distinct visual states for "correct chord", "wrong chord", and "no chord"
+  - **Improvement**: Add success indicators (checkmarks, color changes) when progression advances
+
+- **Error States**:
+  - Currently, playing the wrong chord in Chord Practice mode doesn't provide explicit feedback
+  - **Improvement**: Add visual indicators (red highlighting, shake animation) when wrong chord is played
+  - **Improvement**: Show helpful hints about what notes are missing or incorrect
+
+- **Status Messages**:
+  - Status messages could be more visually prominent
+  - **Improvement**: Use toast notifications or more prominent status banners
+  - **Improvement**: Add icons or color coding to different types of status messages
+
+#### Component Organization
+
+- **Controls Panel**:
+  - Settings and mode controls could be better organized
+  - **Improvement**: Group related controls into collapsible sections
+  - **Improvement**: Add tooltips or help text for less obvious controls
+  - **Improvement**: Consider a settings panel that can be toggled open/closed
+
+- **Recording Controls**:
+  - Recording controls and list could be better integrated
+  - **Improvement**: Create a unified recording panel with better visual organization
+  - **Improvement**: Add visual indicators for recording state (recording, paused, stopped)
+
+- **Mode Selection**:
+  - Mode buttons could be more visually distinct
+  - **Improvement**: Use icons or more distinct styling for each mode
+  - **Improvement**: Add visual indicators showing which mode is currently active
+
+#### Responsive Design
+
+- **Mobile/Tablet Support**:
+  - Current layout may not work well on smaller screens
+  - **Improvement**: Add mobile-specific layouts with stacked components
+  - **Improvement**: Make piano keyboard scrollable or resizable on smaller screens
+  - **Improvement**: Consider touch-friendly button sizes and spacing
+
+- **Large Screen Optimization**:
+  - On very large screens, content may feel too centered and underutilized
+  - **Improvement**: Add options for different layout modes (centered, full-width, custom)
+  - **Improvement**: Allow users to customize panel arrangements
+
+#### Accessibility
+
+- **Keyboard Navigation**:
+  - Keyboard shortcuts and navigation could be improved
+  - **Improvement**: Add keyboard shortcuts for common actions (start/stop recording, change modes)
+  - **Improvement**: Ensure all interactive elements are keyboard accessible
+
+- **Screen Reader Support**:
+  - Better ARIA labels and semantic HTML could improve accessibility
+  - **Improvement**: Add proper ARIA labels to all interactive elements
+  - **Improvement**: Ensure status messages are announced to screen readers
+
+- **Color Contrast**:
+  - Some text/background combinations may not meet accessibility standards
+  - **Improvement**: Review and improve color contrast ratios throughout the application
+  - **Improvement**: Add high-contrast mode option
+
+#### User Experience Enhancements
+
+- **Onboarding**:
+  - New users may find the interface overwhelming
+  - **Improvement**: Add a welcome tour or tutorial for first-time users
+  - **Improvement**: Add contextual help tooltips throughout the interface
+
+- **Customization**:
+  - Limited options for personalizing the interface
+  - **Improvement**: Add theme customization (light/dark mode toggle)
+  - **Improvement**: Allow users to show/hide certain panels
+  - **Improvement**: Save user preferences (layout, theme, default settings)
+
+- **Visual Polish**:
+  - Some components could benefit from more refined styling
+  - **Improvement**: Add subtle shadows, gradients, or other visual effects for depth
+  - **Improvement**: Improve button hover states and transitions
+  - **Improvement**: Add loading states and smooth transitions between states
+
+#### Information Display
+
+- **Chord Information**:
+  - Chord extension suggestions could be more visually integrated
+  - **Improvement**: Show extensions as clickable buttons that highlight keys on the piano
+  - **Improvement**: Add visual connections between chord notes and extension suggestions
+
+- **Progression Display**:
+  - Progression preview could be more interactive
+  - **Improvement**: Add visual indicators showing progress through the progression
+  - **Improvement**: Show which chords have been completed vs. upcoming
+
+- **Recording List**:
+  - Recording list could show more information
+  - **Improvement**: Add thumbnails or previews of recordings
+  - **Improvement**: Show duration, date created, and other metadata more prominently
+  - **Improvement**: Add search/filter functionality for recordings
+
+#### Performance and Polish
+
+- **Animations**:
+  - Smooth animations could improve perceived performance
+  - **Improvement**: Add subtle transitions when switching modes or updating displays
+  - **Improvement**: Smooth animations for chord detection feedback
+
+- **Loading States**:
+  - Some operations may benefit from loading indicators
+  - **Improvement**: Add loading spinners for recording playback initialization
+  - **Improvement**: Show progress indicators for long operations
+
+These improvements would enhance the user experience while maintaining the application's core functionality. The current implementation prioritizes functionality over polish, which is appropriate for a working application, but these enhancements would make it more user-friendly and professional.
+
 ## Technical Details
 
 ### Music Theory Implementation
@@ -769,4 +907,4 @@ Run tests with `npm test` or `npm run test:ui` for interactive test interface.
 
 ---
 
-Last Updated: 2025-12-16T18:50:59
+Last Updated: 2025-12-16T19:47:03
