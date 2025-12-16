@@ -217,3 +217,74 @@ describe('ProgressionBuilder Component', () => {
     });
 });
 
+    it('should handle minor 7th chords correctly - ii7 vs iimaj7', async () => {
+        render(
+            <ProgressionBuilder
+                selectedRoot="C"
+                selectedScaleType="major"
+                onProgressionSet={onProgressionSetMock}
+                onChordClick={onChordClickMock}
+            />
+        );
+
+        const input = screen.getByPlaceholderText('e.g., I IV V ii');
+        
+        // Test ii7 (minor 7th) - should be "D Minor 7"
+        fireEvent.change(input, { target: { value: 'ii7' } });
+        
+        await waitFor(() => {
+            const chordName = screen.getByText('D Minor 7');
+            expect(chordName).toBeInTheDocument();
+        });
+        
+        // Clear and test iimaj7 (minor-major 7th) - should be different from ii7
+        fireEvent.change(input, { target: { value: 'iimaj7' } });
+        
+        await waitFor(() => {
+            const chordElement = screen.getByText('ii');
+            expect(chordElement).toBeInTheDocument();
+        });
+        
+        // Get the chord name displayed
+        const chordPreview = screen.getByText('ii').closest('.chord-preview');
+        const chordNameElement = chordPreview?.querySelector('.alpha');
+        const chordName = chordNameElement?.textContent;
+        
+        // Verify that iimaj7 produces a different result than ii7
+        // Current bug: both return "D Minor 7" because ternary always returns 'minor7'
+        // After fix: iimaj7 should return "D Minor Major 7" or similar
+        expect(chordName).toBeDefined();
+        // This test will fail with current bug, pass after fix
+        expect(chordName).not.toBe('D Minor 7'); // Should be different for maj7
+    });
+    
+    it('should handle iiM7 (minor-major 7th with capital M)', async () => {
+        render(
+            <ProgressionBuilder
+                selectedRoot="C"
+                selectedScaleType="major"
+                onProgressionSet={onProgressionSetMock}
+                onChordClick={onChordClickMock}
+            />
+        );
+
+        const input = screen.getByPlaceholderText('e.g., I IV V ii');
+        
+        // Test iiM7 (minor-major 7th with capital M)
+        fireEvent.change(input, { target: { value: 'iiM7' } });
+        
+        await waitFor(() => {
+            const chordElement = screen.getByText('ii');
+            expect(chordElement).toBeInTheDocument();
+        });
+        
+        const chordPreview = screen.getByText('ii').closest('.chord-preview');
+        const chordNameElement = chordPreview?.querySelector('.alpha');
+        const chordName = chordNameElement?.textContent;
+        
+        // Should be different from regular minor 7th
+        expect(chordName).toBeDefined();
+        expect(chordName).not.toBe('D Minor 7'); // Should be different for M7
+    });
+});
+
