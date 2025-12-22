@@ -54,6 +54,7 @@ const Piano = ({
               ${key.status ? key.status : ''}
             `}
                         data-note={key.noteName}
+                        data-midi={key.midi}
                     >
                         <span className="note-label">{key.noteName}</span>
                     </div>

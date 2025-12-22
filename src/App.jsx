@@ -681,16 +681,13 @@ function App() {
 
   // Helper to get highlighted notes for Left Piano (Chords)
   const getChordHighlights = () => {
-    if (mode === 'chord') {
-      // If a chord is clicked in Circle of Fifths, show that
-      if (chordMidiNotes.length > 0) return chordMidiNotes;
+    // If a chord is clicked in Circle of Fifths, show that regardless of mode
+    if (chordMidiNotes.length > 0) return chordMidiNotes;
 
-      if (progression.length === 0) return [];
-
-      // Otherwise show target chord from progression?
-      // For now, let's use the same logic as before but specific to chords
-      // If we have chordMidiNotes (from click), use them.
-      return chordMidiNotes;
+    // In chord mode, show target chord from progression if available
+    if (mode === 'chord' && progression.length > 0) {
+      // Could show target chord from progression here if needed
+      return [];
     }
     return [];
   };
