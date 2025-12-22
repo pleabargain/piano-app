@@ -261,8 +261,12 @@ The application features an innovative pyramid layout for integrated chord and s
   - Major, Minor, Diminished, Augmented triads
   - Sus2, Sus4 (suspended) chords
   - Major 7, Minor 7, Dominant 7 chords
-  - Diminished 7, Half Diminished 7 chords
+  - Diminished 7, Half Diminished 7 chords (all 12 roots supported)
   - Automatic inversion detection (Root Position, 1st, 2nd, 3rd Inversion)
+  - **Chord Name Formats**: Supports multiple formats for chord names:
+    - Full format: "C Major", "D diminished 7", "F# Sus2"
+    - Short format: "Cm", "Cdim7", "F#sus4", "C°7" (diminished symbol)
+    - Note: Flat roots (Bb, Eb, etc.) work best in full format ("Bb diminished 7")
 
 - **Custom Chord Progressions**:
   - Input progressions using Roman numeral notation (e.g., "I IV V I")
@@ -506,8 +510,9 @@ The Chord Practice interface has several key areas:
 2. The chord display frame appears next to the Circle of Fifths (always visible)
 3. Play any combination of notes on your MIDI keyboard
 4. The app automatically detects and displays:
-   - Chord name (e.g., "C Major", "D Minor 7")
+   - Chord name (e.g., "C Major", "D Minor 7", "F# Diminished 7")
    - Chord inversion (e.g., "Root Position", "1st Inversion")
+   - All chord types are detected across all 12 keys and octaves
 5. When no chord is detected, the frame shows "No chord detected"
 6. Scale notes are highlighted for reference on the keyboard
 7. Use the Circle of Fifths to quickly change keys while playing
@@ -893,7 +898,7 @@ The project includes comprehensive unit tests for:
 - Root element mounting
 - Music theory functions (scales, chords)
 - MIDI manager functionality
-- **Chord detection logic**: Tests for F Major, C Major, Sus2, Sus4, and other chord types
+- **Chord detection logic**: Tests for F Major, C Major, Sus2, Sus4, Diminished 7, and other chord types
 - **Chord practice integration**: Tests for chord name matching and progression advancement
 - **Key progression practice**: Tests for scale progression functionality
 - **Chord name format consistency**: Ensures identifyChord and progression builder use matching formats
@@ -906,6 +911,7 @@ Run tests with `npm test` or `npm run test:ui` for interactive test interface.
 - Tests verify chord detection works across different octaves and inversions
 - Tests ensure chord name matching works correctly for progression advancement
 - Edge cases covered: insufficient notes, wrong chords, partial chords, empty inputs, enharmonic equivalents
+- Diminished 7 chords: All 12 roots supported with enharmonic equivalence handling
 
 ---
 
