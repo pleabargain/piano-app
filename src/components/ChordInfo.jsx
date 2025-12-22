@@ -5,10 +5,11 @@ import './ChordInfo.css';
 /**
  * ChordInfo Component
  * Displays chord information for the left piano frame
- * Shows locked chord, detected chord, and potential chord suggestions
+ * Shows locked chord, detected chord(s), and potential chord suggestions
  */
 const ChordInfo = ({
     detectedChord,
+    detectedChords = [],
     chordSuggestions,
     lockedChord,
     onLockChord,
@@ -18,6 +19,9 @@ const ChordInfo = ({
 }) => {
     const hasActiveNotes = activeNotes && activeNotes.length > 0;
     const hasTwoNotes = activeNotes && activeNotes.length === 2;
+    
+    // Use detectedChords array if available, otherwise fall back to detectedChord
+    const chordsToDisplay = detectedChords.length > 0 ? detectedChords : (detectedChord ? [detectedChord] : []);
 
     return (
         <div className="chord-info-container">
@@ -45,17 +49,40 @@ const ChordInfo = ({
             {!lockedChord && (
                 <div className="detected-chord-section">
                     <div className="section-label">Currently Playing</div>
-                    {detectedChord ? (
+                    {chordsToDisplay.length > 0 ? (
                         <>
-                            <div className="detected-chord-name">{detectedChord.name}</div>
-                            {detectedChord.inversion && (
-                                <div className="detected-chord-inversion">
-                                    {detectedChord.inversion}
-                                </div>
+                            {chordsToDisplay.length === 1 ? (
+                                <>
+                                    <div className="detected-chord-name">{chordsToDisplay[0].name}</div>
+                                    {chordsToDisplay[0].inversion && (
+                                        <div className="detected-chord-inversion">
+                                            {chordsToDisplay[0].inversion}
+                                        </div>
+                                    )}
+                                </>
+                            ) : (
+                                <>
+                                    <div className="detected-chord-name multiple-chords">
+                                        {chordsToDisplay.map((chord, index) => (
+                                            <span key={index} className="chord-variant">
+                                                {chord.name}
+                                                {index < chordsToDisplay.length - 1 && <span className="chord-separator"> / </span>}
+                                            </span>
+                                        ))}
+                                    </div>
+                                    {chordsToDisplay[0].inversion && (
+                                        <div className="detected-chord-inversion">
+                                            {chordsToDisplay[0].inversion}
+                                        </div>
+                                    )}
+                                    <div className="harmonic-function-note">
+                                        Multiple harmonic functions detected
+                                    </div>
+                                </>
                             )}
                             <button
                                 className="lock-button"
-                                onClick={() => onLockChord(detectedChord)}
+                                onClick={() => onLockChord(chordsToDisplay[0])}
                                 title="Lock this chord"
                             >
                                 🔓 Lock Chord

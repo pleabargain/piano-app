@@ -105,6 +105,32 @@
   text-shadow: 0 2px 8px rgba(59, 130, 246, 0.4);
 }
 
+.detected-chord-name.multiple-chords {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px;
+}
+
+.chord-variant {
+  display: inline-flex;
+  align-items: center;
+}
+
+.chord-separator {
+  color: #93c5fd;
+  font-weight: 400;
+  margin: 0 2px;
+}
+
+.harmonic-function-note {
+  font-size: 0.85rem;
+  color: #94a3b8;
+  font-style: italic;
+  margin-top: 4px;
+  margin-bottom: 8px;
+}
+
 .detected-chord-inversion {
   font-size: 1rem;
   color: #93c5fd;

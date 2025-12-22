@@ -39,7 +39,7 @@ function App() {
   const [statusMessage, setStatusMessage] = useState('Connect MIDI keyboard to start');
 
   // Use custom hook for chord detection
-  const { detectedChord, chordSuggestions } = useChordDetection(activeNotes);
+  const { detectedChord, detectedChords, chordSuggestions } = useChordDetection(activeNotes);
   
   // Log detected chord changes with maximum verbosity
   useEffect(() => {
@@ -888,6 +888,7 @@ function App() {
             {/* ChordInfo (center) */}
             <ChordInfo
               detectedChord={detectedChord}
+              detectedChords={detectedChords}
               chordSuggestions={chordSuggestions}
               lockedChord={lockedChord}
               onLockChord={handleLockChord}

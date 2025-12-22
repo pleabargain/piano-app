@@ -24,6 +24,12 @@ export const CHORD_TYPES = {
   dominant7: { name: 'Dominant 7', intervals: [4, 7, 10] },
   diminished7: { name: 'Diminished 7', intervals: [3, 6, 9] },
   half_diminished7: { name: 'Half Diminished 7', intervals: [3, 6, 10] },
+  major6: { name: 'Major 6', intervals: [4, 7, 9] },
+  add6: { name: 'Add6', intervals: [4, 7, 9] },
+  sixNine: { name: '6/9', intervals: [4, 7, 9, 14] },
+  add9: { name: 'Add9', intervals: [4, 7, 14] },
+  major9: { name: 'Major 9', intervals: [4, 7, 11, 14] },
+  minor9: { name: 'Minor 9', intervals: [3, 7, 10, 14] },
 };
 
 export function getNoteIndex(note) {
@@ -148,6 +154,15 @@ export function parseChordName(chordName) {
       'dominant 7': 'dominant7',
       'diminished 7': 'diminished7',
       'half diminished 7': 'half_diminished7',
+      'major 6': 'major6',
+      'add6': 'add6',
+      'add 6': 'add6',
+      '6/9': 'sixNine',
+      '6 9': 'sixNine',
+      'add9': 'add9',
+      'add 9': 'add9',
+      'major 9': 'major9',
+      'minor 9': 'minor9',
     };
 
     const chordType = typeMap[typeName] || 'major';
@@ -187,6 +202,18 @@ export function parseChordName(chordName) {
     chordType = 'diminished7';
   } else if (suffix === 'm7b5' || suffix === 'ø7') {
     chordType = 'half_diminished7';
+  } else if (suffix === '6' || suffix === 'maj6') {
+    chordType = 'major6';
+  } else if (suffix === 'add6') {
+    chordType = 'add6';
+  } else if (suffix === '6/9' || suffix === '69') {
+    chordType = 'sixNine';
+  } else if (suffix === 'add9') {
+    chordType = 'add9';
+  } else if (suffix === 'maj9' || suffix === 'M9') {
+    chordType = 'major9';
+  } else if (suffix === 'm9' || suffix === 'min9') {
+    chordType = 'minor9';
   }
 
   return { root, chordType };
@@ -265,6 +292,63 @@ export function identifyChord(activeNotes) {
 
   console.log('[music-theory] identifyChord: NO MATCH found for pitch classes', pitchClasses);
   return null;
+}
+
+// Identify all possible chord interpretations for a set of notes
+// Returns an array of all matching chords (e.g., Am7 and C6 for notes A, C, E, G)
+export function identifyAllChords(activeNotes) {
+  console.log('[music-theory] identifyAllChords called', { activeNotes, length: activeNotes?.length });
+  
+  if (!activeNotes || activeNotes.length < 3) {
+    console.log('[music-theory] identifyAllChords: insufficient notes', { activeNotes, length: activeNotes?.length });
+    return [];
+  }
+
+  // Convert to pitch classes (0-11)
+  const pitchClasses = [...new Set(activeNotes.map(n => typeof n === 'number' ? n % 12 : getNoteIndex(n)))];
+  console.log('[music-theory] identifyAllChords: pitch classes', { activeNotes, pitchClasses });
+
+  const matches = [];
+
+  // Check all roots and chord types for matches
+  for (let root of NOTES) {
+    for (let [type, data] of Object.entries(CHORD_TYPES)) {
+      const targetNotes = getChordNotes(root, type);
+      if (areNotesEqual(pitchClasses, targetNotes)) {
+        console.log('[music-theory] identifyAllChords: MATCH FOUND!', { root, type, pitchClasses, targetNotes });
+        
+        // Determine inversion
+        let inversion = 'Root Position';
+
+        if (activeNotes.length > 0 && typeof activeNotes[0] === 'number') {
+          const sortedNotes = [...activeNotes].sort((a, b) => a - b);
+          const bassMidi = sortedNotes[0];
+          const bassNoteIndex = bassMidi % 12;
+          const rootIndex = getNoteIndex(root);
+
+          // Calculate interval from root to bass (0-11)
+          let interval = (bassNoteIndex - rootIndex + 12) % 12;
+          console.log('[music-theory] identifyAllChords: inversion calculation', { bassMidi, bassNoteIndex, rootIndex, interval });
+
+          // Map interval to inversion
+          if (interval === 0) inversion = 'Root Position';
+          else if (data.intervals.includes(interval)) {
+            const intervalIndex = data.intervals.indexOf(interval);
+            if (intervalIndex === 0) inversion = '1st Inversion';
+            else if (intervalIndex === 1) inversion = '2nd Inversion';
+            else if (intervalIndex === 2) inversion = '3rd Inversion';
+          }
+        }
+
+        const chordResult = { root, type, name: `${root} ${data.name}`, inversion };
+        matches.push(chordResult);
+        console.log('[music-theory] identifyAllChords: added match', chordResult);
+      }
+    }
+  }
+
+  console.log('[music-theory] identifyAllChords: found', matches.length, 'matches');
+  return matches;
 }
 
 export function getRomanNumeral(scaleRoot, scaleType, chordRoot, chordType) {

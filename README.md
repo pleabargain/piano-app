@@ -91,9 +91,10 @@ npm run test:ui
 - **Free Play Mode**:
   - Play freely and see chord detection in real-time
   - Automatic chord identification with inversion detection
+  - **Multiple Harmonic Functions**: When notes can be interpreted as multiple chords, all interpretations are shown (e.g., "A Minor 7 / C Major 6")
   - **Chord display frame**: Always-visible frame positioned next to Circle of Fifths
-  - Shows detected chord name and inversion when playing, or "No chord detected" when idle
-  - Educational feedback showing what you're playing
+  - Shows detected chord name(s) and inversion when playing, or "No chord detected" when idle
+  - Educational feedback showing what you're playing and all possible harmonic functions
 
 - **Lava Game Mode**:
   - Fun, interactive game mode to practice staying in key
@@ -190,9 +191,18 @@ The application features an innovative pyramid layout for integrated chord and s
 #### Chord Detection Features
 
 - **Real-Time Detection**: Instantly identifies played chords
+- **Multiple Harmonic Function Detection**: Shows all possible chord interpretations when the same notes can function as different chords
+  - Example: Playing A, C, E, G displays "A Minor 7 / C Major 6" since both chords contain the same notes
+  - Helps users understand equivalent chord voicings and harmonic functions
 - **Inversion Display**: Shows chord inversions (Root, 1st, 2nd, 3rd)
 - **Extension Suggestions**: Recommends 7th, 9th, and other extended chords
 - **Visual Feedback**: Highlights chord notes on left piano
+- **Supported Chord Types**:
+  - Triads: Major, Minor, Diminished, Augmented
+  - Suspended: Sus2, Sus4
+  - 7th Chords: Major 7, Minor 7, Dominant 7, Diminished 7, Half Diminished 7
+  - 6th Chords: Major 6, Add6
+  - Extended Chords: 6/9, Add9, Major 9, Minor 9
 
 #### Scale Selector Features
 
@@ -912,7 +922,25 @@ Run tests with `npm test` or `npm run test:ui` for interactive test interface.
 - Tests ensure chord name matching works correctly for progression advancement
 - Edge cases covered: insufficient notes, wrong chords, partial chords, empty inputs, enharmonic equivalents
 - Diminished 7 chords: All 12 roots supported with enharmonic equivalence handling
+- **Multiple Harmonic Function Detection**: Tests for detecting all possible chord interpretations (e.g., Am7/C6 case)
+- **New Chord Types**: Tests for Major 6, Add6, 6/9, Add9, Major 9, and Minor 9 chord detection
 
 ---
 
-Last Updated: 2025-01-27
+## Recent Updates
+
+### 2025-12-22: Multiple Harmonic Function Detection
+
+Added support for detecting and displaying multiple harmonic functions when the same set of notes can be interpreted as different chords:
+
+- **New Function**: `identifyAllChords()` returns all possible chord interpretations for a set of notes
+- **UI Enhancement**: Chord display now shows all interpretations separated by " / " (e.g., "A Minor 7 / C Major 6")
+- **New Chord Types**: Added support for Major 6, Add6, 6/9, Add9, Major 9, and Minor 9 chords
+- **Backward Compatibility**: `identifyChord()` still returns the first match for existing code
+- **Example**: Playing A, C, E, G now shows both "A Minor 7" and "C Major 6" since they contain the same notes
+
+This enhancement helps users understand that the same notes can function as different chords depending on harmonic context, improving music theory education.
+
+---
+
+Last Updated: 2025-12-22
