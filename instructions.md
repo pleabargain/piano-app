@@ -282,5 +282,32 @@ D) All of the above - provide multiple modes
 
 ---
 
-Last Updated: 2025-12-06T13:27:00
+### 2025-12-22T20:23:26
+
+**Question**: The current codebase doesn't include a "major6" (C6) chord type. Should I add it to CHORD_TYPES, or are there other chord types (like add6, 6/9, etc.) you'd also like included?
+
+**Options**:
+A) Add major6 only
+B) Add major6 and ask about others
+C) Focus on multi-detection first, add chord types later
+D) All of the above (add major6 now, plan for others later)
+
+**Answer**: B (Add major6 and ask about others)
+
+### 2025-12-22T20:23:26
+
+**Question**: Which other chord types should be added alongside major6? Common options include add6, 6/9, major9, minor9, dominant9, add9, sus2, sus4 (already exists), and others.
+
+**Options**:
+A) Just add6 (add6)
+B) add6 and 6/9
+C) Common extensions: add6, 6/9, add9, major9, minor9
+D) Minimal set: major6 only for now
+E) All of the above (comprehensive set)
+
+**Answer**: C (Common extensions: add6, 6/9, add9, major9, minor9)
+
+---
+
+Last Updated: 2025-12-22T20:23:26
 
