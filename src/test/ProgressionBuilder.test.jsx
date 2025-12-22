@@ -2,6 +2,19 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import ProgressionBuilder from '../components/ProgressionBuilder';
 
+/**
+ * TEST SUITE: ProgressionBuilder Component
+ * 
+ * PURPOSE: This test suite validates the ProgressionBuilder component functionality.
+ * 
+ * WHY THESE TESTS ARE IMPORTANT:
+ * - ProgressionBuilder is a key feature - users create custom chord progressions
+ * - Tests Roman numeral parsing and chord name generation
+ * - Validates progression preview and validation
+ * - Ensures component handles user input correctly
+ * - These tests ensure users can build and practice custom progressions
+ */
+
 // Mock the music-theory module
 vi.mock('../core/music-theory', () => ({
     getScaleNotes: vi.fn((root, type) => {
@@ -27,6 +40,10 @@ describe('ProgressionBuilder Component', () => {
     });
 
     it('should render with default input', () => {
+        console.log('[Test] Testing ProgressionBuilder component rendering');
+        console.log('[Test] WHY: Component must render correctly with default values');
+        console.log('[Test] IMPORTANCE: Ensures users see the progression builder on load');
+        
         render(
             <ProgressionBuilder
                 selectedRoot="F"
@@ -39,9 +56,15 @@ describe('ProgressionBuilder Component', () => {
         const input = screen.getByPlaceholderText('e.g., I IV V ii');
         expect(input).toBeInTheDocument();
         expect(input.value).toBe('I IV V I');
+        
+        console.log('[Test] ✅ ProgressionBuilder rendered with default input');
     });
 
     it('should parse and display progression preview', async () => {
+        console.log('[Test] Testing progression parsing and preview display');
+        console.log('[Test] WHY: Users need to see what chords their Roman numerals create');
+        console.log('[Test] IMPORTANCE: Enables users to verify progression before using it');
+        
         render(
             <ProgressionBuilder
                 selectedRoot="F"

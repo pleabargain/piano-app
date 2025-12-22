@@ -3,6 +3,19 @@ import { renderHook, act } from '@testing-library/react';
 import { useState, useEffect } from 'react';
 import { identifyChord } from '../core/music-theory';
 
+/**
+ * TEST SUITE: Active Notes State Management
+ * 
+ * PURPOSE: This test suite validates state management for active MIDI notes and chord detection.
+ * 
+ * WHY THESE TESTS ARE IMPORTANT:
+ * - Tests React state updates when active notes change
+ * - Validates chord detection updates correctly as notes are added/removed
+ * - Ensures rapid note changes are handled correctly
+ * - Tests edge cases like empty notes, switching chords, partial chords
+ * - These tests ensure the UI updates correctly in response to MIDI input
+ */
+
 // Mock the useChordDetection hook behavior
 const mockUseChordDetection = (activeNotes) => {
     const [detectedChord, setDetectedChord] = useState(null);
@@ -33,6 +46,11 @@ describe('Active Notes State Management', () => {
     });
 
     it('should update detectedChord when activeNotes changes', () => {
+        console.log('[Test] Testing state update when active notes change');
+        console.log('[Test] WHY: React state must update correctly when MIDI notes change');
+        console.log('[Test] IMPORTANCE: Ensures UI reflects current chord detection in real-time');
+        console.log('[Test] Scenario: Starting empty, then playing F Major');
+        
         const { result, rerender } = renderHook(
             ({ activeNotes }) => mockUseChordDetection(activeNotes),
             { initialProps: { activeNotes: [] } }
@@ -50,6 +68,11 @@ describe('Active Notes State Management', () => {
     });
 
     it('should clear detectedChord when activeNotes becomes empty', () => {
+        console.log('[Test] Testing state update when all notes are released');
+        console.log('[Test] WHY: Users release all keys - state must clear correctly');
+        console.log('[Test] IMPORTANCE: Ensures UI shows "no chord" when idle');
+        console.log('[Test] Scenario: Starting with F Major, then releasing all keys');
+        
         const { result, rerender } = renderHook(
             ({ activeNotes }) => mockUseChordDetection(activeNotes),
             { initialProps: { activeNotes: [53, 57, 60] } }
@@ -67,6 +90,11 @@ describe('Active Notes State Management', () => {
     });
 
     it('should update detectedChord when switching between chords', () => {
+        console.log('[Test] Testing state update when switching between different chords');
+        console.log('[Test] WHY: Users play different chords in sequence - state must update correctly');
+        console.log('[Test] IMPORTANCE: Ensures UI reflects chord changes in real-time');
+        console.log('[Test] Scenario: F Major → C Major → F Major');
+        
         const { result, rerender } = renderHook(
             ({ activeNotes }) => mockUseChordDetection(activeNotes),
             { initialProps: { activeNotes: [53, 57, 60] } }
@@ -89,6 +117,11 @@ describe('Active Notes State Management', () => {
     });
 
     it('should handle rapid note changes', () => {
+        console.log('[Test] Testing rapid note changes (realistic playing pattern)');
+        console.log('[Test] WHY: Users play notes rapidly - state must handle this without issues');
+        console.log('[Test] IMPORTANCE: Prevents state inconsistencies and UI glitches during fast playing');
+        console.log('[Test] Scenario: Rapid sequence of note additions and removals');
+        
         const { result, rerender } = renderHook(
             ({ activeNotes }) => mockUseChordDetection(activeNotes),
             { initialProps: { activeNotes: [] } }
@@ -116,6 +149,11 @@ describe('Active Notes State Management', () => {
     });
 
     it('should maintain chord detection during note additions', () => {
+        console.log('[Test] Testing chord detection during sequential note additions');
+        console.log('[Test] WHY: Users often press keys one at a time - detection must update correctly');
+        console.log('[Test] IMPORTANCE: Ensures UI shows correct state as users build chords');
+        console.log('[Test] Scenario: Adding F, then A, then C - should detect F Major when complete');
+        
         const { result, rerender } = renderHook(
             ({ activeNotes }) => mockUseChordDetection(activeNotes),
             { initialProps: { activeNotes: [53] } }

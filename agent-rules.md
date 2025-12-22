@@ -25,20 +25,54 @@ This document contains coding rules and guidelines for development of this proje
 
 ## Testing Rules
 
-1. **Unit Tests**: Create unit tests for:
+1. **Test-Driven Development (TDD)**: 
+   - **Write tests BEFORE implementing code** whenever possible
+   - TDD helps clarify requirements and design before coding
+   - Tests serve as executable documentation of expected behavior
+   - Red-Green-Refactor cycle: Write failing test → Implement code → Refactor
+   - Benefits:
+     - Ensures code meets requirements from the start
+     - Prevents over-engineering by focusing on what's needed
+     - Creates safety net for refactoring
+     - Improves code design by forcing testable architecture
+   - When to use TDD:
+     - New features or functionality
+     - Bug fixes (write test that reproduces bug first)
+     - Complex logic that needs careful validation
+     - Critical user-facing features
+
+2. **Unit Tests**: Create unit tests for:
    - Bug fixes (to prevent regression)
    - Core functionality
    - Abstracted functions
 
-2. **Test Structure**: 
+3. **Test Structure**: 
    - Use descriptive test names
    - Isolate bugs in separate test cases
    - Abstract functions being tested into testable units
 
-3. **Test Coverage**: Aim for meaningful test coverage, especially for:
+4. **Test Coverage**: Aim for meaningful test coverage, especially for:
    - Critical user-facing features
    - Complex logic
    - Bug-prone areas
+
+5. **Test Console Messages**: All tests must include console.log messages that clearly explain:
+   - **WHAT** the test is doing (test description)
+   - **WHY** the test is important (purpose and context)
+   - **IMPORTANCE** of the test (impact on user experience or system reliability)
+   - Test data values when relevant (e.g., MIDI note numbers, chord names)
+   - Success confirmation when test passes
+   - Format: Use `[Test]` prefix for all console messages
+   - Example:
+     ```javascript
+     console.log('[Test] Testing C Major chord detection');
+     console.log('[Test] WHY: Major chords are fundamental - users need accurate detection');
+     console.log('[Test] IMPORTANCE: Validates core interval pattern [4, 7] works correctly');
+     console.log('[Test] MIDI Notes: C4=60, E4=64, G4=67');
+     // ... test code ...
+     console.log('[Test] ✅ C Major correctly detected');
+     ```
+   - These messages help developers understand test purpose and aid debugging
 
 ## File Naming
 
@@ -92,5 +126,5 @@ This document contains coding rules and guidelines for development of this proje
 
 ---
 
-Last Updated: 2025-12-02T19:21:11
+Last Updated: 2025-01-27
 

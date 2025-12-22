@@ -259,6 +259,7 @@ The application features an innovative pyramid layout for integrated chord and s
 
 - **Chord Detection**:
   - Major, Minor, Diminished, Augmented triads
+  - Sus2, Sus4 (suspended) chords
   - Major 7, Minor 7, Dominant 7 chords
   - Diminished 7, Half Diminished 7 chords
   - Automatic inversion detection (Root Position, 1st, 2nd, 3rd Inversion)
@@ -892,7 +893,7 @@ The project includes comprehensive unit tests for:
 - Root element mounting
 - Music theory functions (scales, chords)
 - MIDI manager functionality
-- **Chord detection logic**: Tests for F Major, C Major, and other chord types
+- **Chord detection logic**: Tests for F Major, C Major, Sus2, Sus4, and other chord types
 - **Chord practice integration**: Tests for chord name matching and progression advancement
 - **Key progression practice**: Tests for scale progression functionality
 - **Chord name format consistency**: Ensures identifyChord and progression builder use matching formats
@@ -900,11 +901,12 @@ The project includes comprehensive unit tests for:
 Run tests with `npm test` or `npm run test:ui` for interactive test interface.
 
 **Test Coverage Highlights**:
-- 33+ tests specifically for chord detection and practice mode
+- 33+ tests specifically for sus2 and sus4 chord detection
+- 33+ tests for chord detection and practice mode
 - Tests verify chord detection works across different octaves and inversions
 - Tests ensure chord name matching works correctly for progression advancement
-- Edge cases covered: insufficient notes, wrong chords, partial chords, empty inputs
+- Edge cases covered: insufficient notes, wrong chords, partial chords, empty inputs, enharmonic equivalents
 
 ---
 
-Last Updated: 2025-12-16T19:47:03
+Last Updated: 2025-01-27

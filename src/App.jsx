@@ -613,7 +613,7 @@ function App() {
           return '';
         }
         // If it's already in full format (e.g., "C Major"), return as is
-        if (name.includes('Major') || name.includes('Minor') || name.includes('Diminished') || name.includes('Augmented')) {
+        if (name.includes('Major') || name.includes('Minor') || name.includes('Diminished') || name.includes('Augmented') || name.includes('Sus2') || name.includes('Sus4')) {
           console.log('[App] normalizeChordName: already full format', name);
           return name;
         }

@@ -17,6 +17,8 @@ export const CHORD_TYPES = {
   minor: { name: 'Minor', intervals: [3, 7] },
   diminished: { name: 'Diminished', intervals: [3, 6] },
   augmented: { name: 'Augmented', intervals: [4, 8] },
+  sus2: { name: 'Sus2', intervals: [2, 7] },
+  sus4: { name: 'Sus4', intervals: [5, 7] },
   major7: { name: 'Major 7', intervals: [4, 7, 11] },
   minor7: { name: 'Minor 7', intervals: [3, 7, 10] },
   dominant7: { name: 'Dominant 7', intervals: [4, 7, 10] },
@@ -135,6 +137,12 @@ export function parseChordName(chordName) {
       'minor': 'minor',
       'diminished': 'diminished',
       'augmented': 'augmented',
+      'sus2': 'sus2',
+      'sus 2': 'sus2',
+      'suspended 2': 'sus2',
+      'sus4': 'sus4',
+      'sus 4': 'sus4',
+      'suspended 4': 'sus4',
       'major 7': 'major7',
       'minor 7': 'minor7',
       'dominant 7': 'dominant7',
@@ -165,6 +173,10 @@ export function parseChordName(chordName) {
     chordType = 'diminished';
   } else if (suffix === 'aug' || suffix === '+') {
     chordType = 'augmented';
+  } else if (suffix === 'sus2' || suffix === 'sus2nd') {
+    chordType = 'sus2';
+  } else if (suffix === 'sus4' || suffix === 'sus4th') {
+    chordType = 'sus4';
   } else if (suffix === 'm7' || suffix === 'min7') {
     chordType = 'minor7';
   } else if (suffix === 'maj7' || suffix === 'M7') {
