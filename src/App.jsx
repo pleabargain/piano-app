@@ -40,7 +40,7 @@ function App() {
 
   // Use custom hook for chord detection
   const { detectedChord, detectedChords, chordSuggestions } = useChordDetection(activeNotes);
-  
+
   // Log detected chord changes with maximum verbosity
   useEffect(() => {
     if (detectedChord) {
@@ -77,6 +77,9 @@ function App() {
   const [isWaitForInputMode, setIsWaitForInputMode] = useState(false);
   const [isLoopMode, setIsLoopMode] = useState(false);
   const [currentRecording, setCurrentRecording] = useState(null);
+
+  // Practice Settings
+  const [rejectErrors, setRejectErrors] = useState(false);
 
   // Clear clicked chord when mode changes
   useEffect(() => {
@@ -120,7 +123,7 @@ function App() {
     recordingManagerRef.current = new RecordingManager();
     playbackManagerRef.current = new PlaybackManager();
     recordingStorageRef.current = new RecordingStorage();
-    
+
     // Initialize storage
     recordingStorageRef.current.init().catch(err => {
       console.error('[App] Failed to initialize recording storage:', err);
@@ -211,9 +214,9 @@ function App() {
   }, [mode, selectedRoot, selectedScaleType]);
 
   const handleMidiMessage = useCallback((event, activeNotesList) => {
-    console.log('[App] 🎹 MIDI MESSAGE RECEIVED:', { 
-      eventType: event.type, 
-      activeNotesList, 
+    console.log('[App] 🎹 MIDI MESSAGE RECEIVED:', {
+      eventType: event.type,
+      activeNotesList,
       activeNotesCount: activeNotesList?.length,
       event,
       note: event.note,
@@ -221,7 +224,7 @@ function App() {
     });
     setActiveNotes(activeNotesList);
     console.log('[App] ✅ activeNotes state updated to:', activeNotesList);
-    
+
     // Check if we're in wait-for-input mode and user played a note
     if (isWaitForInputMode && playbackManagerRef.current && event.type === 'noteOn' && event.note !== undefined) {
       const correct = playbackManagerRef.current.checkUserInput(event.note);
@@ -231,10 +234,9 @@ function App() {
         console.log('[App] ❌ Incorrect note played');
       }
     }
-    
+
     // Immediately try to detect chord for logging
     if (activeNotesList && activeNotesList.length >= 3) {
-      const { identifyChord } = require('./core/music-theory');
       const immediateChord = identifyChord(activeNotesList);
       if (immediateChord) {
         console.log('[App] 🎵 IMMEDIATE CHORD DETECTION:', immediateChord.name, immediateChord.inversion);
@@ -341,13 +343,13 @@ function App() {
   }, [keyProgression, currentKeyIndex, mode]);
 
   const handleChordPractice = () => {
-    console.log('[App] handleChordPractice called', { 
-      activeNotes, 
+    console.log('[App] handleChordPractice called', {
+      activeNotes,
       activeNotesLength: activeNotes?.length,
-      progression, 
+      progression,
       progressionLength: progression?.length,
-      currentStepIndex, 
-      mode 
+      currentStepIndex,
+      mode
     });
     // We use identifyChord locally for synchronous status message updates relative to activeNotes
     const detected = identifyChord(activeNotes);
@@ -522,12 +524,12 @@ function App() {
       const currentKeyProgression = keyProgression.length > 0 ? keyProgression : [];
       const currentKeyIdx = currentKeyProgression.length > 0 ? currentKeyIndex : 0;
       const currentStepIdx = currentStepIndex;
-      
+
       // Use current key from progression if available, otherwise use selectedRoot
       const currentKey = currentKeyProgression.length > 0 ? currentKeyProgression[currentKeyIdx] : selectedRoot;
       const scaleNotes = getScaleNotes(currentKey, selectedScaleType);
       if (scaleNotes.length === 0) return;
-      
+
       // For piano scales: create full octave pattern (ascending + descending)
       // Ascending: C D E F G A B C (8 notes)
       // Descending: C B A G F E D C (8 notes, starting from octave C)
@@ -535,7 +537,7 @@ function App() {
       const ascendingPattern = [...scaleNotes, currentKey]; // C D E F G A B C
       const descendingPattern = [...scaleNotes].reverse(); // B A G F E D C
       const completeScalePattern = [...ascendingPattern, ...descendingPattern]; // Full cycle
-      
+
       const targetNoteName = completeScalePattern[currentStepIdx % completeScalePattern.length];
 
       // Check if any of the new notes match the target
@@ -544,7 +546,7 @@ function App() {
       if (hit) {
         const nextStepIndex = currentStepIdx + 1;
         const scaleLength = completeScalePattern.length;
-        
+
         // Check if full scale cycle is complete
         if (nextStepIndex >= scaleLength) {
           // Scale completed! Advance to next key in progression
@@ -564,8 +566,10 @@ function App() {
           setCurrentStepIndex(nextStepIndex);
           setStatusMessage(`Good! Next: ${completeScalePattern[nextStepIndex]}`);
         }
-      } else {
-        // Optional: Feedback for wrong note
+      } else if (rejectErrors) {
+        // WRONG NOTE and rejectErrors is on: Reset to beginning
+        setCurrentStepIndex(0);
+        setStatusMessage(`Wrong note! Restarting ${currentKey} ${selectedScaleType} scale. Target: ${completeScalePattern[0]}`);
       }
     } else if (mode === 'chord') {
       // Logic for chord progression
@@ -591,18 +595,18 @@ function App() {
 
   // Separate effect for Chord validation (state-based, not edge-based)
   useEffect(() => {
-    console.log('[App] Chord validation useEffect triggered', { 
-      mode, 
-      progressionLength: progression.length, 
+    console.log('[App] Chord validation useEffect triggered', {
+      mode,
+      progressionLength: progression.length,
       activeNotesLength: activeNotes.length,
       currentStepIndex,
-      activeNotes 
+      activeNotes
     });
-    
+
     if (mode === 'chord' && progression.length > 0 && activeNotes.length >= 3) {
       const targetChord = progression[currentStepIndex % progression.length];
       console.log('[App] Chord validation: target chord', targetChord);
-      
+
       const detected = identifyChord(activeNotes);
       console.log('[App] Chord validation: detected chord', detected);
 
@@ -630,7 +634,7 @@ function App() {
 
       const normalizedTarget = normalizeChordName(targetChord.name);
       const normalizedDetected = detected ? normalizeChordName(detected.name) : '';
-      
+
       console.log('[App] Chord validation: name comparison', {
         targetChordName: targetChord.name,
         detectedName: detected?.name,
@@ -666,6 +670,13 @@ function App() {
           normalizedTarget,
           areEqual: normalizedDetected === normalizedTarget
         });
+
+        if (rejectErrors && detected) {
+          // WRONG CHORD and rejectErrors is on: Reset to beginning
+          console.log('[App] Chord validation: Rejecting error, resetting progression');
+          setCurrentStepIndex(0);
+          setStatusMessage(`Wrong chord! Restarting progression. Target: ${progression[0].roman} (${progression[0].name})`);
+        }
       }
     } else {
       console.log('[App] Chord validation: conditions not met', {
@@ -945,6 +956,8 @@ function App() {
             onModeChange={setMode}
             keyboardSize={keyboardSize}
             onKeyboardSizeChange={setKeyboardSize}
+            rejectErrors={rejectErrors}
+            onRejectErrorsChange={setRejectErrors}
           />
 
           <RecordingControls
@@ -1079,6 +1092,7 @@ function App() {
               setCurrentKeyIndex(0);
               setCurrentStepIndex(0);
             }}
+            selectedScaleType={selectedScaleType}
           />
         )}
 
@@ -1110,8 +1124,8 @@ function App() {
             <h3>Current Key: {keyProgression[currentKeyIndex]} {selectedScaleType}</h3>
             <div className="progression-display">
               {keyProgression.map((key, idx) => (
-                <span 
-                  key={idx} 
+                <span
+                  key={idx}
                   className={idx === currentKeyIndex ? 'current-key' : 'upcoming-key'}
                 >
                   {key}

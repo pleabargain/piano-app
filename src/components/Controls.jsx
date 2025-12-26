@@ -19,7 +19,9 @@ const Controls = ({
     mode,
     onModeChange,
     keyboardSize,
-    onKeyboardSizeChange
+    onKeyboardSizeChange,
+    rejectErrors,
+    onRejectErrorsChange
 }) => {
     return (
         <div className="controls-container">
@@ -84,6 +86,30 @@ const Controls = ({
                             </option>
                         ))}
                     </select>
+                </div>
+
+                <div className="control-group">
+                    <label>Practice Rules</label>
+                    <div className="radio-group" style={{ display: 'flex', gap: '10px', alignItems: 'center', height: '100% ' }}>
+                        <label style={{ display: 'flex', alignItems: 'center', gap: '5px', cursor: 'pointer', fontSize: '0.9rem' }}>
+                            <input
+                                type="radio"
+                                name="rejectErrors"
+                                checked={!rejectErrors}
+                                onChange={() => onRejectErrorsChange(false)}
+                            />
+                            Normal
+                        </label>
+                        <label style={{ display: 'flex', alignItems: 'center', gap: '5px', cursor: 'pointer', fontSize: '0.9rem' }}>
+                            <input
+                                type="radio"
+                                name="rejectErrors"
+                                checked={rejectErrors}
+                                onChange={() => onRejectErrorsChange(true)}
+                            />
+                            Reject Errors
+                        </label>
+                    </div>
                 </div>
             </div>
         </div>

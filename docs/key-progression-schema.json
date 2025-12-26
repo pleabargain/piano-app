@@ -1,0 +1,50 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "title": "Key Progression Schema",
+    "description": "Schema for scale practice key progression files in the Piano App",
+    "type": "object",
+    "properties": {
+        "version": {
+            "type": "string",
+            "description": "The schema version",
+            "example": "1.0.0"
+        },
+        "id": {
+            "type": "string",
+            "description": "A unique identifier for the progression (UUID)",
+            "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+        },
+        "name": {
+            "type": "string",
+            "description": "Name of the progression",
+            "maxLength": 100
+        },
+        "progression": {
+            "type": "string",
+            "description": "Space-separated musical notes (e.g., 'C F Bb Eb')",
+            "example": "C F Bb Eb Ab Db Gb B E A D G"
+        },
+        "createdAt": {
+            "type": "number",
+            "description": "Creation timestamp in milliseconds"
+        },
+        "metadata": {
+            "type": "object",
+            "properties": {
+                "scaleType": {
+                    "type": "string",
+                    "description": "Target scale type for this progression"
+                },
+                "description": {
+                    "type": "string",
+                    "description": "Optional description of the progression"
+                }
+            }
+        }
+    },
+    "required": [
+        "version",
+        "name",
+        "progression"
+    ]
+}

@@ -1,0 +1,14 @@
+{
+  "version": "1.0.0",
+  "id": "550e8400-e29b-41d4-a716-446655440000",
+  "name": "Example Progression",
+  "progression": "I IV V I",
+  "createdAt": 1704067200000,
+  "metadata": {
+    "description": "This is an example progression template showing the JSON schema format",
+    "tags": ["example", "template"],
+    "key": "C",
+    "scaleType": "major"
+  }
+}
+

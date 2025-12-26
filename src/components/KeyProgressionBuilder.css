@@ -5,18 +5,6 @@
     margin: 1rem 0;
 }
 
-.key-progression-builder h3 {
-    margin: 0 0 1rem 0;
-    color: #333;
-    font-size: 1.1rem;
-}
-
-.key-progression-builder .input-group {
-    display: flex;
-    gap: 0.5rem;
-    margin-bottom: 0.5rem;
-}
-
 .key-progression-builder input {
     flex: 1;
     padding: 0.5rem;
@@ -66,3 +54,100 @@
     font-style: italic;
 }
 
+.key-progression-builder .header-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.key-progression-builder .header-row h3 {
+    margin: 0;
+}
+
+.key-progression-builder .header-actions {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.key-progression-builder .save-btn {
+    background: #2196F3;
+}
+
+.key-progression-builder .open-btn {
+    display: inline-block;
+    padding: 0.5rem 1rem;
+    background: #9c27b0;
+    color: white;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.9rem;
+}
+
+.key-progression-builder .saved-progressions {
+    margin-top: 1rem;
+    border-top: 1px solid #ddd;
+    padding-top: 0.5rem;
+}
+
+.key-progression-builder .saved-list {
+    max-height: 150px;
+    overflow-y: auto;
+}
+
+.key-progression-builder .saved-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.4rem;
+    background: white;
+    margin-bottom: 0.3rem;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.9rem;
+}
+
+.key-progression-builder .saved-item:hover {
+    background: #eef;
+}
+
+.key-progression-builder .saved-item .preview {
+    color: #888;
+    font-size: 0.8rem;
+}
+
+.key-progression-builder .delete-small {
+    padding: 2px 6px;
+    background: #f44336;
+    font-size: 0.75rem;
+}
+
+.key-progression-builder .dialog-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 100;
+}
+
+.key-progression-builder .dialog {
+    background: white;
+    padding: 1.5rem;
+    border-radius: 8px;
+    width: 300px;
+}
+
+.key-progression-builder .dialog input {
+    width: 100%;
+    margin-bottom: 1rem;
+}
+
+.key-progression-builder .sample-link {
+    margin-top: 1rem;
+    font-size: 0.8rem;
+}

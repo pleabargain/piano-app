@@ -1,6 +1,7 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import ProgressionBuilder from '../components/ProgressionBuilder';
+import ProgressionStorage from '../core/progression-storage';
 
 /**
  * TEST SUITE: ProgressionBuilder Component
@@ -28,6 +29,23 @@ vi.mock('../core/music-theory', () => ({
     }),
     NOTES: ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B']
 }));
+
+// Mock ProgressionStorage
+vi.mock('../core/progression-storage', () => {
+    const mockStorage = {
+        init: vi.fn().mockResolvedValue(undefined),
+        getAll: vi.fn().mockResolvedValue([]),
+        save: vi.fn().mockResolvedValue('test-id'),
+        load: vi.fn(),
+        delete: vi.fn().mockResolvedValue(undefined),
+        validateProgressionString: vi.fn().mockReturnValue({ valid: true }),
+        downloadProgression: vi.fn(),
+        importFromFile: vi.fn()
+    };
+    return {
+        default: vi.fn(() => mockStorage)
+    };
+});
 
 describe('ProgressionBuilder Component', () => {
     let onProgressionSetMock;
@@ -238,7 +256,6 @@ describe('ProgressionBuilder Component', () => {
             expect(screen.getByText('I')).toBeInTheDocument();
         });
     });
-});
 
     it('should handle minor 7th chords correctly - ii7 vs iimaj7', async () => {
         render(
@@ -308,6 +325,105 @@ describe('ProgressionBuilder Component', () => {
         // Should be different from regular minor 7th
         expect(chordName).toBeDefined();
         expect(chordName).not.toBe('D Minor 7'); // Should be different for M7
+    });
+
+    describe('Save Functionality', () => {
+        it('should show save button when valid progression is entered', async () => {
+            render(
+                <ProgressionBuilder
+                    selectedRoot="F"
+                    selectedScaleType="major"
+                    onProgressionSet={onProgressionSetMock}
+                    onChordClick={onChordClickMock}
+                />
+            );
+
+            await waitFor(() => {
+                // Button text includes emoji, so use role or title
+                const saveButton = screen.getByTitle('Save current progression');
+                expect(saveButton).toBeInTheDocument();
+            });
+        });
+
+        it('should disable save button when input is invalid', async () => {
+            render(
+                <ProgressionBuilder
+                    selectedRoot="F"
+                    selectedScaleType="major"
+                    onProgressionSet={onProgressionSetMock}
+                    onChordClick={onChordClickMock}
+                />
+            );
+
+            const input = screen.getByPlaceholderText('e.g., I IV V ii');
+            const saveButton = screen.getByTitle('Save current progression');
+
+            fireEvent.change(input, { target: { value: 'INVALID' } });
+
+            await waitFor(() => {
+                expect(saveButton).toBeDisabled();
+            });
+        });
+
+        it('should open save dialog when save button is clicked', async () => {
+            render(
+                <ProgressionBuilder
+                    selectedRoot="F"
+                    selectedScaleType="major"
+                    onProgressionSet={onProgressionSetMock}
+                    onChordClick={onChordClickMock}
+                />
+            );
+
+            const saveButton = screen.getByTitle('Save current progression');
+            fireEvent.click(saveButton);
+
+            await waitFor(() => {
+                expect(screen.getByText('Save Progression')).toBeInTheDocument();
+            });
+        });
+    });
+
+    describe('Input Field Tooltip', () => {
+        it('should show tooltip on hover/rollover of input field', async () => {
+            render(
+                <ProgressionBuilder
+                    selectedRoot="F"
+                    selectedScaleType="major"
+                    onProgressionSet={onProgressionSetMock}
+                    onChordClick={onChordClickMock}
+                />
+            );
+
+            const inputGroup = screen.getByPlaceholderText('e.g., I IV V ii').closest('.input-group');
+            
+            fireEvent.mouseEnter(inputGroup);
+
+            await waitFor(() => {
+                expect(screen.getByText(/Enter chord progressions using Roman numeral notation/i)).toBeInTheDocument();
+            });
+        });
+
+        it('should display detailed format description', async () => {
+            render(
+                <ProgressionBuilder
+                    selectedRoot="F"
+                    selectedScaleType="major"
+                    onProgressionSet={onProgressionSetMock}
+                    onChordClick={onChordClickMock}
+                />
+            );
+
+            const inputGroup = screen.getByPlaceholderText('e.g., I IV V ii').closest('.input-group');
+            fireEvent.mouseEnter(inputGroup);
+
+            await waitFor(() => {
+                expect(screen.getByText(/BASIC CHORDS/i)).toBeInTheDocument();
+                expect(screen.getByText(/ACCIDENTALS/i)).toBeInTheDocument();
+                expect(screen.getByText(/CHORD QUALITIES/i)).toBeInTheDocument();
+                expect(screen.getByText(/EXAMPLES/i)).toBeInTheDocument();
+            });
+        });
     });
 });
 

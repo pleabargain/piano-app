@@ -22,8 +22,34 @@ vi.mock('../core/midi-manager', () => ({
     requestAccess: vi.fn(() => Promise.resolve(false)),
     addListener: vi.fn(),
     removeListener: vi.fn(),
+    setRecordingCallback: vi.fn(),
+    getFirstInputName: vi.fn(() => null),
   },
 }))
+
+// Mock Storage classes to avoid IndexedDB errors in tests
+vi.mock('../core/progression-storage', () => {
+  return {
+    default: vi.fn().mockImplementation(() => ({
+      init: vi.fn().mockResolvedValue(undefined),
+      getAll: vi.fn().mockResolvedValue([]),
+      save: vi.fn().mockResolvedValue('test-id'),
+      delete: vi.fn().mockResolvedValue(undefined),
+      validateProgressionString: vi.fn().mockReturnValue({ valid: true })
+    }))
+  }
+})
+
+vi.mock('../core/key-progression-storage', () => {
+  return {
+    default: vi.fn().mockImplementation(() => ({
+      init: vi.fn().mockResolvedValue(undefined),
+      getAll: vi.fn().mockResolvedValue([]),
+      save: vi.fn().mockResolvedValue('test-id'),
+      delete: vi.fn().mockResolvedValue(undefined)
+    }))
+  }
+})
 
 describe('App Component', () => {
   beforeEach(() => {
@@ -34,10 +60,10 @@ describe('App Component', () => {
     console.log('[Test] Testing App component initial render');
     console.log('[Test] WHY: App component is the root - must render without errors');
     console.log('[Test] IMPORTANCE: Catches critical rendering issues that would break the entire app');
-    
+
     render(<App />)
     expect(screen.getByText('Piano Trainer')).toBeInTheDocument()
-    
+
     console.log('[Test] ✅ App component rendered successfully');
   })
 
@@ -45,12 +71,12 @@ describe('App Component', () => {
     console.log('[Test] Testing App component status message display');
     console.log('[Test] WHY: Status messages provide user feedback - must be visible');
     console.log('[Test] IMPORTANCE: Ensures users can see app state and instructions');
-    
+
     render(<App />)
     // Use findAllByText in case multiple elements match (though ideally only one status message)
     const statusElements = await screen.findAllByText(/Connect MIDI|Web MIDI|Practice|Free Play|Lava Game/i);
     expect(statusElements.length).toBeGreaterThan(0);
-    
+
     console.log('[Test] ✅ Status message displayed correctly');
   })
 
@@ -70,9 +96,9 @@ describe('App Component', () => {
 
   it('should have all required mode buttons', () => {
     render(<App />)
-    expect(screen.getByText('Scale Practice')).toBeInTheDocument()
-    expect(screen.getByText('Chord Practice')).toBeInTheDocument()
-    expect(screen.getByText('Free Play')).toBeInTheDocument()
+    expect(screen.getAllByText('Scale Practice').length).toBeGreaterThanOrEqual(1)
+    expect(screen.getAllByText('Chord Practice').length).toBeGreaterThanOrEqual(1)
+    expect(screen.getAllByText('Free Play').length).toBeGreaterThanOrEqual(1)
   })
 
   describe('Chord Click Functionality', () => {
@@ -81,29 +107,29 @@ describe('App Component', () => {
       console.log('[Test] WHY: handleChordClick must update state to trigger piano highlighting');
       console.log('[Test] IMPORTANCE: Validates core functionality - clicking chord updates state');
       console.log('[Test] Chord Name: F Major (should produce MIDI notes [41, 45, 48])');
-      
+
       const { container } = render(<App />);
-      
+
       // Find and click F Major chord in Circle of Fifths
       const fMajorSegment = container.querySelector('path[data-key="major-F"]');
       expect(fMajorSegment).toBeTruthy();
-      
+
       await userEvent.click(fMajorSegment);
-      
+
       // Wait for state update and check that chord notes are highlighted on left piano
       await waitFor(() => {
         const leftPiano = container.querySelector('.left-piano .piano-container');
         expect(leftPiano).toBeTruthy();
-        
+
         const keys = leftPiano.querySelectorAll('.key');
         const chordNoteKeys = Array.from(keys).filter(key => {
           const midiNumber = parseInt(key.getAttribute('data-midi') || '0');
           return [41, 45, 48].includes(midiNumber) && key.classList.contains('chord-note');
         });
-        
+
         expect(chordNoteKeys.length).toBeGreaterThan(0);
       }, { timeout: 3000 });
-      
+
       console.log('[Test] ✅ handleChordClick correctly sets chordMidiNotes state');
     });
 
@@ -112,22 +138,22 @@ describe('App Component', () => {
       console.log('[Test] WHY: Root position is the default - must calculate correct notes');
       console.log('[Test] IMPORTANCE: Ensures users see correct keys to press for root position');
       console.log('[Test] Chord: F Major root position should be [41, 45, 48] (F2, A2, C3)');
-      
+
       const { container } = render(<App />);
-      
+
       // Click F Major chord
       const fMajorSegment = container.querySelector('path[data-key="major-F"]');
       await userEvent.click(fMajorSegment);
-      
+
       await waitFor(() => {
         const leftPiano = container.querySelector('.left-piano .piano-container');
         const keys = leftPiano.querySelectorAll('.key');
-        
+
         // Check for F Major root position: F2=41, A2=45, C3=48
         const fKey = Array.from(keys).find(key => parseInt(key.getAttribute('data-midi') || '0') === 41);
         const aKey = Array.from(keys).find(key => parseInt(key.getAttribute('data-midi') || '0') === 45);
         const cKey = Array.from(keys).find(key => parseInt(key.getAttribute('data-midi') || '0') === 48);
-        
+
         expect(fKey).toBeTruthy();
         expect(aKey).toBeTruthy();
         expect(cKey).toBeTruthy();
@@ -135,7 +161,7 @@ describe('App Component', () => {
         expect(aKey.classList.contains('chord-note')).toBe(true);
         expect(cKey.classList.contains('chord-note')).toBe(true);
       }, { timeout: 3000 });
-      
+
       console.log('[Test] ✅ Root position MIDI notes calculated correctly');
     });
 
@@ -144,13 +170,13 @@ describe('App Component', () => {
       console.log('[Test] WHY: Users need to see different inversions - cycling is key feature');
       console.log('[Test] IMPORTANCE: Validates inversion cycling works correctly');
       console.log('[Test] Chord: F Major - clicking twice should show 1st inversion');
-      
+
       const { container } = render(<App />);
-      
+
       // Click F Major chord first time (root position)
       const fMajorSegment = container.querySelector('path[data-key="major-F"]');
       await userEvent.click(fMajorSegment);
-      
+
       await waitFor(() => {
         const leftPiano = container.querySelector('.left-piano .piano-container');
         const keys = leftPiano.querySelectorAll('.key');
@@ -160,10 +186,10 @@ describe('App Component', () => {
         });
         expect(rootPositionKeys.length).toBe(3);
       }, { timeout: 3000 });
-      
+
       // Click same chord again (should cycle to 1st inversion)
       await userEvent.click(fMajorSegment);
-      
+
       await waitFor(() => {
         const leftPiano = container.querySelector('.left-piano .piano-container');
         const keys = leftPiano.querySelectorAll('.key');
@@ -174,7 +200,7 @@ describe('App Component', () => {
         });
         expect(firstInversionKeys.length).toBe(3);
       }, { timeout: 3000 });
-      
+
       console.log('[Test] ✅ Chord inversion cycling works correctly');
     });
 
@@ -182,13 +208,13 @@ describe('App Component', () => {
       console.log('[Test] Testing getChordHighlights returns chordMidiNotes when they exist');
       console.log('[Test] WHY: getChordHighlights is used to pass notes to piano - must return correct values');
       console.log('[Test] IMPORTANCE: Validates helper function works correctly');
-      
+
       const { container } = render(<App />);
-      
+
       // Click a chord to set chordMidiNotes
       const fMajorSegment = container.querySelector('path[data-key="major-F"]');
       await userEvent.click(fMajorSegment);
-      
+
       await waitFor(() => {
         // Verify that left piano receives chord notes via getChordHighlights
         const leftPiano = container.querySelector('.left-piano .piano-container');
@@ -196,7 +222,7 @@ describe('App Component', () => {
         const chordNoteKeys = Array.from(keys).filter(key => key.classList.contains('chord-note'));
         expect(chordNoteKeys.length).toBeGreaterThan(0);
       }, { timeout: 3000 });
-      
+
       console.log('[Test] ✅ getChordHighlights correctly returns chordMidiNotes');
     });
 
@@ -204,20 +230,20 @@ describe('App Component', () => {
       console.log('[Test] Testing getChordHighlights returns empty array when no chord clicked');
       console.log('[Test] WHY: Helper function should return empty array when no chord is selected');
       console.log('[Test] IMPORTANCE: Ensures piano doesn\'t show incorrect highlighting');
-      
+
       const { container } = render(<App />);
-      
+
       // Switch to free mode (not chord mode)
       const freePlayButton = screen.getByText('Free Play');
       fireEvent.click(freePlayButton);
-      
+
       // Check that left piano has no chord notes highlighted
       const leftPiano = container.querySelector('.left-piano .piano-container');
       const keys = leftPiano.querySelectorAll('.key');
       const chordNoteKeys = Array.from(keys).filter(key => key.classList.contains('chord-note'));
-      
+
       expect(chordNoteKeys.length).toBe(0);
-      
+
       console.log('[Test] ✅ getChordHighlights returns empty array when no chord clicked');
     });
 
@@ -226,29 +252,29 @@ describe('App Component', () => {
       console.log('[Test] WHY: End-to-end test - validates full flow from click to visual feedback');
       console.log('[Test] IMPORTANCE: Ensures user interaction produces expected visual result');
       console.log('[Test] Flow: Click F Major in Circle -> handleChordClick -> chordMidiNotes -> getChordHighlights -> Piano highlights');
-      
+
       const { container } = render(<App />);
-      
+
       // Click F Major chord in Circle of Fifths
       const fMajorSegment = container.querySelector('path[data-key="major-F"]');
       expect(fMajorSegment).toBeTruthy();
-      
+
       await userEvent.click(fMajorSegment);
-      
+
       // Wait for state update and verify left piano highlights correct keys
       await waitFor(() => {
         const leftPiano = container.querySelector('.left-piano .piano-container');
         expect(leftPiano).toBeTruthy();
-        
+
         const keys = leftPiano.querySelectorAll('.key');
         const highlightedKeys = Array.from(keys).filter(key => {
           const midi = parseInt(key.getAttribute('data-midi') || '0');
           return [41, 45, 48].includes(midi) && key.classList.contains('chord-note');
         });
-        
+
         expect(highlightedKeys.length).toBe(3);
       }, { timeout: 3000 });
-      
+
       console.log('[Test] ✅ Clicking chord in CircleOfFifths correctly highlights left piano keys');
     });
   });

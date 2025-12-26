@@ -1,0 +1,14 @@
+{
+  "version": "1.0.0",
+  "id": "sample-0000-0000-0000-000000000001",
+  "name": "Sample Jazz Progression",
+  "progression": "ii7 V7 I vi",
+  "createdAt": 1704067200000,
+  "metadata": {
+    "description": "A classic jazz progression (2-5-1-6) that works great in any key",
+    "tags": ["jazz", "classic", "sample"],
+    "key": "C",
+    "scaleType": "major"
+  }
+}
+
