@@ -10,6 +10,7 @@ const KeyProgressionBuilder = ({ onProgressionSet, onClear, selectedScaleType })
     const [savedProgressions, setSavedProgressions] = useState([]);
     const [showSaveDialog, setShowSaveDialog] = useState(false);
     const [saveName, setSaveName] = useState('');
+    const [currentName, setCurrentName] = useState('');
     const [isLoading, setIsLoading] = useState(false);
 
     const storageRef = useRef(null);
@@ -71,12 +72,14 @@ const KeyProgressionBuilder = ({ onProgressionSet, onClear, selectedScaleType })
         const keys = validateAndParse(input);
         if (keys.length > 0) {
             onProgressionSet(keys);
+            setCurrentName('Custom Progression');
         }
     };
 
     const handleClear = () => {
         setInput('');
         setError('');
+        setCurrentName('');
         if (onClear) onClear();
     };
 
@@ -89,6 +92,7 @@ const KeyProgressionBuilder = ({ onProgressionSet, onClear, selectedScaleType })
                 progression: input.trim(),
                 metadata: { scaleType: selectedScaleType }
             });
+            setCurrentName(saveName.trim());
             setShowSaveDialog(false);
             setSaveName('');
             await loadSavedProgressions();
@@ -102,12 +106,16 @@ const KeyProgressionBuilder = ({ onProgressionSet, onClear, selectedScaleType })
     const handleLoad = (prog) => {
         setInput(prog.progression);
         onProgressionSet(validateAndParse(prog.progression));
+        setCurrentName(prog.name);
     };
 
     const handleDelete = async (id, e) => {
         e.stopPropagation();
         if (window.confirm('Delete this progression?')) {
             await storageRef.current.delete(id);
+            if (currentName === savedProgressions.find(p => p.id === id)?.name) {
+                setCurrentName('');
+            }
             await loadSavedProgressions();
         }
     };
@@ -119,6 +127,7 @@ const KeyProgressionBuilder = ({ onProgressionSet, onClear, selectedScaleType })
             const prog = await storageRef.current.importFromFile(file);
             await storageRef.current.save(prog);
             await loadSavedProgressions();
+            handleLoad(prog);
         } catch (err) {
             setError(`Import failed: ${err.message}`);
         }
@@ -127,7 +136,7 @@ const KeyProgressionBuilder = ({ onProgressionSet, onClear, selectedScaleType })
     return (
         <div className="key-progression-builder">
             <div className="header-row">
-                <h3>Key Progression Practice</h3>
+                <h3>Key Progression Practice {currentName && <small className="current-badge">({currentName})</small>}</h3>
                 <div className="header-actions">
                     <button
                         className="save-btn"
@@ -164,9 +173,12 @@ const KeyProgressionBuilder = ({ onProgressionSet, onClear, selectedScaleType })
                     <div className="saved-list">
                         {savedProgressions.map(p => (
                             <div key={p.id} className="saved-item" onClick={() => handleLoad(p)}>
-                                <span className="name">{p.name}</span>
+                                <span className="name">{p.name || 'Untitled Progression'}</span>
                                 <span className="preview">{p.progression}</span>
-                                <button className="delete-small" onClick={(e) => handleDelete(p.id, e)}>×</button>
+                                <button className="delete-small" onClick={(e) => {
+                                    e.stopPropagation();
+                                    handleDelete(p.id, e);
+                                }}>×</button>
                             </div>
                         ))}
                     </div>
@@ -193,7 +205,7 @@ const KeyProgressionBuilder = ({ onProgressionSet, onClear, selectedScaleType })
             )}
 
             <div className="sample-link">
-                <a href="/sample-key-progression.json" download>📄 Download Sample</a>
+                <a href="/sample-progressions/sample-key-progression.json" download>📄 Download Sample</a>
             </div>
 
             <div className="info-text">

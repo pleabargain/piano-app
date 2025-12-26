@@ -1,44 +1,66 @@
 .key-progression-builder {
     padding: 1rem;
-    background: #f5f5f5;
+    background: #fdfdfd;
+    /* Even lighter background for better contrast */
     border-radius: 8px;
     margin: 1rem 0;
+    color: #1a1a1a;
+    /* Force dark text color */
+    border: 2px solid #333;
+    /* High contrast border */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.key-progression-builder h3 {
+    color: #000;
+    font-size: 1.25rem;
+    font-weight: 800;
+    /* Extra bold */
+}
+
+.key-progression-builder h4 {
+    color: #222;
+    font-weight: 700;
 }
 
 .key-progression-builder input {
     flex: 1;
-    padding: 0.5rem;
-    border: 1px solid #ddd;
+    padding: 0.6rem;
+    border: 2px solid #000;
+    /* High contrast border */
     border-radius: 4px;
-    font-size: 1rem;
+    font-size: 1.1rem;
+    background: white;
+    color: black;
 }
 
 .key-progression-builder button {
     padding: 0.5rem 1rem;
-    border: none;
+    border: 1.5px solid #000;
+    /* Distinct border */
     border-radius: 4px;
-    background: #4CAF50;
+    background: #2e7d32;
+    /* Darker green for contrast */
     color: white;
     cursor: pointer;
-    font-size: 0.9rem;
-    transition: background 0.2s;
+    font-size: 1rem;
+    font-weight: 600;
+    transition: all 0.2s;
 }
 
 .key-progression-builder button:hover:not(:disabled) {
-    background: #45a049;
-}
-
-.key-progression-builder button:disabled {
-    background: #ccc;
-    cursor: not-allowed;
+    background: #1b5e20;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
 .key-progression-builder .clear-btn {
-    background: #f44336;
+    background: #c62828;
+    /* Darker red */
 }
 
 .key-progression-builder .clear-btn:hover:not(:disabled) {
-    background: #da190b;
+    background: #b71c1c;
 }
 
 .key-progression-builder .error-msg {
@@ -48,10 +70,11 @@
 }
 
 .key-progression-builder .info-text {
-    color: #666;
-    font-size: 0.85rem;
-    margin-top: 0.5rem;
+    color: #333;
+    font-size: 0.9rem;
+    margin-top: 0.8rem;
     font-style: italic;
+    font-weight: 500;
 }
 
 .key-progression-builder .header-row {
@@ -63,6 +86,20 @@
 
 .key-progression-builder .header-row h3 {
     margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.key-progression-builder .current-badge {
+    font-size: 0.9rem;
+    color: #0d47a1;
+    /* High contrast blue */
+    font-weight: 700;
+    background: #bbdefb;
+    padding: 4px 10px;
+    border-radius: 12px;
+    border: 1.5px solid #1565c0;
 }
 
 .key-progression-builder .header-actions {
@@ -99,21 +136,41 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 0.4rem;
+    padding: 0.6rem;
     background: white;
-    margin-bottom: 0.3rem;
-    border-radius: 4px;
+    margin-bottom: 0.5rem;
+    border-radius: 6px;
     cursor: pointer;
-    font-size: 0.9rem;
+    border: 1px solid #ccc;
+    font-size: 1rem;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
 }
 
 .key-progression-builder .saved-item:hover {
-    background: #eef;
+    background: #f0f7ff;
+    border-color: #2196F3;
+}
+
+.key-progression-builder .saved-item .name {
+    flex: 1;
+    font-weight: 800;
+    color: #000;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    margin-right: 1rem;
 }
 
 .key-progression-builder .saved-item .preview {
-    color: #888;
-    font-size: 0.8rem;
+    color: #111;
+    font-size: 0.9rem;
+    font-weight: 600;
+    font-family: 'Inter', monospace;
+    background: #e0e0e0;
+    padding: 4px 8px;
+    border-radius: 4px;
+    margin-right: 1rem;
+    border: 1px solid #999;
 }
 
 .key-progression-builder .delete-small {

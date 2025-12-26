@@ -1,9 +1,11 @@
 {
     "version": "1.0.0",
+    "id": "e4e4e4e4-e4e4-4e4e-8e4e-e4e4e4e4e4e4",
     "name": "Circle of Fourths",
     "progression": "C F Bb Eb Ab Db Gb B E A D G",
     "metadata": {
         "scaleType": "major",
         "description": "Sequential practice through the Circle of Fourths."
-    }
+    },
+    "createdAt": 1735230000000
 }

@@ -4,7 +4,7 @@ import * as path from 'path';
 
 describe('Sample Key Progression Validation', () => {
     it('should be a valid JSON file and match the required schema', () => {
-        const filePath = path.join(process.cwd(), 'public', 'sample-key-progression.json');
+        const filePath = path.join(process.cwd(), 'public', 'sample-progressions', 'sample-key-progression.json');
 
         // Check if file exists
         expect(fs.existsSync(filePath), 'Sample file should exist at /public/sample-key-progression.json').toBe(true);

@@ -54,7 +54,7 @@ const ProgressionBuilder = ({ selectedRoot, selectedScaleType, onProgressionSet,
     const [storageError, setStorageError] = useState(null);
     const [showTooltip, setShowTooltip] = useState(false);
     const [currentLoadedProgressionId, setCurrentLoadedProgressionId] = useState(null);
-    
+
     const storageRef = useRef(null);
     const inputRef = useRef(null);
     const tooltipRef = useRef(null);
@@ -66,14 +66,14 @@ const ProgressionBuilder = ({ selectedRoot, selectedScaleType, onProgressionSet,
             console.error('[ProgressionBuilder] Failed to initialize storage:', err);
             setStorageError('Failed to initialize storage. Some features may not work.');
         });
-        
+
         loadSavedProgressions();
     }, []);
 
     // Load saved progressions list
     const loadSavedProgressions = async () => {
         if (!storageRef.current) return;
-        
+
         try {
             setIsLoading(true);
             const progressions = await storageRef.current.getAll('createdAt', 'desc');
@@ -147,8 +147,8 @@ const ProgressionBuilder = ({ selectedRoot, selectedScaleType, onProgressionSet,
             onProgressionSet(parsedChords);
             setCurrentLoadedProgressionId(null); // Clear loaded progression indicator
         } else {
-            console.warn('[ProgressionBuilder] Cannot set progression:', { 
-                hasError: !!error, 
+            console.warn('[ProgressionBuilder] Cannot set progression:', {
+                hasError: !!error,
                 parsedChordsLength: parsedChords.length,
                 error,
                 parsedChords,
@@ -216,7 +216,7 @@ const ProgressionBuilder = ({ selectedRoot, selectedScaleType, onProgressionSet,
             setIsLoading(true);
             setInput(progression.progression);
             setCurrentLoadedProgressionId(progression.id);
-            
+
             // Update lastUsed timestamp
             if (progression.metadata) {
                 progression.metadata.lastUsed = Date.now();
@@ -227,7 +227,7 @@ const ProgressionBuilder = ({ selectedRoot, selectedScaleType, onProgressionSet,
                     console.warn('[ProgressionBuilder] Failed to update lastUsed:', err);
                 }
             }
-            
+
             setError('');
             setStorageError(null);
         } catch (err) {
@@ -240,7 +240,7 @@ const ProgressionBuilder = ({ selectedRoot, selectedScaleType, onProgressionSet,
 
     const handleDelete = async (id, e) => {
         e.stopPropagation();
-        
+
         if (!window.confirm('Are you sure you want to delete this progression?')) {
             return;
         }
@@ -269,7 +269,7 @@ const ProgressionBuilder = ({ selectedRoot, selectedScaleType, onProgressionSet,
 
     const handleExport = async (progression, e) => {
         e.stopPropagation();
-        
+
         if (!storageRef.current) {
             setStorageError('Storage not initialized');
             return;
@@ -295,20 +295,20 @@ const ProgressionBuilder = ({ selectedRoot, selectedScaleType, onProgressionSet,
         try {
             setIsLoading(true);
             const progression = await storageRef.current.importFromFile(file);
-            
+
             // Generate new ID to avoid conflicts
             if (typeof crypto !== 'undefined' && crypto.randomUUID) {
                 progression.id = crypto.randomUUID();
             } else {
                 // Fallback UUID v4 generator
-                progression.id = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+                progression.id = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
                     const r = Math.random() * 16 | 0;
                     const v = c === 'x' ? r : (r & 0x3 | 0x8);
                     return v.toString(16);
                 });
             }
             progression.createdAt = Date.now();
-            
+
             await storageRef.current.save(progression);
             await loadSavedProgressions();
             setError('');
@@ -328,7 +328,7 @@ const ProgressionBuilder = ({ selectedRoot, selectedScaleType, onProgressionSet,
         // Parse the progression immediately
         const tokens = progressionText.trim().split(/\s+/);
         const scaleNotes = getScaleNotes(selectedRoot, selectedScaleType);
-        
+
         if (scaleNotes.length === 0) {
             console.warn('[ProgressionBuilder] No scale notes found');
             return;
@@ -388,7 +388,7 @@ const ProgressionBuilder = ({ selectedRoot, selectedScaleType, onProgressionSet,
                     </label>
                 </div>
             </div>
-            
+
             {/* Saved Progressions List */}
             {savedProgressions.length > 0 && (
                 <div className="saved-progressions-section">
@@ -437,7 +437,7 @@ const ProgressionBuilder = ({ selectedRoot, selectedScaleType, onProgressionSet,
                 <div className="empty-state">
                     No saved progressions. Create one below!
                     <div className="sample-file-link">
-                        <a href="/sample-progression.json" download="sample-progression.json">
+                        <a href="/sample-progressions/sample-progression.json" download="sample-progression.json">
                             📄 Download sample progression file to test import
                         </a>
                     </div>
@@ -446,7 +446,7 @@ const ProgressionBuilder = ({ selectedRoot, selectedScaleType, onProgressionSet,
 
             {/* Input Group with Tooltip */}
             <div className="input-group-wrapper">
-                <div 
+                <div
                     className="input-group"
                     onMouseEnter={() => setShowTooltip(true)}
                     onMouseLeave={() => setShowTooltip(false)}
@@ -500,13 +500,13 @@ const ProgressionBuilder = ({ selectedRoot, selectedScaleType, onProgressionSet,
                             </div>
                         )}
                     </div>
-                    <button 
+                    <button
                         onClick={(e) => {
                             console.log('[ProgressionBuilder] Button clicked', { error, parsedChords, input, disabled: !!error || !input });
                             e.preventDefault();
                             e.stopPropagation();
                             handleSet();
-                        }} 
+                        }}
                         disabled={!!error || !input || parsedChords.length === 0 || isLoading}
                     >
                         Set Progression
@@ -557,8 +557,8 @@ const ProgressionBuilder = ({ selectedRoot, selectedScaleType, onProgressionSet,
 
             <div className="preview">
                 {parsedChords.map((chord, idx) => (
-                    <div 
-                        key={idx} 
+                    <div
+                        key={idx}
                         className="chord-preview clickable-chord"
                         onClick={() => onChordClick && onChordClick(chord.name)}
                         style={{ cursor: onChordClick ? 'pointer' : 'default' }}
@@ -632,25 +632,25 @@ function getChordNameFromRoman(roman, scaleNotes) {
 
     // Handle 7th chords
     if (suffix.includes('7')) {
-      if (isLowerCase) {
-        chordType = suffix.includes('maj7') || suffix.includes('M7') ? 'minor7' : 'minor7';
-      } else {
-        if (suffix.includes('maj7') || suffix.includes('M7')) chordType = 'major7';
-        else if (suffix.includes('dim7')) chordType = 'diminished7';
-        else chordType = 'dominant7';
-      }
+        if (isLowerCase) {
+            chordType = suffix.includes('maj7') || suffix.includes('M7') ? 'minor7' : 'minor7';
+        } else {
+            if (suffix.includes('maj7') || suffix.includes('M7')) chordType = 'major7';
+            else if (suffix.includes('dim7')) chordType = 'diminished7';
+            else chordType = 'dominant7';
+        }
     }
 
     // Return full name format to match identifyChord output: "C Major", "D Minor", etc.
     const chordTypeNames = {
-      'major': 'Major',
-      'minor': 'Minor',
-      'diminished': 'Diminished',
-      'augmented': 'Augmented',
-      'major7': 'Major 7',
-      'minor7': 'Minor 7',
-      'dominant7': 'Dominant 7',
-      'diminished7': 'Diminished 7'
+        'major': 'Major',
+        'minor': 'Minor',
+        'diminished': 'Diminished',
+        'augmented': 'Augmented',
+        'major7': 'Major 7',
+        'minor7': 'Minor 7',
+        'dominant7': 'Dominant 7',
+        'diminished7': 'Diminished 7'
     };
 
     const result = `${rootNote} ${chordTypeNames[chordType] || 'Major'}`;

@@ -1,0 +1,11 @@
+{
+    "version": "1.0.0",
+    "id": "c2c2c2c2-c2c2-4c22-8c22-c2c2c2c2c2c2",
+    "name": "Blues Scale Key Master",
+    "progression": "C Eb F Gb G Bb",
+    "metadata": {
+        "scaleType": "blues",
+        "description": "Practice the blues scale on each of its component notes (C, Eb, F, Gb, G, Bb)."
+    },
+    "createdAt": 1735230000000
+}
