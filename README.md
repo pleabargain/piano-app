@@ -901,6 +901,14 @@ These improvements would enhance the user experience while maintaining the appli
 - Supports multiple MIDI input devices
 - Handles MIDI device connection/disconnection events
 
+### Prerequisites
+
+- A browser that supports the **Web MIDI API** (Chrome, Edge, or Opera).
+- A MIDI keyboard or controller connected to your computer.
+- **IMPORTANT**: Some MIDI models (especially Yamaha) require specific USB/MIDI drivers (e.g., **Yamaha Steinberg USB Driver**) to be installed on your operating system for the browser to detect the device.
+
+---
+
 ### Testing
 
 The project includes comprehensive unit tests for:

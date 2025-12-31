@@ -1,14 +1,22 @@
 <!-- https://github.com/pleabargain/piano-app -->
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>piano-app</title>
-  </head>
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.jsx"></script>
-  </body>
+
+<head>
+  <meta charset="UTF-8" />
+  <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>piano-app</title>
+</head>
+
+<body>
+  <div id="root"></div>
+  <div style="position: fixed; bottom: 20px; right: 20px; z-index: 9999;">
+    <a href="/midi-checker.html"
+      style="background: #38bdf8; color: white; padding: 10px 20px; border-radius: 8px; text-decoration: none; font-family: sans-serif; box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);">Open
+      MIDI Explorer</a>
+  </div>
+  <script type="module" src="/src/main.jsx"></script>
+</body>
+
 </html>

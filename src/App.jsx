@@ -23,7 +23,7 @@ function App() {
   const [selectedRoot, setSelectedRoot] = useState('C');
   const [selectedScaleType, setSelectedScaleType] = useState('major');
   const [mode, setMode] = useState('scale'); // 'scale', 'chord', 'free', 'lava'
-  const [keyboardSize, setKeyboardSize] = useState({ start: 36, end: 96 }); // 61 keys default
+  const [keyboardSize, setKeyboardSize] = useState({ start: 21, end: 108 }); // 88 keys default
 
   // MIDI State
   const [activeNotes, setActiveNotes] = useState([]);
