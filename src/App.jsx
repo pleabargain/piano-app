@@ -705,10 +705,10 @@ function App() {
 
   // Helper to get highlighted notes for Right Piano (Scales)
   const getScaleHighlights = () => {
-    // Always show scale notes on the right piano, regardless of mode (except maybe lava?)
-    // User said "scales on one side", implying constant reference.
-    // Use current key from progression if available, otherwise use selectedRoot
-    const currentKey = keyProgression.length > 0 ? keyProgression[currentKeyIndex] : selectedRoot;
+    // Only use progression if we are actually in scale practice mode
+    const currentKey = (mode === 'scale' && keyProgression.length > 0)
+      ? keyProgression[currentKeyIndex]
+      : (lockedChord ? lockedChord.root : selectedRoot);
     const scaleNotes = getScaleNotes(currentKey, selectedScaleType);
     return scaleNotes.map(n => NOTES.indexOf(n));
   };
@@ -921,9 +921,10 @@ function App() {
                 startNote={36}
                 endNote={60}
                 activeNotes={activeNotes}
-                highlightedNotes={[]}
+                highlightedNotes={mode === 'lava' ? getScaleHighlights() : []}
                 chordMidiNotes={getChordHighlights()}
                 lavaKeys={mode === 'lava' ? lavaKeys : []}
+                mode={mode}
                 feedbackState={feedbackState}
                 expectedNotes={isPlayAlongMode ? expectedNotes : []}
               />
@@ -938,6 +939,7 @@ function App() {
                 highlightedNotes={getScaleHighlights()}
                 chordMidiNotes={[]}
                 lavaKeys={mode === 'lava' ? lavaKeys : []}
+                mode={mode}
                 feedbackState={feedbackState}
                 expectedNotes={isPlayAlongMode ? expectedNotes : []}
               />
