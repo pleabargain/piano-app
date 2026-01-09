@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lava Game Tab - Mockup</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: #1a1a1a;
+            color: white;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .mockup-container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .tab-indicator {
+            background: #222;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .tab-indicator .active-tab {
+            background: #3b82f6;
+            color: white;
+            padding: 8px 20px;
+            border-radius: 6px;
+            display: inline-block;
+            font-weight: 600;
+        }
+
+        .tab-indicator .inactive-tabs {
+            display: inline-block;
+            margin-left: 10px;
+            color: #666;
+        }
+
+        .lava-game-score {
+            text-align: center;
+            background: linear-gradient(135deg, #1a1a1a 0%, #2a1a1a 100%);
+            padding: 40px;
+            border-radius: 12px;
+            border: 3px solid #dc2626;
+            box-shadow: 0 0 30px rgba(220, 38, 38, 0.4);
+            margin: 40px auto;
+            max-width: 500px;
+        }
+
+        .lava-game-score h3 {
+            margin: 0 0 25px 0;
+            font-size: 2rem;
+            color: #fbbf24;
+            text-shadow: 0 0 15px rgba(251, 191, 36, 0.5);
+        }
+
+        .score-display {
+            display: flex;
+            justify-content: center;
+            gap: 50px;
+            margin-bottom: 25px;
+        }
+
+        .score-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .score-label {
+            font-size: 1rem;
+            color: #aaa;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .score-value {
+            font-size: 3rem;
+            font-weight: 700;
+            line-height: 1;
+        }
+
+        .score-item.good-keys .score-value {
+            color: #7dd3fc;
+            text-shadow: 0 0 15px rgba(125, 211, 252, 0.5);
+        }
+
+        .score-item.bad-keys .score-value {
+            color: #dc2626;
+            text-shadow: 0 0 15px rgba(220, 38, 38, 0.5);
+        }
+
+        .lava-instructions {
+            margin-top: 25px;
+            padding-top: 25px;
+            border-top: 2px solid #444;
+        }
+
+        .lava-instructions p {
+            margin: 12px 0;
+            font-size: 1rem;
+            color: #ccc;
+            line-height: 1.6;
+        }
+
+        .lava-instructions p:first-child {
+            color: #7dd3fc;
+            font-weight: 600;
+        }
+
+        .lava-instructions p:nth-child(2) {
+            color: #dc2626;
+            font-weight: 600;
+        }
+
+        .game-info {
+            margin-top: 30px;
+            padding: 25px;
+            background: #2a2a2a;
+            border-radius: 8px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .game-info h3 {
+            color: #fff;
+            margin-bottom: 15px;
+            font-size: 1.1rem;
+        }
+
+        .game-info ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .game-info li {
+            padding: 8px 0;
+            color: #ccc;
+            font-size: 0.95rem;
+            padding-left: 25px;
+            position: relative;
+        }
+
+        .game-info li::before {
+            content: '🎮';
+            position: absolute;
+            left: 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="mockup-container">
+        <div class="tab-indicator">
+            <span class="inactive-tabs">Key Practice | Chord Practice | Free Play |</span>
+            <span class="active-tab">Lava Game</span>
+        </div>
+
+        <div class="lava-game-score">
+            <h3>🔥 Lava Game Score 🔥</h3>
+            <div class="score-display">
+                <div class="score-item good-keys">
+                    <span class="score-label">Good Keys</span>
+                    <span class="score-value">42</span>
+                </div>
+                <div class="score-item bad-keys">
+                    <span class="score-label">Lava Keys Hit</span>
+                    <span class="score-value">3</span>
+                </div>
+            </div>
+            <div class="lava-instructions">
+                <p>🎹 Ice Blue keys = Good (in C Major)</p>
+                <p>🔥 Red keys = Lava (avoid these!)</p>
+                <p>Play continuously - no time limit!</p>
+            </div>
+        </div>
+
+        <div class="game-info">
+            <h3>How to Play:</h3>
+            <ul>
+                <li>Select your desired key and scale type (e.g., "C Major")</li>
+                <li>Play notes on your MIDI keyboard</li>
+                <li>Blue keys are safe - they're in your selected scale</li>
+                <li>Red keys are lava - avoid them!</li>
+                <li>Your score tracks good keys hit vs lava keys hit</li>
+                <li>No time limit - practice at your own pace</li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html>

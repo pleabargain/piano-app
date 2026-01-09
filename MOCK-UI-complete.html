@@ -1,0 +1,815 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Piano App - Tab-Based UI Mockup</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: #1a1a1a;
+            color: white;
+            min-height: 100vh;
+        }
+
+        .app-container {
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+            max-width: 1400px;
+            margin: 0 auto;
+            min-height: 100vh;
+        }
+
+        header {
+            padding: 8px 20px;
+            background: #111;
+            text-align: center;
+            border-bottom: 1px solid #333;
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 0.9rem;
+            color: #3b82f6;
+        }
+
+        .midi-device-name {
+            font-size: 0.8rem;
+            color: #60a5fa;
+            font-weight: 400;
+            margin-left: 8px;
+        }
+
+        .usage-ideas-link {
+            font-size: 0.75rem;
+            color: #60a5fa;
+            font-weight: 400;
+            margin-left: 12px;
+            text-decoration: none;
+            opacity: 0.8;
+        }
+
+        .usage-ideas-link:hover {
+            opacity: 1;
+            text-decoration: underline;
+        }
+
+        .main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 10px 20px;
+            gap: 15px;
+        }
+
+        /* Controls Section */
+        .controls-section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+            width: 100%;
+            max-width: 1200px;
+        }
+
+        .controls-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            padding: 20px;
+            background: #333;
+            border-radius: 10px;
+        }
+
+        .control-group {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .control-group label {
+            font-size: 0.8rem;
+            color: #aaa;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        select {
+            padding: 8px 12px;
+            border-radius: 5px;
+            border: 1px solid #555;
+            background: #222;
+            color: white;
+            font-size: 1rem;
+            cursor: pointer;
+        }
+
+        /* Tab Navigation */
+        .tab-navigation {
+            display: flex;
+            gap: 4px;
+            background: #222;
+            border-radius: 8px;
+            padding: 4px;
+            width: 100%;
+            max-width: 1200px;
+            margin-bottom: 10px;
+        }
+
+        .tab-button {
+            flex: 1;
+            padding: 12px 20px;
+            background: transparent;
+            border: none;
+            color: #aaa;
+            cursor: pointer;
+            border-radius: 6px;
+            font-size: 0.95rem;
+            font-weight: 500;
+            transition: all 0.2s;
+            position: relative;
+        }
+
+        .tab-button:hover {
+            color: white;
+            background: rgba(59, 130, 246, 0.1);
+        }
+
+        .tab-button.active {
+            background: #3b82f6;
+            color: white;
+        }
+
+        .tab-button.active::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: #3b82f6;
+        }
+
+        /* Pyramid Layout (Always Visible) */
+        .pyramid-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 10px 20px;
+        }
+
+        .pyramid-top {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+        }
+
+        .circle-of-fifths-placeholder {
+            width: 400px;
+            height: 400px;
+            background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 3px solid #60a5fa;
+            box-shadow: 0 0 30px rgba(59, 130, 246, 0.3);
+            color: white;
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+
+        .pyramid-middle {
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            gap: 20px;
+            width: 100%;
+            max-width: 1100px;
+        }
+
+        .extensions-panel {
+            background: linear-gradient(135deg, #581c87 0%, #7c3aed 100%);
+            border: 2px solid #a78bfa;
+            border-radius: 12px;
+            padding: 16px;
+            min-width: 240px;
+            min-height: 280px;
+            box-shadow: 0 4px 20px rgba(124, 58, 237, 0.2);
+        }
+
+        .extensions-panel h3 {
+            margin: 0 0 12px 0;
+            color: #ddd6fe;
+            font-size: 1rem;
+            text-align: center;
+        }
+
+        .chord-info-container {
+            min-width: 280px;
+            min-height: 280px;
+            background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);
+            border: 2px solid #60a5fa;
+            border-radius: 12px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 20px rgba(59, 130, 246, 0.2);
+        }
+
+        .scale-selector-container {
+            min-width: 280px;
+            min-height: 280px;
+            background: #2a2a2a;
+            border: 2px solid #555;
+            border-radius: 12px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .pyramid-bottom {
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            gap: 30px;
+            width: 100%;
+            flex-wrap: wrap;
+        }
+
+        .piano-section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .piano-section h3 {
+            color: #fff;
+            margin: 0 0 10px 0;
+            font-size: 1rem;
+            font-weight: 600;
+        }
+
+        .piano-placeholder {
+            width: 600px;
+            height: 200px;
+            background: linear-gradient(to bottom, #f3f4f6 0%, #e5e7eb 100%);
+            border-radius: 8px;
+            border: 2px solid #666;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #333;
+            font-weight: 600;
+            position: relative;
+        }
+
+        .piano-placeholder::before {
+            content: '🎹';
+            font-size: 3rem;
+            position: absolute;
+            opacity: 0.3;
+        }
+
+        /* Tab Content */
+        .tab-content {
+            display: none;
+            width: 100%;
+            max-width: 1200px;
+            padding: 20px 0;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* Key Practice Tab */
+        .key-progression-builder {
+            background: #2a2a2a;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .key-progression-builder h3 {
+            margin: 0 0 15px 0;
+            color: #fff;
+            font-size: 1.1rem;
+        }
+
+        .input-group {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .input-group input {
+            flex: 1;
+            padding: 10px;
+            border: 1px solid #555;
+            border-radius: 5px;
+            background: #1a1a1a;
+            color: white;
+            font-size: 1rem;
+        }
+
+        .input-group button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            background: #3b82f6;
+            color: white;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        .saved-progressions {
+            margin-top: 20px;
+        }
+
+        .saved-progressions h4 {
+            color: #aaa;
+            font-size: 0.9rem;
+            margin-bottom: 10px;
+        }
+
+        .saved-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            background: #333;
+            border-radius: 5px;
+            margin-bottom: 8px;
+            cursor: pointer;
+        }
+
+        .current-target {
+            text-align: center;
+            background: #333;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+        }
+
+        .current-target h2 {
+            margin: 0;
+            font-size: 2rem;
+            color: #fbbf24;
+        }
+
+        .current-target h3 {
+            margin: 10px 0 0;
+            color: #ccc;
+        }
+
+        .progression-display {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 15px;
+            flex-wrap: wrap;
+        }
+
+        .progression-display span {
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+
+        .progression-display .current-key {
+            background: #3b82f6;
+            color: white;
+            box-shadow: 0 0 15px rgba(59, 130, 246, 0.5);
+            transform: scale(1.1);
+        }
+
+        .progression-display .upcoming-key {
+            background: #444;
+            color: #ccc;
+            border: 1px solid #666;
+        }
+
+        /* Chord Practice Tab */
+        .progression-builder {
+            background: #2a2a2a;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .progression-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .header-save-btn, .header-open-btn {
+            padding: 6px 12px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            background: #10b981;
+            color: white;
+        }
+
+        .preview-display {
+            background: #333;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 15px 0;
+            font-size: 0.95rem;
+            color: #ccc;
+        }
+
+        .clicked-chord-display {
+            text-align: center;
+            background: #2a2a2a;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 20px;
+            border: 2px solid #3b82f6;
+        }
+
+        .clicked-chord-name {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #60a5fa;
+            margin: 10px 0;
+        }
+
+        /* Free Play Tab */
+        .detected-chord-card {
+            background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);
+            border: 2px solid #60a5fa;
+            border-radius: 12px;
+            padding: 40px;
+            text-align: center;
+            box-shadow: 0 0 20px rgba(59, 130, 246, 0.3);
+            margin: 20px auto;
+            max-width: 400px;
+        }
+
+        .chord-name-display {
+            font-size: 2.5rem;
+            color: #fff;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .chord-inversion-display {
+            color: #e0e7ff;
+            font-size: 1.2rem;
+        }
+
+        /* Lava Game Tab */
+        .lava-game-score {
+            text-align: center;
+            background: linear-gradient(135deg, #1a1a1a 0%, #2a1a1a 100%);
+            padding: 20px;
+            border-radius: 10px;
+            border: 2px solid #dc2626;
+            box-shadow: 0 0 20px rgba(220, 38, 38, 0.3);
+            margin: 20px auto;
+            max-width: 400px;
+        }
+
+        .lava-game-score h3 {
+            margin: 0 0 15px 0;
+            font-size: 1.5rem;
+            color: #fbbf24;
+        }
+
+        .score-display {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            margin-bottom: 15px;
+        }
+
+        .score-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .score-label {
+            font-size: 0.9rem;
+            color: #aaa;
+        }
+
+        .score-value {
+            font-size: 2rem;
+            font-weight: 700;
+        }
+
+        .score-item.good-keys .score-value {
+            color: #7dd3fc;
+        }
+
+        .score-item.bad-keys .score-value {
+            color: #dc2626;
+        }
+
+        .lava-instructions {
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid #444;
+        }
+
+        .lava-instructions p {
+            margin: 5px 0;
+            font-size: 0.9rem;
+            color: #ccc;
+        }
+
+        /* Responsive */
+        @media (max-width: 1100px) {
+            .pyramid-middle, .pyramid-bottom {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <header>
+            <h1>
+                Piano Trainer <span class="midi-device-name">(MIDI Device Name)</span>
+                <a href="#" class="usage-ideas-link">usage ideas</a>
+            </h1>
+        </header>
+
+        <div class="main-content">
+            <!-- Controls Section -->
+            <div class="controls-section">
+                <div class="controls-container">
+                    <div class="control-group">
+                        <label>Key Center</label>
+                        <select>
+                            <option>C</option>
+                            <option>D</option>
+                            <option>E</option>
+                            <option>F</option>
+                            <option>G</option>
+                            <option>A</option>
+                            <option>B</option>
+                        </select>
+                    </div>
+                    <div class="control-group">
+                        <label>Scale Type</label>
+                        <select>
+                            <option>Major</option>
+                            <option>Minor</option>
+                        </select>
+                    </div>
+                    <div class="control-group">
+                        <label>Keyboard Size</label>
+                        <select>
+                            <option>88 Keys</option>
+                            <option>76 Keys</option>
+                            <option>61 Keys</option>
+                        </select>
+                    </div>
+                    <div class="control-group">
+                        <label>Practice Rules</label>
+                        <div style="display: flex; gap: 10px;">
+                            <label><input type="radio" name="rules" checked> Normal</label>
+                            <label><input type="radio" name="rules"> Reject Errors</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab Navigation -->
+            <div class="tab-navigation">
+                <button class="tab-button active" onclick="switchTab('key')">Key Practice</button>
+                <button class="tab-button" onclick="switchTab('chord')">Chord Practice</button>
+                <button class="tab-button" onclick="switchTab('free')">Free Play</button>
+                <button class="tab-button" onclick="switchTab('lava')">Lava Game</button>
+            </div>
+
+            <!-- Always-Visible Pyramid Layout -->
+            <div class="pyramid-container">
+                <div class="pyramid-top">
+                    <div class="circle-of-fifths-placeholder">
+                        Circle of Fifths
+                    </div>
+                </div>
+
+                <div class="pyramid-middle">
+                    <div class="extensions-panel">
+                        <h3>Extensions</h3>
+                        <div style="color: #ddd6fe; font-size: 0.9rem; text-align: center; padding: 20px;">
+                            Play 2+ notes to see chord suggestions
+                        </div>
+                    </div>
+
+                    <div class="chord-info-container">
+                        <div style="text-align: center;">
+                            <div style="font-size: 0.8rem; color: #e0e7ff; margin-bottom: 8px;">DETECTED</div>
+                            <div style="font-size: 2rem; font-weight: 700; color: #fff;">C Major</div>
+                            <div style="font-size: 1rem; color: #60a5fa; font-style: italic; margin-top: 4px;">Root Position</div>
+                        </div>
+                    </div>
+
+                    <div class="scale-selector-container">
+                        <h3 style="margin: 0 0 15px 0; color: #fff;">Scale Type</h3>
+                        <select style="width: 100%;">
+                            <option>Major</option>
+                            <option>Minor</option>
+                            <option>Dorian</option>
+                            <option>Mixolydian</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="pyramid-bottom">
+                    <div class="piano-section">
+                        <div class="piano-placeholder">
+                            Left Piano (C2-C5)
+                        </div>
+                    </div>
+                    <div class="piano-section">
+                        <h3>Scale Practice</h3>
+                        <div class="piano-placeholder">
+                            Right Piano (C5-C8)
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab Content: Key Practice -->
+            <div id="tab-key" class="tab-content active">
+                <div class="key-progression-builder">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                        <h3>Key Progression Practice</h3>
+                        <div style="display: flex; gap: 8px;">
+                            <button style="padding: 6px 12px; background: #10b981; color: white; border: none; border-radius: 4px; cursor: pointer;">💾 Save</button>
+                            <button style="padding: 6px 12px; background: #3b82f6; color: white; border: none; border-radius: 4px; cursor: pointer;">📂 Open</button>
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <input type="text" placeholder="e.g., F C G D" value="F C G D">
+                        <button>Set Progression</button>
+                        <button style="background: #666;">Clear</button>
+                    </div>
+                    <div class="saved-progressions">
+                        <h4>Saved:</h4>
+                        <div class="saved-item">
+                            <div>
+                                <div style="font-weight: 600;">Circle of Fifths</div>
+                                <div style="font-size: 0.85rem; color: #aaa;">F C G D A</div>
+                            </div>
+                            <button style="background: #dc2626; border: none; color: white; padding: 4px 8px; border-radius: 3px; cursor: pointer;">×</button>
+                        </div>
+                    </div>
+                    <div style="margin-top: 15px; font-size: 0.85rem; color: #aaa; font-style: italic;">
+                        Practice scales in each key sequentially. Complete a scale to advance to the next key.
+                    </div>
+                </div>
+
+                <div class="current-target">
+                    <h2>Key Progression Practice</h2>
+                    <h3>Current Key: F Major</h3>
+                    <div class="progression-display">
+                        <span class="current-key">F</span>
+                        <span class="upcoming-key">C</span>
+                        <span class="upcoming-key">G</span>
+                        <span class="upcoming-key">D</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab Content: Chord Practice -->
+            <div id="tab-chord" class="tab-content">
+                <div class="progression-builder">
+                    <div class="progression-header">
+                        <h3 style="margin: 0; color: #fff;">Custom Progression</h3>
+                        <div class="header-actions">
+                            <button class="header-save-btn">💾 Save</button>
+                            <button class="header-open-btn">📂 Open</button>
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <input type="text" placeholder="e.g., I IV V I" value="I IV V I">
+                        <button>Set Progression</button>
+                    </div>
+                    <div class="preview-display">
+                        Preview: <strong>I</strong> (C Major) → <strong>IV</strong> (F Major) → <strong>V</strong> (G Major) → <strong>I</strong> (C Major)
+                    </div>
+                    <div class="saved-progressions">
+                        <h4>Saved Progressions:</h4>
+                        <div class="saved-item">
+                            <div>
+                                <div style="font-weight: 600;">Epic Pop progression</div>
+                                <div style="font-size: 0.85rem; color: #aaa;">I V vi IV</div>
+                            </div>
+                            <div style="display: flex; gap: 5px;">
+                                <button style="background: #3b82f6; border: none; color: white; padding: 4px 8px; border-radius: 3px; cursor: pointer; font-size: 0.8rem;">Load</button>
+                                <button style="background: #dc2626; border: none; color: white; padding: 4px 8px; border-radius: 3px; cursor: pointer;">×</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="current-target">
+                    <h2>Target: I</h2>
+                    <h3>C Major</h3>
+                </div>
+
+                <div class="clicked-chord-display">
+                    <div style="font-size: 0.8rem; color: #aaa; margin-bottom: 5px;">Showing on Piano:</div>
+                    <div class="clicked-chord-name">C Major</div>
+                    <div style="font-size: 1rem; color: #fbbf24; font-style: italic; margin-bottom: 5px;">Root Position</div>
+                    <div style="font-size: 0.75rem; color: #666; margin-top: 5px;">Click chord again to cycle inversions</div>
+                </div>
+            </div>
+
+            <!-- Tab Content: Free Play -->
+            <div id="tab-free" class="tab-content">
+                <div class="detected-chord-card">
+                    <div class="chord-name-display">C Major</div>
+                    <div class="chord-inversion-display">Root Position</div>
+                    <div style="margin-top: 20px; font-size: 0.9rem; color: #e0e7ff; opacity: 0.8;">
+                        Play any combination of notes to see chord detection
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab Content: Lava Game -->
+            <div id="tab-lava" class="tab-content">
+                <div class="lava-game-score">
+                    <h3>🔥 Lava Game Score 🔥</h3>
+                    <div class="score-display">
+                        <div class="score-item good-keys">
+                            <span class="score-label">Good Keys:</span>
+                            <span class="score-value">42</span>
+                        </div>
+                        <div class="score-item bad-keys">
+                            <span class="score-label">Lava Keys Hit:</span>
+                            <span class="score-value">3</span>
+                        </div>
+                    </div>
+                    <div class="lava-instructions">
+                        <p>🎹 Ice Blue keys = Good (in C Major)</p>
+                        <p>🔥 Red keys = Lava (avoid these!)</p>
+                        <p>Play continuously - no time limit!</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function switchTab(tabName) {
+            // Hide all tab contents
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.remove('active');
+            });
+
+            // Remove active class from all buttons
+            document.querySelectorAll('.tab-button').forEach(button => {
+                button.classList.remove('active');
+            });
+
+            // Show selected tab content
+            document.getElementById('tab-' + tabName).classList.add('active');
+
+            // Add active class to clicked button
+            event.target.classList.add('active');
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chord Practice Tab - Mockup</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: #1a1a1a;
+            color: white;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .mockup-container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .tab-indicator {
+            background: #222;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .tab-indicator .active-tab {
+            background: #3b82f6;
+            color: white;
+            padding: 8px 20px;
+            border-radius: 6px;
+            display: inline-block;
+            font-weight: 600;
+        }
+
+        .tab-indicator .inactive-tabs {
+            display: inline-block;
+            margin-left: 10px;
+            color: #666;
+        }
+
+        .progression-builder {
+            background: #2a2a2a;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .progression-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #444;
+        }
+
+        .progression-header h3 {
+            margin: 0;
+            color: #fff;
+            font-size: 1.1rem;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .header-save-btn, .header-open-btn {
+            padding: 6px 12px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            background: #10b981;
+            color: white;
+            transition: background 0.2s;
+        }
+
+        .header-save-btn:hover {
+            background: #059669;
+        }
+
+        .header-open-btn {
+            background: #3b82f6;
+        }
+
+        .header-open-btn:hover {
+            background: #2563eb;
+        }
+
+        .input-group {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .input-group input {
+            flex: 1;
+            padding: 10px;
+            border: 1px solid #555;
+            border-radius: 5px;
+            background: #1a1a1a;
+            color: white;
+            font-size: 1rem;
+        }
+
+        .input-group input:focus {
+            outline: none;
+            border-color: #3b82f6;
+        }
+
+        .input-group button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            background: #3b82f6;
+            color: white;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        .preview-display {
+            background: #333;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 15px 0;
+            font-size: 0.95rem;
+            color: #ccc;
+            line-height: 1.6;
+        }
+
+        .preview-display strong {
+            color: #60a5fa;
+            font-weight: 600;
+        }
+
+        .saved-progressions {
+            margin-top: 20px;
+        }
+
+        .saved-progressions h4 {
+            color: #aaa;
+            font-size: 0.9rem;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .saved-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px;
+            background: #333;
+            border-radius: 5px;
+            margin-bottom: 8px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .saved-item:hover {
+            background: #3a3a3a;
+        }
+
+        .saved-item .name {
+            font-weight: 600;
+            color: #fff;
+        }
+
+        .saved-item .preview {
+            font-size: 0.85rem;
+            color: #aaa;
+            margin-top: 4px;
+        }
+
+        .saved-item-actions {
+            display: flex;
+            gap: 5px;
+        }
+
+        .saved-item-actions button {
+            padding: 4px 10px;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+            font-size: 0.8rem;
+        }
+
+        .saved-item-actions .load-btn {
+            background: #3b82f6;
+            color: white;
+        }
+
+        .saved-item-actions .delete-btn {
+            background: #dc2626;
+            color: white;
+            padding: 4px 10px;
+            font-size: 1.2rem;
+            line-height: 1;
+        }
+
+        .predefined-section {
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid #444;
+        }
+
+        .predefined-section h4 {
+            color: #aaa;
+            font-size: 0.9rem;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .predefined-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .predefined-btn {
+            padding: 6px 12px;
+            background: #444;
+            border: 1px solid #555;
+            border-radius: 4px;
+            color: white;
+            cursor: pointer;
+            font-size: 0.85rem;
+            transition: all 0.2s;
+        }
+
+        .predefined-btn:hover {
+            background: #555;
+            border-color: #666;
+        }
+
+        .current-target {
+            text-align: center;
+            background: #333;
+            padding: 30px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+
+        .current-target h2 {
+            margin: 0;
+            font-size: 2rem;
+            color: #fbbf24;
+        }
+
+        .current-target h3 {
+            margin: 15px 0 0;
+            color: #ccc;
+            font-size: 1.2rem;
+        }
+
+        .clicked-chord-display {
+            text-align: center;
+            background: #2a2a2a;
+            padding: 20px;
+            border-radius: 8px;
+            border: 2px solid #3b82f6;
+            max-width: 400px;
+            margin: 0 auto;
+        }
+
+        .clicked-chord-label {
+            font-size: 0.8rem;
+            color: #aaa;
+            margin-bottom: 5px;
+        }
+
+        .clicked-chord-name {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #60a5fa;
+            margin: 10px 0;
+        }
+
+        .clicked-chord-inversion {
+            font-size: 1rem;
+            color: #fbbf24;
+            font-style: italic;
+            margin-bottom: 5px;
+        }
+
+        .clicked-chord-hint {
+            font-size: 0.75rem;
+            color: #666;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="mockup-container">
+        <div class="tab-indicator">
+            <span class="inactive-tabs">Key Practice |</span>
+            <span class="active-tab">Chord Practice</span>
+            <span class="inactive-tabs">| Free Play | Lava Game</span>
+        </div>
+
+        <div class="progression-builder">
+            <div class="progression-header">
+                <h3>Custom Progression</h3>
+                <div class="header-actions">
+                    <button class="header-save-btn">💾 Save</button>
+                    <button class="header-open-btn">📂 Open</button>
+                </div>
+            </div>
+
+            <div class="input-group">
+                <input type="text" placeholder="e.g., I IV V I" value="I IV V I">
+                <button>Set Progression</button>
+            </div>
+
+            <div class="preview-display">
+                Preview: <strong>I</strong> (C Major) → <strong>IV</strong> (F Major) → <strong>V</strong> (G Major) → <strong>I</strong> (C Major)
+            </div>
+
+            <div class="saved-progressions">
+                <h4>Saved Progressions:</h4>
+                <div class="saved-item">
+                    <div>
+                        <div class="name">Epic Pop progression</div>
+                        <div class="preview">I V vi IV</div>
+                    </div>
+                    <div class="saved-item-actions">
+                        <button class="load-btn">Load</button>
+                        <button class="delete-btn">×</button>
+                    </div>
+                </div>
+                <div class="saved-item">
+                    <div>
+                        <div class="name">Doo-Wop progression</div>
+                        <div class="preview">I vi IV V</div>
+                    </div>
+                    <div class="saved-item-actions">
+                        <button class="load-btn">Load</button>
+                        <button class="delete-btn">×</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="predefined-section">
+                <h4>Predefined Progressions:</h4>
+                <div class="predefined-buttons">
+                    <button class="predefined-btn">Epic Pop</button>
+                    <button class="predefined-btn">Doo-Wop</button>
+                    <button class="predefined-btn">Heartfelt</button>
+                    <button class="predefined-btn">Passion</button>
+                    <button class="predefined-btn">Wandering</button>
+                    <button class="predefined-btn">Circle</button>
+                    <button class="predefined-btn">Sentimental</button>
+                    <button class="predefined-btn">Dreamy</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="current-target">
+            <h2>Target: I</h2>
+            <h3>C Major</h3>
+        </div>
+
+        <div class="clicked-chord-display">
+            <div class="clicked-chord-label">Showing on Piano:</div>
+            <div class="clicked-chord-name">C Major</div>
+            <div class="clicked-chord-inversion">Root Position</div>
+            <div class="clicked-chord-hint">Click chord again to cycle inversions</div>
+        </div>
+    </div>
+</body>
+</html>
