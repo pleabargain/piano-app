@@ -694,29 +694,12 @@ header h1 {
   flex-direction: column;
   align-items: center;
   gap: 15px;
-  /* Ensure consistent height by aligning at bottom */
 }
 
-/* Make pianos smaller in split view to fit side-by-side */
-.split-keyboard-container .piano-container .key.white {
-  width: 28px;
-  height: 140px;
-}
-
-.split-keyboard-container .piano-container .key.black {
-  width: 18px;
-  height: 85px;
-  margin-left: -9px;
-  margin-right: -9px;
-}
-
-.piano-section h3 {
-  color: #fff;
-  margin-bottom: 15px;
-  font-size: 1.1rem;
-  font-weight: 600;
-  text-transform: none;
-  letter-spacing: 0.5px;
+.unified-piano {
+  width: 100%;
+  display: flex;
+  justify-content: center;
 }
 
 .center-section {
@@ -854,10 +837,9 @@ header h1 {
 .pyramid-bottom {
   display: flex;
   justify-content: center;
-  align-items: flex-start;
-  gap: 30px;
+  align-items: center;
   width: 100%;
-  flex-wrap: wrap;
+  padding-top: 20px;
 }
 
 .piano-section {

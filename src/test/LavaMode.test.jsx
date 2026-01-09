@@ -77,15 +77,12 @@ describe('Lava Mode Functionality', () => {
         await userEvent.click(lavaModeButton)
 
         await waitFor(() => {
-            const leftPiano = container.querySelector('.left-piano .piano-container')
-            const rightPiano = container.querySelector('.right-piano .piano-container')
+            const unifiedPiano = container.querySelector('.unified-piano .piano-container')
 
-            expect(leftPiano.classList.contains('lava-mode')).toBe(true)
-            expect(rightPiano.classList.contains('lava-mode')).toBe(true)
+            expect(unifiedPiano.classList.contains('lava-mode')).toBe(true)
 
-            // Both should have red keys
-            expect(leftPiano.querySelectorAll('.lava-key').length).toBeGreaterThan(0)
-            expect(rightPiano.querySelectorAll('.lava-key').length).toBeGreaterThan(0)
+            // Should have red keys
+            expect(unifiedPiano.querySelectorAll('.lava-key').length).toBeGreaterThan(0)
         })
     })
 })

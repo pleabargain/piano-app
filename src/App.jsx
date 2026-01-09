@@ -914,30 +914,15 @@ function App() {
             />
           </div>
 
-          {/* Bottom Row: Two Pianos */}
+          {/* Bottom Row: Unified Piano */}
           <div className="pyramid-bottom">
-            <div className="piano-section left-piano">
+            <div className="piano-section unified-piano">
               <Piano
                 startNote={36}
-                endNote={60}
-                activeNotes={activeNotes}
-                highlightedNotes={mode === 'lava' ? getScaleHighlights() : []}
-                chordMidiNotes={getChordHighlights()}
-                lavaKeys={mode === 'lava' ? lavaKeys : []}
-                mode={mode}
-                feedbackState={feedbackState}
-                expectedNotes={isPlayAlongMode ? expectedNotes : []}
-              />
-            </div>
-
-            <div className="piano-section right-piano">
-              <h3>Scale Practice</h3>
-              <Piano
-                startNote={60}
                 endNote={84}
                 activeNotes={activeNotes}
                 highlightedNotes={getScaleHighlights()}
-                chordMidiNotes={[]}
+                chordMidiNotes={getChordHighlights()}
                 lavaKeys={mode === 'lava' ? lavaKeys : []}
                 mode={mode}
                 feedbackState={feedbackState}

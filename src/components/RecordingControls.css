@@ -2,11 +2,62 @@
 .recording-controls {
   display: flex;
   flex-direction: column;
-  gap: 20px;
-  padding: 20px;
+  gap: 15px;
+  padding: 15px 20px;
   background: #2a2a2a;
   border-radius: 8px;
   margin: 20px 0;
+  transition: all 0.3s ease;
+}
+
+.recording-controls.collapsed {
+  padding-bottom: 15px;
+}
+
+.recording-controls-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+  user-select: none;
+  width: 100%;
+}
+
+.recording-controls-header:hover {
+  background-color: rgba(255, 255, 255, 0.05);
+  margin: -5px -10px;
+  padding: 5px 10px;
+  border-radius: 4px;
+}
+
+.recording-controls-header h3 {
+  margin: 0;
+  font-size: 1.1rem;
+  color: #fff;
+}
+
+.toggle-icon {
+  color: #aaa;
+  font-size: 0.8em;
+}
+
+.recording-controls-content {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  animation: slideDown 0.3s ease-out;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .recording-playback-container {
@@ -105,10 +156,13 @@
 }
 
 @keyframes recording-pulse {
-  0%, 100% {
+
+  0%,
+  100% {
     opacity: 1;
     transform: scale(1);
   }
+
   50% {
     opacity: 0.5;
     transform: scale(1.2);
@@ -188,4 +242,3 @@
   flex-direction: column;
   flex: 1;
 }
-

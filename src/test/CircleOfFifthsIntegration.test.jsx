@@ -41,11 +41,11 @@ describe('Circle of Fifths Integration', () => {
             // Click it
             fireEvent.click(segment);
 
-            // Check if keys are highlighted in the Left Piano (Chords)
-            // We look for keys with class 'chord-note' inside the left piano section
-            const leftPiano = container.querySelector('.piano-section.left-piano');
-            expect(leftPiano).toBeTruthy();
-            const highlightedKeys = leftPiano.querySelectorAll('.key.chord-note');
+            // Check if keys are highlighted in the Unified Piano
+            // We look for keys with class 'chord-note' inside the unified piano section
+            const unifiedPiano = container.querySelector('.piano-section.unified-piano');
+            expect(unifiedPiano).toBeTruthy();
+            const highlightedKeys = unifiedPiano.querySelectorAll('.key.chord-note');
             expect(highlightedKeys.length).toBeGreaterThan(0);
 
             // Verify at least the root note is highlighted

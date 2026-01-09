@@ -104,13 +104,13 @@ class RecordingManager {
         // Generate UUID v4
         const id = this.generateUUID();
 
-        // Calculate duration from last event timestamp
-        const duration = this.events.length > 0 
-            ? Math.max(...this.events.map(e => e.timestamp))
-            : 0;
-
         // Normalize timestamps to start at 0
         const normalizedEvents = this.normalizeTimestamps(this.events);
+
+        // Calculate duration from last event timestamp (normalized)
+        const duration = normalizedEvents.length > 0
+            ? Math.max(...normalizedEvents.map(e => e.timestamp))
+            : 0;
 
         const recording = {
             version: '1.0',
@@ -141,7 +141,7 @@ class RecordingManager {
         if (events.length === 0) return [];
 
         const firstTimestamp = Math.min(...events.map(e => e.timestamp));
-        
+
         return events.map(event => ({
             ...event,
             timestamp: event.timestamp - firstTimestamp
