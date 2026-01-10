@@ -32,19 +32,19 @@ describe('getChordNotesAsMidi Function', () => {
       console.log('[Test] ✅ C Major root position calculated correctly:', midiNotes);
     });
 
-    it('should return correct MIDI notes for F Major root position in octave 3', () => {
-      console.log('[Test] Testing F Major root position in octave 3');
+    it('should return correct MIDI notes for F Major root position in octave 2', () => {
+      console.log('[Test] Testing F Major root position in octave 2');
       console.log('[Test] WHY: This matches user requirement - F Major [41, 45, 48]');
       console.log('[Test] IMPORTANCE: Validates exact scenario from user request');
-      console.log('[Test] Input: root=F, chordType=major, inversion=0, baseOctave=3');
+      console.log('[Test] Input: root=F, chordType=major, inversion=0, baseOctave=2');
       
-      const midiNotes = getChordNotesAsMidi('F', 'major', 0, 3);
+      const midiNotes = getChordNotesAsMidi('F', 'major', 0, 2);
       
-      // F Major root position in octave 3: F3=41, A3=45, C4=48
+      // F Major root position in octave 2: F2=41, A2=45, C3=48
       expect(midiNotes).toEqual([41, 45, 48]);
       expect(midiNotes.length).toBe(3);
       
-      console.log('[Test] ✅ F Major root position in octave 3 calculated correctly:', midiNotes);
+      console.log('[Test] ✅ F Major root position in octave 2 calculated correctly:', midiNotes);
     });
 
     it('should return correct MIDI notes for C Minor root position', () => {
@@ -160,11 +160,11 @@ describe('getChordNotesAsMidi Function', () => {
       const octave5 = getChordNotesAsMidi('C', 'major', 0, 5);
       
       // C Major: C, E, G
-      // Octave 2: C2=24, E2=28, G2=31
-      expect(octave2).toEqual([24, 28, 31]);
+      // Octave 2: C2=36, E2=40, G2=43
+      expect(octave2).toEqual([36, 40, 43]);
       
-      // Octave 3: C3=36, E3=40, G3=43
-      expect(octave3).toEqual([36, 40, 43]);
+      // Octave 3: C3=48, E3=52, G3=55
+      expect(octave3).toEqual([48, 52, 55]);
       
       // Octave 4: C4=60, E4=64, G4=67
       expect(octave4).toEqual([60, 64, 67]);

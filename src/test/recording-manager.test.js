@@ -68,7 +68,8 @@ describe('RecordingManager', () => {
             
             expect(recording.events).toHaveLength(2);
             expect(recording.events[0].timestamp).toBe(0.0);
-            expect(recording.events[1].timestamp).toBe(499.7);
+            // 1500.2 - 1000.0 = 500.2, minus first event at 1.5 => 498.7
+            expect(recording.events[1].timestamp).toBeCloseTo(498.7, 5);
         });
 
         it('should normalize timestamps to start at 0', () => {
@@ -236,8 +237,8 @@ describe('RecordingManager', () => {
             
             const recording = manager.stopRecording();
             
-            // Second event should be at 500ms (3500 - 3000 + 500 pause = 500ms relative)
-            expect(recording.events[1].timestamp).toBeCloseTo(500, 1);
+            // Raw timestamps: first=500ms, second=1500ms (pause subtracted), normalized => 0ms and 1000ms
+            expect(recording.events[1].timestamp).toBeCloseTo(1000, 1);
         });
     });
 

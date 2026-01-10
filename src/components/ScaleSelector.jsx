@@ -13,7 +13,9 @@ const ScaleSelector = ({
     selectedScaleType,
     onScaleTypeChange,
     lockedChordRoot,
-    showAllScales = false
+    showAllScales = false,
+    isCollapsed = false,
+    onToggleCollapse
 }) => {
     // Determine which root to use for display
     const displayRoot = lockedChordRoot || selectedRoot;
@@ -24,8 +26,30 @@ const ScaleSelector = ({
         name: data.name
     }));
 
+    if (isCollapsed) {
+        return (
+            <div className="scale-selector-container collapsed">
+                <button
+                    className="collapse-toggle-btn"
+                    onClick={onToggleCollapse}
+                    title="Show Scale Selector"
+                >
+                    ←
+                </button>
+                <div className="collapsed-label">Scale</div>
+            </div>
+        );
+    }
+
     return (
         <div className="scale-selector-container">
+            <button
+                className="collapse-toggle-btn"
+                onClick={onToggleCollapse}
+                title="Collapse Scale Selector"
+            >
+                →
+            </button>
             <div className="scale-selector-header">
                 <h3>Scale Practice</h3>
                 {lockedChordRoot && (
@@ -38,7 +62,9 @@ const ScaleSelector = ({
 
             <div className="current-scale-display">
                 <div className="scale-label">Current Scale:</div>
-                <div className="scale-name">{displayRoot} {SCALES[selectedScaleType].name}</div>
+                <div className="scale-name">
+                    {displayRoot} {(SCALES[selectedScaleType]?.name) || selectedScaleType}
+                </div>
             </div>
 
             <div className="scale-type-selector">

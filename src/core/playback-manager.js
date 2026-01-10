@@ -13,6 +13,7 @@ class PlaybackManager {
         this.waitForInput = false; // If true, wait for user to play correct note before advancing
         this.currentExpectedNote = null; // The note currently expected from user
         this.loop = false; // If true, loop playback when it reaches the end
+        this.completionScheduled = false;
     }
 
     /**
@@ -96,6 +97,7 @@ class PlaybackManager {
             }
             this.state = 'playing';
             this.scheduleRemainingEvents();
+            this.scheduleCompletion();
             return;
         }
 
@@ -106,8 +108,40 @@ class PlaybackManager {
         this.pauseTime = null;
         this.totalPauseDuration = 0;
         this.currentExpectedNote = null;
+        this.completionScheduled = false;
         console.log('[PlaybackManager] Starting playback, recording has', this.recording.events.length, 'events, waitForInput:', this.waitForInput);
         this.scheduleRemainingEvents();
+        this.scheduleCompletion();
+    }
+
+    /**
+     * Schedule completion based on recording duration.
+     * This keeps the state as 'playing' even if the last event fires immediately,
+     * and supports recordings with no events but non-zero duration.
+     */
+    scheduleCompletion() {
+        if (!this.recording || this.state !== 'playing') return;
+        if (this.completionScheduled) return;
+
+        const duration = typeof this.recording.duration === 'number' ? this.recording.duration : 0;
+        if (duration <= 0) return;
+
+        const now = performance.now();
+        const effectiveStartTime = this.startTime - this.totalPauseDuration;
+        const effectiveDuration = duration / this.playbackRate;
+        const targetTime = effectiveStartTime + effectiveDuration;
+        const delay = Math.max(0, targetTime - now);
+
+        this.completionScheduled = true;
+
+        const timeoutId = setTimeout(() => {
+            // Only complete if we're still actively playing (not paused/stopped/waiting for input)
+            if (this.state === 'playing') {
+                this.complete();
+            }
+        }, delay);
+
+        this.scheduledTimeouts.push(timeoutId);
     }
 
     /**
@@ -126,10 +160,14 @@ class PlaybackManager {
         console.log('[PlaybackManager] Scheduling events from index', this.currentEventIndex, 'to', events.length - 1);
         console.log('[PlaybackManager] Effective start time:', effectiveStartTime, 'Current time:', now);
 
-        // If we've already processed all events, complete
+        // If we've already processed all events, rely on duration-based completion.
+        // If duration is 0/undefined, complete immediately.
         if (this.currentEventIndex >= events.length) {
-            console.log('[PlaybackManager] All events processed, completing');
-            this.complete();
+            const duration = typeof this.recording.duration === 'number' ? this.recording.duration : 0;
+            if (duration <= 0) {
+                console.log('[PlaybackManager] All events processed and duration is 0, completing');
+                this.complete();
+            }
             return;
         }
 
@@ -161,10 +199,6 @@ class PlaybackManager {
                 } else {
                     this.currentEventIndex = i + 1;
                     
-                    // Check if this was the last event (only if not waiting for input)
-                    if (i === events.length - 1 && this.state !== 'waitingForInput') {
-                        this.complete();
-                    }
                 }
             } else {
                 console.log('[PlaybackManager] Scheduling event at index', i, 'with delay', delay, 'ms');
@@ -188,10 +222,6 @@ class PlaybackManager {
                         } else {
                             this.currentEventIndex = i + 1;
 
-                            // Check if this was the last event (only if not waiting for input)
-                            if (i === events.length - 1 && this.state !== 'waitingForInput') {
-                                this.complete();
-                            }
                         }
                     }
                 }, delay);
@@ -200,12 +230,7 @@ class PlaybackManager {
             }
         }
         
-        // After scheduling, check if we've processed all events
-        // This handles the case where all remaining events fired immediately
-        if (this.currentEventIndex >= events.length && this.state !== 'waitingForInput') {
-            console.log('[PlaybackManager] All events processed after scheduling, completing');
-            this.complete();
-        }
+        // Completion is scheduled based on duration (see scheduleCompletion).
     }
 
     /**
@@ -338,6 +363,7 @@ class PlaybackManager {
         this.state = 'paused';
         this.pauseTime = performance.now();
         this.clearScheduledTimeouts();
+        this.completionScheduled = false;
     }
 
     /**
@@ -350,6 +376,7 @@ class PlaybackManager {
         this.pauseTime = null;
         this.totalPauseDuration = 0;
         this.clearScheduledTimeouts();
+        this.completionScheduled = false;
         this.emit('stop', {});
     }
 
@@ -365,12 +392,14 @@ class PlaybackManager {
             this.pauseTime = null;
             this.totalPauseDuration = 0;
             this.currentExpectedNote = null;
+            this.completionScheduled = false;
             this.emit('loop', {
                 duration: this.recording.duration,
                 totalEvents: this.recording.events.length
             });
             // Restart playback
             this.scheduleRemainingEvents();
+            this.scheduleCompletion();
             return;
         }
 
@@ -381,6 +410,7 @@ class PlaybackManager {
         this.pauseTime = null;
         this.totalPauseDuration = 0;
         this.clearScheduledTimeouts();
+        this.completionScheduled = false;
         this.emit('complete', {
             duration: this.recording.duration,
             totalEvents: this.recording.events.length

@@ -4,28 +4,22 @@ import PlaybackManager from '../core/playback-manager';
 describe('PlaybackManager', () => {
     let manager;
     let mockPerformanceNow;
-    let mockSetTimeout;
-    let mockClearTimeout;
+    let currentNow;
 
     beforeEach(() => {
+        vi.useFakeTimers();
+
+        currentNow = 0;
         mockPerformanceNow = vi.fn();
+        mockPerformanceNow.mockImplementation(() => currentNow);
         vi.stubGlobal('performance', { now: mockPerformanceNow });
-        
-        const timeouts = [];
-        mockSetTimeout = vi.fn((fn, delay) => {
-            const id = setTimeout(fn, delay);
-            timeouts.push(id);
-            return id;
-        });
-        mockClearTimeout = vi.fn((id) => clearTimeout(id));
-        vi.stubGlobal('setTimeout', mockSetTimeout);
-        vi.stubGlobal('clearTimeout', mockClearTimeout);
         
         manager = new PlaybackManager();
     });
 
     afterEach(() => {
         manager.stop();
+        vi.useRealTimers();
     });
 
     describe('State Management', () => {
@@ -72,7 +66,7 @@ describe('PlaybackManager', () => {
             };
             
             manager.loadRecording(recording);
-            mockPerformanceNow.mockReturnValue(1000);
+            currentNow = 1000;
             manager.play();
             
             expect(manager.getState()).toBe('playing');
@@ -97,7 +91,7 @@ describe('PlaybackManager', () => {
             };
             
             manager.loadRecording(recording);
-            mockPerformanceNow.mockReturnValue(1000);
+            currentNow = 1000;
             manager.play();
             manager.pause();
             
@@ -117,7 +111,7 @@ describe('PlaybackManager', () => {
             };
             
             manager.loadRecording(recording);
-            mockPerformanceNow.mockReturnValue(1000);
+            currentNow = 1000;
             manager.play();
             manager.pause();
             manager.play();
@@ -138,7 +132,7 @@ describe('PlaybackManager', () => {
             };
             
             manager.loadRecording(recording);
-            mockPerformanceNow.mockReturnValue(1000);
+            currentNow = 1000;
             manager.play();
             manager.stop();
             
@@ -148,7 +142,7 @@ describe('PlaybackManager', () => {
     });
 
     describe('Event Emission', () => {
-        it('should emit events during playback', (done) => {
+        it('should emit events during playback', async () => {
             const recording = {
                 version: '1.0',
                 id: 'test-id',
@@ -161,19 +155,21 @@ describe('PlaybackManager', () => {
             };
             
             manager.loadRecording(recording);
-            
-            manager.on('event', (data) => {
-                expect(data.type).toBe('noteOn');
-                expect(data.note).toBe(60);
-                expect(data.velocity).toBe(100);
-                done();
+
+            const eventPromise = new Promise((resolve) => {
+                manager.on('event', (data) => resolve(data));
             });
-            
-            mockPerformanceNow.mockReturnValue(1000);
+
+            currentNow = 1000;
             manager.play();
+
+            const data = await eventPromise;
+            expect(data.type).toBe('noteOn');
+            expect(data.note).toBe(60);
+            expect(data.velocity).toBe(100);
         });
 
-        it('should emit progress events', (done) => {
+        it('should emit progress events', async () => {
             const recording = {
                 version: '1.0',
                 id: 'test-id',
@@ -186,19 +182,21 @@ describe('PlaybackManager', () => {
             };
             
             manager.loadRecording(recording);
-            
-            manager.on('progress', (data) => {
-                expect(data).toHaveProperty('progress');
-                expect(data).toHaveProperty('currentTime');
-                expect(data).toHaveProperty('duration');
-                done();
+
+            const progressPromise = new Promise((resolve) => {
+                manager.on('progress', (data) => resolve(data));
             });
-            
-            mockPerformanceNow.mockReturnValue(1000);
+
+            currentNow = 1000;
             manager.play();
+
+            const data = await progressPromise;
+            expect(data).toHaveProperty('progress');
+            expect(data).toHaveProperty('currentTime');
+            expect(data).toHaveProperty('duration');
         });
 
-        it('should emit complete event when playback finishes', (done) => {
+        it('should emit complete event when playback finishes', async () => {
             const recording = {
                 version: '1.0',
                 id: 'test-id',
@@ -211,18 +209,24 @@ describe('PlaybackManager', () => {
             };
             
             manager.loadRecording(recording);
-            
-            manager.on('complete', (data) => {
-                expect(data).toHaveProperty('duration');
-                expect(data).toHaveProperty('totalEvents');
-                done();
+
+            const completePromise = new Promise((resolve) => {
+                manager.on('complete', (data) => resolve(data));
             });
-            
-            mockPerformanceNow.mockReturnValue(1000);
+
+            currentNow = 1000;
             manager.play();
+
+            // Advance time to the end of the recording duration to trigger completion
+            currentNow += 100;
+            await vi.advanceTimersByTimeAsync(100);
+
+            const data = await completePromise;
+            expect(data).toHaveProperty('duration');
+            expect(data).toHaveProperty('totalEvents');
         });
 
-        it('should emit stop event when stopped', (done) => {
+        it('should emit stop event when stopped', async () => {
             const recording = {
                 version: '1.0',
                 id: 'test-id',
@@ -233,17 +237,20 @@ describe('PlaybackManager', () => {
             };
             
             manager.loadRecording(recording);
-            
-            manager.on('stop', () => {
-                done();
+
+            const stopPromise = new Promise((resolve) => {
+                manager.on('stop', () => resolve(true));
             });
-            
+
             manager.stop();
+
+            await expect(stopPromise).resolves.toBe(true);
         });
     });
 
     describe('Event Scheduling', () => {
         it('should schedule events with correct timing', () => {
+            const setTimeoutSpy = vi.spyOn(globalThis, 'setTimeout');
             const recording = {
                 version: '1.0',
                 id: 'test-id',
@@ -257,11 +264,11 @@ describe('PlaybackManager', () => {
             };
             
             manager.loadRecording(recording);
-            mockPerformanceNow.mockReturnValue(1000);
+            currentNow = 1000;
             manager.play();
             
             // Should schedule timeouts for events
-            expect(mockSetTimeout).toHaveBeenCalled();
+            expect(setTimeoutSpy).toHaveBeenCalled();
         });
 
         it('should handle empty recordings', () => {
@@ -270,15 +277,20 @@ describe('PlaybackManager', () => {
                 id: 'test-id',
                 name: 'Test',
                 createdAt: Date.now(),
-                duration: 0,
+                duration: 1000,
                 events: []
             };
             
             manager.loadRecording(recording);
-            mockPerformanceNow.mockReturnValue(1000);
+            currentNow = 1000;
             manager.play();
             
             expect(manager.getState()).toBe('playing');
+
+            // Complete after duration
+            currentNow += 1000;
+            vi.advanceTimersByTime(1000);
+            expect(manager.getState()).toBe('idle');
         });
     });
 

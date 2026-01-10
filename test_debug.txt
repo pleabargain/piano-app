@@ -1,249 +1,29 @@
 
 [7m[1m[36m RUN [39m[22m[27m [36mv1.6.1[39m [90mC:/Users/denni/OneDrive/Documents/piano-app[39m
 
-[90mstdout[2m | src/test/PianoToCircleIntegration.test.jsx[2m > [22m[2mPiano to Circle of Fifths Integration[2m > [22m[2mshould highlight C Major in Circle of Fifths when C Major chord is played via MIDI[22m[39m
-[36m<body>[39m
-  [36m<div>[39m
-    [36m<div[39m
-      [33mclass[39m=[32m"app-container"[39m
-    [36m>[39m
-      [36m<header>[39m
-        [36m<h1>[39m
-          [0mPiano Trainer [0m
-          [36m<span[39m
-            [33mclass[39m=[32m"midi-device-name"[39m
-          [36m>[39m
-            [0m([0m
-            [0mMock MIDI Device[0m
-            [0m)[0m
-          [36m</span>[39m
-        [36m</h1>[39m
-      [36m</header>[39m
-      [36m<div[39m
-        [33mclass[39m=[32m"main-content"[39m
-      [36m>[39m
-        [36m<div[39m
-          [33mclass[39m=[32m"split-keyboard-container"[39m
-        [36m>[39m
-          [36m<div[39m
-            [33mclass[39m=[32m"piano-section left-piano"[39m
-          [36m>[39m
-            [36m<h3>[39m
-              [0mChords[0m
-            [36m</h3>[39m
-            [36m<div[39m
-              [33mclass[39m=[32m"piano-container "[39m
-            [36m>[39m
-              [36m<div[39m
-                [33mclass[39m=[32m"piano"[39m
-              [36m>[39m
-                [36m<div[39m
-                  [33mclass[39m=[32m"key white 
-               
-              
-              
-              
-              
-              
-            "[39m
-                  [33mdata-note[39m=[32m"C"[39m
-                [36m>[39m
-                  [36m<span[39m
-                    [33mclass[39m=[32m"note-label"[39m
-                  [36m>[39m
-                    [0mC[0m
-                  [36m</span>[39m
-                [36m</div>[39m
-                [36m<div[39m
-                  [33mclass[39m=[32m"key black 
-               
-              
-              
-              
-              
-              
-            "[39m
-                  [33mdata-note[39m=[32m"C#"[39m
-                [36m>[39m
-                  [36m<span[39m
-                    [33mclass[39m=[32m"note-label"[39m
-                  [36m>[39m
-                    [0mC#[0m
-                  [36m</span>[39m
-                [36m</div>[39m
-                [36m<div[39m
-                  [33mclass[39m=[32m"key white 
-               
-              
-              
-              
-              
-              
-            "[39m
-                  [33mdata-note[39m=[32m"D"[39m
-                [36m>[39m
-                  [36m<span[39m
-                    [33mclass[39m=[32m"note-label"[39m
-                  [36m>[39m
-                    [0mD[0m
-                  [36m</span>[39m
-                [36m</div>[39m
-                [36m<div[39m
-                  [33mclass[39m=[32m"key black 
-               
-              
-              
-              
-              
-              
-            "[39m
-                  [33mdata-note[39m=[32m"D#"[39m
-                [36m>[39m
-                  [36m<span[39m
-                    [33mclass[39m=[32m"note-label"[39m
-                  [36m>[39m
-                    [0mD#[0m
-                  [36m</span>[39m
-                [36m</div>[39m
-                [36m<div[39m
-                  [33mclass[39m=[32m"key white 
-               
-              
-              
-              
-              
-              
-            "[39m
-                  [33mdata-note[39m=[32m"E"[39m
-                [36m>[39m
-                  [36m<span[39m
-                    [33mclass[39m=[32m"note-label"[39m
-                  [36m>[39m
-                    [0mE[0m
-                  [36m</span>[39m
-                [36m</div>[39m
-                [36m<div[39m
-                  [33mclass[39m=[32m"key white 
-               
-              
-              
-              
-              
-              
-            "[39m
-                  [33mdata-note[39m=[32m"F"[39m
-                [36m>[39m
-                  [36m<span[39m
-                    [33mclass[39m=[32m"note-label"[39m
-                  [36m>[39m
-                    [0mF[0m
-                  [36m</span>[39m
-                [36m</div>[39m
-                [36m<div[39m
-                  [33mclass[39m=[32m"key black 
-               
-              
-              
-              
-              
-              
-            "[39m
-                  [33mdata-note[39m=[32m"F#"[39m
-                [36m>[39m
-                  [36m<span[39m
-                    [33mclass[39m=[32m"note-label"[39m
-                  [36m>[39m
-                    [0mF#[0m
-                  [36m</span>[39m
-                [36m</div>[39m
-                [36m<div[39m
-                  [33mclass[39m=[32m"key white 
-               
-              
-              
-              
-              
-              
-            "[39m
-                  [33mdata-note[39m=[32m"G"[39m
-                [36m>[39m
-                  [36m<span[39m
-                    [33mclass[39m=[32m"note-label"[39m
-                  [36m>[39m
-                    [0mG[0m
-                  [36m</span>[39m
-                [36m</div>[39m
-                [36m<div[39m
-                  [33mclass[39m=[32m"key black 
-               
-              
-              
-              
-              
-              
-            "[39m
-                  [33mdata-note[39m=[32m"G#"[39m
-                [36m>[39m
-                  [36m<span[39m
-                    [33mclass[39m=[32m"note-label"[39m
-                  [36m>[39m
-                    [0mG#[0m
-                  [36m</span>[39m
-                [36m</div>[39m
-                [36m<div[39m
-                  [33mclass[39m=[32m"key white 
-               
-              
-              
-              
-              
-              
-            "[39m
-                  [33mdata-note[39m=[32m"A"[39m
-                [36m>[39m
-                  [36m<span[39m
-                    [33mclass[39m=[32m"note-label"[39m
-                  [36m>[39m
-                    [0mA[0m
-                  [36m</span>[39m
-                [36m</div>[39m
-                [36m<div[39m
-                  [33mclass[39m=[32m"key black 
-               
-              
-              
-              
-              
-              
-            "[39m
-                  [33mdata-note[39m=[32m"A#"[39m
-                [36m>[39m
-                  [36m<span[39m
-                    [33mclass[39m=[32m"note-label"[39m
-                  [36m>[39m
-                    [0mA#[0m
-                  [36m</span>[39m
-                [36m</div>[39m
-                [36m<div[39m
-                  [33mclass[39m=[32m"key white 
-               
-              
-              
-              
-              
-              
-            "[39m
-                  [33mdata-note[39m=[32m"B"[39m
-                [36m>[39m
-                  [36m<span[39m
-                    [33mclass[39m=[32m"note-label"[39m
-                  [36m>[39m
-                    [0mB[0m
-                  [36m</span>[39m
-                [36m</div>...
+[90mstdout[2m | src/test/troubleshoot.test.jsx[2m > [22m[2mTroubleshoot Integration[2m > [22m[2mshould highlight E Minor in Circle of Fifths when E Minor chord is played via MIDI[22m[39m
+[useChordDetection] useEffect triggered { activeNotes: [], length: [33m0[39m }
+[music-theory] identifyAllChords called { activeNotes: [], length: [33m0[39m }
+[music-theory] identifyAllChords: insufficient notes { activeNotes: [], length: [33m0[39m }
+[useChordDetection] All chords detected: [33m0[39m 
+[useChordDetection] Γ¥î NO CHORD DETECTED {
+  activeNotes: [],
+  activeNotesLength: [33m0[39m,
+  reason: [32m'Insufficient notes (need 3+)'[39m
+}
+[useChordDetection] No suggestions (insufficient notes)
+[App] ΓÜá∩╕Å No chord detected { activeNotes: [], activeNotesLength: [33m0[39m }
+[App] Chord validation useEffect triggered {
+  mode: [32m'scale'[39m,
+  progressionLength: [33m0[39m,
+  activeNotesLength: [33m0[39m,
+  currentStepIndex: [33m0[39m,
+  activeNotes: []
+}
+[App] Chord validation: conditions not met { modeIsChord: [33mfalse[39m, hasProgression: [33mfalse[39m, hasEnoughNotes: [33mfalse[39m }
 
- [33mΓ¥»[39m src/test/PianoToCircleIntegration.test.jsx [2m ([22m[2m2 tests[22m [2m|[22m [31m2 failed[39m[2m)[22m[33m 6077[2mms[22m[39m
-[31m   [33mΓ¥»[31m src/test/PianoToCircleIntegration.test.jsx[2m > [22mPiano to Circle of Fifths Integration[2m > [22mshould highlight C Major in Circle of Fifths when C Major chord is played via MIDI[39m
+ [33mΓ¥»[39m src/test/troubleshoot.test.jsx [2m ([22m[2m1 test[22m [2m|[22m [31m1 failed[39m[2m)[22m[33m 3059[2mms[22m[39m
+[31m   [33mΓ¥»[31m src/test/troubleshoot.test.jsx[2m > [22mTroubleshoot Integration[2m > [22mshould highlight E Minor in Circle of Fifths when E Minor chord is played via MIDI[39m
 [31m     ΓåÆ Unable to find an element with the text: /MIDI Connected/. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
 
 Ignored nodes: comments, script, style
@@ -262,230 +42,146 @@ Ignored nodes: comments, script, style
             [0mMock MIDI Device[0m
             [0m)[0m
           [36m</span>[31m
+          [0m [0m
+          [36m<a[31m
+            [33mclass[31m=[32m"usage-ideas-link"[31m
+            [33mhref[31m=[32m"/usage-ideas.md"[31m
+            [33mrel[31m=[32m"noopener noreferrer"[31m
+            [33mtarget[31m=[32m"_blank"[31m
+          [36m>[31m
+            [0musage ideas[0m
+          [36m</a>[31m
         [36m</h1>[31m
       [36m</header>[31m
       [36m<div[31m
         [33mclass[31m=[32m"main-content"[31m
       [36m>[31m
         [36m<div[31m
-          [33mclass[31m=[32m"split-keyboard-container"[31m
+          [33mclass[31m=[32m"pyramid-container"[31m
         [36m>[31m
           [36m<div[31m
-            [33mclass[31m=[32m"piano-section left-piano"[31m
+            [33mclass[31m=[32m"pyramid-top"[31m
           [36m>[31m
-            [36m<h3>[31m
-              [0mChords[0m
-            [36m</h3>[31m
             [36m<div[31m
-              [33mclass[31m=[32m"piano-container "[31m
+              [33mclass[31m=[32m"circle-of-fifths-container"[31m
             [36m>[31m
               [36m<div[31m
-                [33mclass[31m=[32m"piano"[31m
+                [33mclass[31m=[32m"circle-of-fifths"[31m
               [36m>[31m
-                [36m<div[31m
-                  [33mclass[31m=[32m"key white 
-               
-              
-              
-              
-              
-              
-            "[31m
-                  [33mdata-note[31m=[32m"C"[31m
+                [36m<svg[31m
+                  [33mclass[31m=[32m"circle-svg"[31m
+                  [33mviewBox[31m=[32m"-200 -200 400 400"[31m
                 [36m>[31m
-                  [36m<span[31m
-                    [33mclass[31m=[32m"note-label"[31m
-                  [36m>[31m
-                    [0mC[0m
-                  [36m</span>[31m
-                [36m</div>[31m
-                [36m<div[31m
-                  [33mclass[31m=[32m"key black 
-               
-              
-              
-              
-              
-              
+                  [36m<g>[31m
+                    [36m<path[31m
+                      [33mclass[31m=[32m"segment major-segment light selected "[31m
+                      [33md[31m=[32m"
+              M 9.797174393178826e-15 -160
+              A 160 160 0 0 1 80.00000000000001 -138.56406460551017
+              L 50.000000000000014 -86.60254037844386
+              A 100 100 0 0 0 6.123233995736766e-15 -100
+              Z
             "[31m
-                  [33mdata-note[31m=[32m"C#"[31m
-                [36m>[31m
-                  [36m<span[31m
-                    [33mclass[31m=[32m"note-label"[31m
-                  [36m>[31m
-                    [0mC#[0m
-                  [36m</span>[31m
-                [36m</div>[31m
-                [36m<div[31m
-                  [33mclass[31m=[32m"key white 
-               
-              
-              
-              
-              
-              
+                      [33mdata-key[31m=[32m"major-C"[31m
+                      [33mstyle[31m=[32m"cursor: pointer;"[31m
+                    [36m/>[31m
+                    [36m<path[31m
+                      [33mclass[31m=[32m"segment minor-segment light selected "[31m
+                      [33md[31m=[32m"
+              M 6.123233995736766e-15 -100
+              A 100 100 0 0 1 50.000000000000014 -86.60254037844386
+              L 25.000000000000007 -43.30127018922193
+              A 50 50 0 0 0 3.061616997868383e-15 -50
+              Z
             "[31m
-                  [33mdata-note[31m=[32m"D"[31m
-                [36m>[31m
-                  [36m<span[31m
-                    [33mclass[31m=[32m"note-label"[31m
-                  [36m>[31m
-                    [0mD[0m
-                  [36m</span>[31m
-                [36m</div>[31m
-                [36m<div[31m
-                  [33mclass[31m=[32m"key black 
-               
-              
-              
-              
-              
-              
+                      [33mdata-key[31m=[32m"minor-Am"[31m
+                      [33mstyle[31m=[32m"cursor: pointer;"[31m
+                    [36m/>[31m
+                    [36m<text[31m
+                      [33mclass[31m=[32m"major-label selected-text"[31m
+                      [33mdominant-baseline[31m=[32m"middle"[31m
+                      [33mstyle[31m=[32m"cursor: pointer; pointer-events: none;"[31m
+                      [33mtext-anchor[31m=[32m"middle"[31m
+                      [33mx[31m=[32m"33.646475863327694"[31m
+                      [33my[31m=[32m"-125.57035741757888"[31m
+                    [36m>[31m
+                      [0mC[0m
+                    [36m</text>[31m
+                    [36m<text[31m
+                      [33mclass[31m=[32m"minor-label selected-text"[31m
+                      [33mdominant-baseline[31m=[32m"middle"[31m
+                      [33mstyle[31m=[32m"cursor: pointer; pointer-events: none;"[31m
+                      [33mtext-anchor[31m=[32m"middle"[31m
+                      [33mx[31m=[32m"19.411428382689056"[31m
+                      [33my[31m=[32m"-72.44443697168012"[31m
+                    [36m>[31m
+                      [0mAm[0m
+                    [36m</text>[31m
+                  [36m</g>[31m
+                  [36m<g>[31m
+                    [36m<path[31m
+                      [33mclass[31m=[32m"segment major-segment dark  "[31m
+                      [33md[31m=[32m"
+              M 80.00000000000001 -138.56406460551017
+              A 160 160 0 0 1 138.5640646055102 -79.99999999999999
+              L 86.60254037844388 -49.99999999999999
+              A 100 100 0 0 0 50.000000000000014 -86.60254037844386
+              Z
             "[31m
-                  [33mdata-note[31m=[32m"D#"[31m
-                [36m>[31m
-                  [36m<span[31m
-                    [33mclass[31m=[32m"note-label"[31m
-                  [36m>[31m
-                    [0mD#[0m
-                  [36m</span>[31m
-                [36m</div>[31m
-                [36m<div[31m
-                  [33mclass[31m=[32m"key white 
-               
-              
-              
-              
-              
-              
+                      [33mdata-key[31m=[32m"major-G"[31m
+                      [33mstyle[31m=[32m"cursor: pointer;"[31m
+                    [36m/>[31m
+                    [36m<path[31m
+                      [33mclass[31m=[32m"segment minor-segment dark  "[31m
+                      [33md[31m=[32m"
+              M 50.000000000000014 -86.60254037844386
+              A 100 100 0 0 1 86.60254037844388 -49.99999999999999
+              L 43.30127018922194 -24.999999999999996
+              A 50 50 0 0 0 25.000000000000007 -43.30127018922193
+              Z
             "[31m
-                  [33mdata-note[31m=[32m"E"[31m
-                [36m>[31m
-                  [36m<span[31m
-                    [33mclass[31m=[32m"note-label"[31m
-                  [36m>[31m
-                    [0mE[0m
-                  [36m</span>[31m
-                [36m</div>[31m
-                [36m<div[31m
-                  [33mclass[31m=[32m"key white 
-               
-              
-              
-              
-              
-              
+                      [33mdata-key[31m=[32m"minor-Em"[31m
+                      [33mstyle[31m=[32m"cursor: pointer;"[31m
+                    [36m/>[31m
+                    [36m<text[31m
+                      [33mclass[31m=[32m"major-label "[31m
+                      [33mdominant-baseline[31m=[32m"middle"[31m
+                      [33mstyle[31m=[32m"cursor: pointer; pointer-events: none;"[31m
+                      [33mtext-anchor[31m=[32m"middle"[31m
+                      [33mx[31m=[32m"91.92388155425118"[31m
+                      [33my[31m=[32m"-91.92388155425117"[31m
+                    [36m>[31m
+                      [0mG[0m
+                    [36m</text>[31m
+                    [36m<text[31m
+                      [33mclass[31m=[32m"minor-label "[31m
+                      [33mdominant-baseline[31m=[32m"middle"[31m
+                      [33mstyle[31m=[32m"cursor: pointer; pointer-events: none;"[31m
+                      [33mtext-anchor[31m=[32m"middle"[31m
+                      [33mx[31m=[32m"53.033008588991066"[31m
+                      [33my[31m=[32m"-53.03300858899106"[31m
+                    [36m>[31m
+                      [0mEm[0m
+                    [36m</text>[31m
+                  [36m</g>[31m
+                  [36m<g>[31m
+                    [36m<path[31m
+                      [33mclass[31m=[32m"segment major-segment light  "[31m
+                      [33md[31m=[32m"
+              M 138.5640646055102 -79.99999999999999
+              A 160 160 0 0 1 160 0
+              L 100 0
+              A 100 100 0 0 0 86.60254037844388 -49.99999999999999
+              Z
             "[31m
-                  [33mdata-note[31m=[32m"F"[31m
-                [36m>[31m
-                  [36m<span[31m
-                    [33mclass[31m=[32m"note-label"[31m
-                  [36m>[31m
-                    [0mF[0m
-                  [36m</span>[31m
-                [36m</div>[31m
-                [36m<div[31m
-                  [33mclass[31m=[32m"key black 
-               
-              
-              
-              
-              
-              
-            "[31m
-                  [33mdata-note[31m=[32m"F#"[31m
-                [36m>[31m
-                  [36m<span[31m
-                    [33mclass[31m=[32m"note-label"[31m
-                  [36m>[31m
-                    [0mF#[0m
-                  [36m</span>[31m
-                [36m</div>[31m
-                [36m<div[31m
-                  [33mclass[31m=[32m"key white 
-               
-              
-              
-              
-              
-              
-            "[31m
-                  [33mdata-note[31m=[32m"G"[31m
-                [36m>[31m
-                  [36m<span[31m
-                    [33mclass[31m=[32m"note-label"[31m
-                  [36m>[31m
-                    [0mG[0m
-                  [36m</span>[31m
-                [36m</div>[31m
-                [36m<div[31m
-                  [33mclass[31m=[32m"key black 
-               
-              
-              
-              
-              
-              
-            "[31m
-                  [33mdata-note[31m=[32m"G#"[31m
-                [36m>[31m
-                  [36m<span[31m
-                    [33mclass[31m=[32m"note-label"[31m
-                  [36m>[31m
-                    [0mG#[0m
-                  [36m</span>[31m
-                [36m</div>[31m
-                [36m<div[31m
-                  [33mclass[31m=[32m"key white 
-               
-              
-              
-              
-              
-              
-            "[31m
-                  [33mdata-note[31m=[32m"A"[31m
-                [36m>[31m
-                  [36m<span[31m
-                    [33mclass[31m=[32m"note-label"[31m
-                  [36m>[31m
-                    [0mA[0m
-                  [36m</span>[31m
-                [36m</div>[31m
-                [36m<div[31m
-                  [33mclass[31m=[32m"key black 
-               
-              
-              
-              
-              
-              
-            "[31m
-                  [33mdata-note[31m=[32m"A#"[31m
-                [36m>[31m
-                  [36m<span[31m
-                    [33mclass[31m=[32m"note-label"[31m
-                  [36m>[31m
-                    [0mA#[0m
-                  [36m</span>[31m
-                [36m</div>[31m
-                [36m<div[31m
-                  [33mclass[31m=[32m"key white 
-               
-              
-              
-              
-              
-              
-            "[31m
-                  [33mdata-note[31m=[32m"B"[31m
-                [36m>[31m
-                  [36m<span[31m
-                    [33mclass[31m=[32m"note-label"[31m
-                  [36m>[31m
-                    [0mB[0m
-                  [36m</span>[31m
-                [36m</div>...
+                      [33mdata-key[31m=[32m"major-D"[31m
+                      [33mstyle[31m=[32m"cursor: pointer;"[31m
+                    [36m/>[31m
+                    [36m<path[31m
+                      [33mclass[31m=[32m"segment minor-segment light  "[31m
+                      [33md[31m=[32m"
+              M 86.60254037844388 -49.99999999999999
+  ...
 
 Ignored nodes: comments, script, style
 [36m<body>[31m
@@ -503,717 +199,479 @@ Ignored nodes: comments, script, style
             [0mMock MIDI Device[0m
             [0m)[0m
           [36m</span>[31m
+          [0m [0m
+          [36m<a[31m
+            [33mclass[31m=[32m"usage-ideas-link"[31m
+            [33mhref[31m=[32m"/usage-ideas.md"[31m
+            [33mrel[31m=[32m"noopener noreferrer"[31m
+            [33mtarget[31m=[32m"_blank"[31m
+          [36m>[31m
+            [0musage ideas[0m
+          [36m</a>[31m
         [36m</h1>[31m
       [36m</header>[31m
       [36m<div[31m
         [33mclass[31m=[32m"main-content"[31m
       [36m>[31m
         [36m<div[31m
-          [33mclass[31m=[32m"split-keyboard-container"[31m
+          [33mclass[31m=[32m"pyramid-container"[31m
         [36m>[31m
           [36m<div[31m
-            [33mclass[31m=[32m"piano-section left-piano"[31m
+            [33mclass[31m=[32m"pyramid-top"[31m
           [36m>[31m
-            [36m<h3>[31m
-              [0mChords[0m
-            [36m</h3>[31m
             [36m<div[31m
-              [33mclass[31m=[32m"piano-container "[31m
+              [33mclass[31m=[32m"circle-of-fifths-container"[31m
             [36m>[31m
               [36m<div[31m
-                [33mclass[31m=[32m"piano"[31m
+                [33mclass[31m=[32m"circle-of-fifths"[31m
               [36m>[31m
-                [36m<div[31m
-                  [33mclass[31m=[32m"key white 
-               
-              
-              
-              
-              
-              
-            "[31m
-                  [33mdata-note[31m=[32m"C"[31m
+                [36m<svg[31m
+                  [33mclass[31m=[32m"circle-svg"[31m
+                  [33mviewBox[31m=[32m"-200 -200 400 400"[31m
                 [36m>[31m
-                  [36m<span[31m
-                    [33mclass[31m=[32m"note-label"[31m
-                  [36m>[31m
-                    [0mC[0m
-                  [36m</span>[31m
-                [36m</div>[31m
-                [36m<div[31m
-                  [33mclass[31m=[32m"key black 
-               
-              
-              
-              
-              
-              
+                  [36m<g>[31m
+                    [36m<path[31m
+                      [33mclass[31m=[32m"segment major-segment light selected "[31m
+                      [33md[31m=[32m"
+              M 9.797174393178826e-15 -160
+              A 160 160 0 0 1 80.00000000000001 -138.56406460551017
+              L 50.000000000000014 -86.60254037844386
+              A 100 100 0 0 0 6.123233995736766e-15 -100
+              Z
             "[31m
-                  [33mdata-note[31m=[32m"C#"[31m
-                [36m>[31m
-                  [36m<span[31m
-                    [33mclass[31m=[32m"note-label"[31m
-                  [36m>[31m
-                    [0mC#[0m
-                  [36m</span>[31m
-                [36m</div>[31m
-                [36m<div[31m
-                  [33mclass[31m=[32m"key white 
-               
-              
-              
-              
-              
-              
+                      [33mdata-key[31m=[32m"major-C"[31m
+                      [33mstyle[31m=[32m"cursor: pointer;"[31m
+                    [36m/>[31m
+                    [36m<path[31m
+                      [33mclass[31m=[32m"segment minor-segment light selected "[31m
+                      [33md[31m=[32m"
+              M 6.123233995736766e-15 -100
+              A 100 100 0 0 1 50.000000000000014 -86.60254037844386
+              L 25.000000000000007 -43.30127018922193
+              A 50 50 0 0 0 3.061616997868383e-15 -50
+              Z
             "[31m
-                  [33mdata-note[31m=[32m"D"[31m
-                [36m>[31m
-                  [36m<span[31m
-                    [33mclass[31m=[32m"note-label"[31m
-                  [36m>[31m
-                    [0mD[0m
-                  [36m</span>[31m
-                [36m</div>[31m
-                [36m<div[31m
-                  [33mclass[31m=[32m"key black 
-               
-              
-              
-              
-              
-              
+                      [33mdata-key[31m=[32m"minor-Am"[31m
+                      [33mstyle[31m=[32m"cursor: pointer;"[31m
+                    [36m/>[31m
+                    [36m<text[31m
+                      [33mclass[31m=[32m"major-label selected-text"[31m
+                      [33mdominant-baseline[31m=[32m"middle"[31m
+                      [33mstyle[31m=[32m"cursor: pointer; pointer-events: none;"[31m
+                      [33mtext-anchor[31m=[32m"middle"[31m
+                      [33mx[31m=[32m"33.646475863327694"[31m
+                      [33my[31m=[32m"-125.57035741757888"[31m
+                    [36m>[31m
+                      [0mC[0m
+                    [36m</text>[31m
+                    [36m<text[31m
+                      [33mclass[31m=[32m"minor-label selected-text"[31m
+                      [33mdominant-baseline[31m=[32m"middle"[31m
+                      [33mstyle[31m=[32m"cursor: pointer; pointer-events: none;"[31m
+                      [33mtext-anchor[31m=[32m"middle"[31m
+                      [33mx[31m=[32m"19.411428382689056"[31m
+                      [33my[31m=[32m"-72.44443697168012"[31m
+                    [36m>[31m
+                      [0mAm[0m
+                    [36m</text>[31m
+                  [36m</g>[31m
+                  [36m<g>[31m
+                    [36m<path[31m
+                      [33mclass[31m=[32m"segment major-segment dark  "[31m
+                      [33md[31m=[32m"
+              M 80.00000000000001 -138.56406460551017
+              A 160 160 0 0 1 138.5640646055102 -79.99999999999999
+              L 86.60254037844388 -49.99999999999999
+              A 100 100 0 0 0 50.000000000000014 -86.60254037844386
+              Z
             "[31m
-                  [33mdata-note[31m=[32m"D#"[31m
-                [36m>[31m
-                  [36m<span[31m
-                    [33mclass[31m=[32m"note-label"[31m
-                  [36m>[31m
-                    [0mD#[0m
-                  [36m</span>[31m
-                [36m</div>[31m
-                [36m<div[31m
-                  [33mclass[31m=[32m"key white 
-               
-              
-              
-              
-              
-              
+                      [33mdata-key[31m=[32m"major-G"[31m
+                      [33mstyle[31m=[32m"cursor: pointer;"[31m
+                    [36m/>[31m
+                    [36m<path[31m
+                      [33mclass[31m=[32m"segment minor-segment dark  "[31m
+                      [33md[31m=[32m"
+              M 50.000000000000014 -86.60254037844386
+              A 100 100 0 0 1 86.60254037844388 -49.99999999999999
+              L 43.30127018922194 -24.999999999999996
+              A 50 50 0 0 0 25.000000000000007 -43.30127018922193
+              Z
             "[31m
-                  [33mdata-note[31m=[32m"E"[31m
-                [36m>[31m
-                  [36m<span[31m
-                    [33mclass[31m=[32m"note-label"[31m
-                  [36m>[31m
-                    [0mE[0m
-                  [36m</span>[31m
-                [36m</div>[31m
-                [36m<div[31m
-                  [33mclass[31m=[32m"key white 
-               
-              
-              
-              
-              
-              
+                      [33mdata-key[31m=[32m"minor-Em"[31m
+                      [33mstyle[31m=[32m"cursor: pointer;"[31m
+                    [36m/>[31m
+                    [36m<text[31m
+                      [33mclass[31m=[32m"major-label "[31m
+                      [33mdominant-baseline[31m=[32m"middle"[31m
+                      [33mstyle[31m=[32m"cursor: pointer; pointer-events: none;"[31m
+                      [33mtext-anchor[31m=[32m"middle"[31m
+                      [33mx[31m=[32m"91.92388155425118"[31m
+                      [33my[31m=[32m"-91.92388155425117"[31m
+                    [36m>[31m
+                      [0mG[0m
+                    [36m</text>[31m
+                    [36m<text[31m
+                      [33mclass[31m=[32m"minor-label "[31m
+                      [33mdominant-baseline[31m=[32m"middle"[31m
+                      [33mstyle[31m=[32m"cursor: pointer; pointer-events: none;"[31m
+                      [33mtext-anchor[31m=[32m"middle"[31m
+                      [33mx[31m=[32m"53.033008588991066"[31m
+                      [33my[31m=[32m"-53.03300858899106"[31m
+                    [36m>[31m
+                      [0mEm[0m
+                    [36m</text>[31m
+                  [36m</g>[31m
+                  [36m<g>[31m
+                    [36m<path[31m
+                      [33mclass[31m=[32m"segment major-segment light  "[31m
+                      [33md[31m=[32m"
+              M 138.5640646055102 -79.99999999999999
+              A 160 160 0 0 1 160 0
+              L 100 0
+              A 100 100 0 0 0 86.60254037844388 -49.99999999999999
+              Z
             "[31m
-                  [33mdata-note[31m=[32m"F"[31m
-                [36m>[31m
-                  [36m<span[31m
-                    [33mclass[31m=[32m"note-label"[31m
-                  [36m>[31m
-                    [0mF[0m
-                  [36m</span>[31m
-                [36m</div>[31m
-                [36m<div[31m
-                  [33mclass[31m=[32m"key black 
-               
-              
-              
-              
-              
-              
-            "[31m
-                  [33mdata-note[31m=[32m"F#"[31m
-                [36m>[31m
-                  [36m<span[31m
-                    [33mclass[31m=[32m"note-label"[31m
-                  [36m>[31m
-                    [0mF#[0m
-                  [36m</span>[31m
-                [36m</div>[31m
-                [36m<div[31m
-                  [33mclass[31m=[32m"key white 
-               
-              
-              
-              
-              
-              
-            "[31m
-                  [33mdata-note[31m=[32m"G"[31m
-                [36m>[31m
-                  [36m<span[31m
-                    [33mclass[31m=[32m"note-label"[31m
-                  [36m>[31m
-                    [0mG[0m
-                  [36m</span>[31m
-                [36m</div>[31m
-                [36m<div[31m
-                  [33mclass[31m=[32m"key black 
-               
-              
-              
-              
-              
-              
-            "[31m
-                  [33mdata-note[31m=[32m"G#"[31m
-                [36m>[31m
-                  [36m<span[31m
-                    [33mclass[31m=[32m"note-label"[31m
-                  [36m>[31m
-                    [0mG#[0m
-                  [36m</span>[31m
-                [36m</div>[31m
-                [36m<div[31m
-                  [33mclass[31m=[32m"key white 
-               
-              
-              
-              
-              
-              
-            "[31m
-                  [33mdata-note[31m=[32m"A"[31m
-                [36m>[31m
-                  [36m<span[31m
-                    [33mclass[31m=[32m"note-label"[31m
-                  [36m>[31m
-                    [0mA[0m
-                  [36m</span>[31m
-                [36m</div>[31m
-                [36m<div[31m
-                  [33mclass[31m=[32m"key black 
-               
-              
-              
-              
-              
-              
-            "[31m
-                  [33mdata-note[31m=[32m"A#"[31m
-                [36m>[31m
-                  [36m<span[31m
-                    [33mclass[31m=[32m"note-label"[31m
-                  [36m>[31m
-                    [0mA#[0m
-                  [36m</span>[31m
-                [36m</div>[31m
-                [36m<div[31m
-                  [33mclass[31m=[32m"key white 
-               
-              
-              
-              
-              
-              
-            "[31m
-                  [33mdata-note[31m=[32m"B"[31m
-                [36m>[31m
-                  [36m<span[31m
-                    [33mclass[31m=[32m"note-label"[31m
-                  [36m>[31m
-                    [0mB[0m
-                  [36m</span>[31m
-                [36m</div>...[39m
-[31m   [33mΓ¥»[31m src/test/PianoToCircleIntegration.test.jsx[2m > [22mPiano to Circle of Fifths Integration[2m > [22mshould highlight E Minor in Circle of Fifths when E Minor chord is played via MIDI[39m
-[31m     ΓåÆ Unable to find an element with the text: /MIDI Connected/. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+                      [33mdata-key[31m=[32m"major-D"[31m
+                      [33mstyle[31m=[32m"cursor: pointer;"[31m
+                    [36m/>[31m
+                    [36m<path[31m
+                      [33mclass[31m=[32m"segment minor-segment light  "[31m
+                      [33md[31m=[32m"
+              M 86.60254037844388 -49.99999999999999
+  ...[39m
+
+ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ» Failed Tests 1 ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»
+
+ FAIL  src/test/troubleshoot.test.jsx > Troubleshoot Integration > should highlight E Minor in Circle of Fifths when E Minor chord is played via MIDI
+TestingLibraryElementError: Unable to find an element with the text: /MIDI Connected/. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
 
 Ignored nodes: comments, script, style
-[36m<body>[31m
-  [36m<div>[31m
-    [36m<div[31m
-      [33mclass[31m=[32m"app-container"[31m
-    [36m>[31m
-      [36m<header>[31m
-        [36m<h1>[31m
-          [0mPiano Trainer [0m
-          [36m<span[31m
-            [33mclass[31m=[32m"midi-device-name"[31m
-          [36m>[31m
-            [0m([0m
-            [0mMock MIDI Device[0m
-            [0m)[0m
-          [36m</span>[31m
-        [36m</h1>[31m
-      [36m</header>[31m
-      [36m<div[31m
-        [33mclass[31m=[32m"main-content"[31m
-      [36m>[31m
-        [36m<div[31m
-          [33mclass[31m=[32m"split-keyboard-container"[31m
-        [36m>[31m
-          [36m<div[31m
-            [33mclass[31m=[32m"piano-section left-piano"[31m
-          [36m>[31m
-            [36m<h3>[31m
-              [0mChords[0m
-            [36m</h3>[31m
-            [36m<div[31m
-              [33mclass[31m=[32m"piano-container "[31m
-            [36m>[31m
-              [36m<div[31m
-                [33mclass[31m=[32m"piano"[31m
-              [36m>[31m
-                [36m<div[31m
-                  [33mclass[31m=[32m"key white 
-               
-              
-              
-              
-              
-              
-            "[31m
-                  [33mdata-note[31m=[32m"C"[31m
-                [36m>[31m
-                  [36m<span[31m
-                    [33mclass[31m=[32m"note-label"[31m
-                  [36m>[31m
-                    [0mC[0m
-                  [36m</span>[31m
-                [36m</div>[31m
-                [36m<div[31m
-                  [33mclass[31m=[32m"key black 
-               
-              
-              
-              
-              
-              
-            "[31m
-                  [33mdata-note[31m=[32m"C#"[31m
-                [36m>[31m
-                  [36m<span[31m
-                    [33mclass[31m=[32m"note-label"[31m
-                  [36m>[31m
-                    [0mC#[0m
-                  [36m</span>[31m
-                [36m</div>[31m
-                [36m<div[31m
-                  [33mclass[31m=[32m"key white 
-               
-              
-              
-              
-              
-              
-            "[31m
-                  [33mdata-note[31m=[32m"D"[31m
-                [36m>[31m
-                  [36m<span[31m
-                    [33mclass[31m=[32m"note-label"[31m
-                  [36m>[31m
-                    [0mD[0m
-                  [36m</span>[31m
-                [36m</div>[31m
-                [36m<div[31m
-                  [33mclass[31m=[32m"key black 
-               
-              
-              
-              
-              
-              
-            "[31m
-                  [33mdata-note[31m=[32m"D#"[31m
-                [36m>[31m
-                  [36m<span[31m
-                    [33mclass[31m=[32m"note-label"[31m
-                  [36m>[31m
-                    [0mD#[0m
-                  [36m</span>[31m
-                [36m</div>[31m
-                [36m<div[31m
-                  [33mclass[31m=[32m"key white 
-               
-              
-              
-              
-              
-              
-            "[31m
-                  [33mdata-note[31m=[32m"E"[31m
-                [36m>[31m
-                  [36m<span[31m
-                    [33mclass[31m=[32m"note-label"[31m
-                  [36m>[31m
-                    [0mE[0m
-                  [36m</span>[31m
-                [36m</div>[31m
-                [36m<div[31m
-                  [33mclass[31m=[32m"key white 
-               
-              
-              
-              
-              
-              
-            "[31m
-                  [33mdata-note[31m=[32m"F"[31m
-                [36m>[31m
-                  [36m<span[31m
-                    [33mclass[31m=[32m"note-label"[31m
-                  [36m>[31m
-                    [0mF[0m
-                  [36m</span>[31m
-                [36m</div>[31m
-                [36m<div[31m
-                  [33mclass[31m=[32m"key black 
-               
-              
-              
-              
-              
-              
-            "[31m
-                  [33mdata-note[31m=[32m"F#"[31m
-                [36m>[31m
-                  [36m<span[31m
-                    [33mclass[31m=[32m"note-label"[31m
-                  [36m>[31m
-                    [0mF#[0m
-                  [36m</span>[31m
-                [36m</div>[31m
-                [36m<div[31m
-                  [33mclass[31m=[32m"key white 
-               
-              
-              
-              
-              
-              
-            "[31m
-                  [33mdata-note[31m=[32m"G"[31m
-                [36m>[31m
-                  [36m<span[31m
-                    [33mclass[31m=[32m"note-label"[31m
-                  [36m>[31m
-                    [0mG[0m
-                  [36m</span>[31m
-                [36m</div>[31m
-                [36m<div[31m
-                  [33mclass[31m=[32m"key black 
-               
-              
-              
-              
-              
-              
-            "[31m
-                  [33mdata-note[31m=[32m"G#"[31m
-                [36m>[31m
-                  [36m<span[31m
-                    [33mclass[31m=[32m"note-label"[31m
-                  [36m>[31m
-                    [0mG#[0m
-                  [36m</span>[31m
-                [36m</div>[31m
-                [36m<div[31m
-                  [33mclass[31m=[32m"key white 
-               
-              
-              
-              
-              
-              
-            "[31m
-                  [33mdata-note[31m=[32m"A"[31m
-                [36m>[31m
-                  [36m<span[31m
-                    [33mclass[31m=[32m"note-label"[31m
-                  [36m>[31m
-                    [0mA[0m
-                  [36m</span>[31m
-                [36m</div>[31m
-                [36m<div[31m
-                  [33mclass[31m=[32m"key black 
-               
-              
-              
-              
-              
-              
-            "[31m
-                  [33mdata-note[31m=[32m"A#"[31m
-                [36m>[31m
-                  [36m<span[31m
-                    [33mclass[31m=[32m"note-label"[31m
-                  [36m>[31m
-                    [0mA#[0m
-                  [36m</span>[31m
-                [36m</div>[31m
-                [36m<div[31m
-                  [33mclass[31m=[32m"key white 
-               
-              
-              
-              
-              
-              
-            "[31m
-                  [33mdata-note[31m=[32m"B"[31m
-                [36m>[31m
-                  [36m<span[31m
-                    [33mclass[31m=[32m"note-label"[31m
-                  [36m>[31m
-                    [0mB[0m
-                  [36m</span>[31m
-                [36m</div>...
+<body>
+  <div>
+    <div
+      class="app-container"
+    >
+      <header>
+        <h1>
+          Piano Trainer 
+          <span
+            class="midi-device-name"
+          >
+            (
+            Mock MIDI Device
+            )
+          </span>
+           
+          <a
+            class="usage-ideas-link"
+            href="/usage-ideas.md"
+            rel="noopener noreferrer"
+            target="_blank"
+          >
+            usage ideas
+          </a>
+        </h1>
+      </header>
+      <div
+        class="main-content"
+      >
+        <div
+          class="pyramid-container"
+        >
+          <div
+            class="pyramid-top"
+          >
+            <div
+              class="circle-of-fifths-container"
+            >
+              <div
+                class="circle-of-fifths"
+              >
+                <svg
+                  class="circle-svg"
+                  viewBox="-200 -200 400 400"
+                >
+                  <g>
+                    <path
+                      class="segment major-segment light selected "
+                      d="
+              M 9.797174393178826e-15 -160
+              A 160 160 0 0 1 80.00000000000001 -138.56406460551017
+              L 50.000000000000014 -86.60254037844386
+              A 100 100 0 0 0 6.123233995736766e-15 -100
+              Z
+            "
+                      data-key="major-C"
+                      style="cursor: pointer;"
+                    />
+                    <path
+                      class="segment minor-segment light selected "
+                      d="
+              M 6.123233995736766e-15 -100
+              A 100 100 0 0 1 50.000000000000014 -86.60254037844386
+              L 25.000000000000007 -43.30127018922193
+              A 50 50 0 0 0 3.061616997868383e-15 -50
+              Z
+            "
+                      data-key="minor-Am"
+                      style="cursor: pointer;"
+                    />
+                    <text
+                      class="major-label selected-text"
+                      dominant-baseline="middle"
+                      style="cursor: pointer; pointer-events: none;"
+                      text-anchor="middle"
+                      x="33.646475863327694"
+                      y="-125.57035741757888"
+                    >
+                      C
+                    </text>
+                    <text
+                      class="minor-label selected-text"
+                      dominant-baseline="middle"
+                      style="cursor: pointer; pointer-events: none;"
+                      text-anchor="middle"
+                      x="19.411428382689056"
+                      y="-72.44443697168012"
+                    >
+                      Am
+                    </text>
+                  </g>
+                  <g>
+                    <path
+                      class="segment major-segment dark  "
+                      d="
+              M 80.00000000000001 -138.56406460551017
+              A 160 160 0 0 1 138.5640646055102 -79.99999999999999
+              L 86.60254037844388 -49.99999999999999
+              A 100 100 0 0 0 50.000000000000014 -86.60254037844386
+              Z
+            "
+                      data-key="major-G"
+                      style="cursor: pointer;"
+                    />
+                    <path
+                      class="segment minor-segment dark  "
+                      d="
+              M 50.000000000000014 -86.60254037844386
+              A 100 100 0 0 1 86.60254037844388 -49.99999999999999
+              L 43.30127018922194 -24.999999999999996
+              A 50 50 0 0 0 25.000000000000007 -43.30127018922193
+              Z
+            "
+                      data-key="minor-Em"
+                      style="cursor: pointer;"
+                    />
+                    <text
+                      class="major-label "
+                      dominant-baseline="middle"
+                      style="cursor: pointer; pointer-events: none;"
+                      text-anchor="middle"
+                      x="91.92388155425118"
+                      y="-91.92388155425117"
+                    >
+                      G
+                    </text>
+                    <text
+                      class="minor-label "
+                      dominant-baseline="middle"
+                      style="cursor: pointer; pointer-events: none;"
+                      text-anchor="middle"
+                      x="53.033008588991066"
+                      y="-53.03300858899106"
+                    >
+                      Em
+                    </text>
+                  </g>
+                  <g>
+                    <path
+                      class="segment major-segment light  "
+                      d="
+              M 138.5640646055102 -79.99999999999999
+              A 160 160 0 0 1 160 0
+              L 100 0
+              A 100 100 0 0 0 86.60254037844388 -49.99999999999999
+              Z
+            "
+                      data-key="major-D"
+                      style="cursor: pointer;"
+                    />
+                    <path
+                      class="segment minor-segment light  "
+                      d="
+              M 86.60254037844388 -49.99999999999999
+  ...
 
 Ignored nodes: comments, script, style
-[36m<body>[31m
-  [36m<div>[31m
-    [36m<div[31m
-      [33mclass[31m=[32m"app-container"[31m
-    [36m>[31m
-      [36m<header>[31m
-        [36m<h1>[31m
-          [0mPiano Trainer [0m
-          [36m<span[31m
-            [33mclass[31m=[32m"midi-device-name"[31m
-          [36m>[31m
-            [0m([0m
-            [0mMock MIDI Device[0m
-            [0m)[0m
-          [36m</span>[31m
-        [36m</h1>[31m
-      [36m</header>[31m
-      [36m<div[31m
-        [33mclass[31m=[32m"main-content"[31m
-      [36m>[31m
-        [36m<div[31m
-          [33mclass[31m=[32m"split-keyboard-container"[31m
-        [36m>[31m
-          [36m<div[31m
-            [33mclass[31m=[32m"piano-section left-piano"[31m
-          [36m>[31m
-            [36m<h3>[31m
-              [0mChords[0m
-            [36m</h3>[31m
-            [36m<div[31m
-              [33mclass[31m=[32m"piano-container "[31m
-            [36m>[31m
-              [36m<div[31m
-                [33mclass[31m=[32m"piano"[31m
-              [36m>[31m
-                [36m<div[31m
-                  [33mclass[31m=[32m"key white 
-               
-              
-              
-              
-              
-              
-            "[31m
-                  [33mdata-note[31m=[32m"C"[31m
-                [36m>[31m
-                  [36m<span[31m
-                    [33mclass[31m=[32m"note-label"[31m
-                  [36m>[31m
-                    [0mC[0m
-                  [36m</span>[31m
-                [36m</div>[31m
-                [36m<div[31m
-                  [33mclass[31m=[32m"key black 
-               
-              
-              
-              
-              
-              
-            "[31m
-                  [33mdata-note[31m=[32m"C#"[31m
-                [36m>[31m
-                  [36m<span[31m
-                    [33mclass[31m=[32m"note-label"[31m
-                  [36m>[31m
-                    [0mC#[0m
-                  [36m</span>[31m
-                [36m</div>[31m
-                [36m<div[31m
-                  [33mclass[31m=[32m"key white 
-               
-              
-              
-              
-              
-              
-            "[31m
-                  [33mdata-note[31m=[32m"D"[31m
-                [36m>[31m
-                  [36m<span[31m
-                    [33mclass[31m=[32m"note-label"[31m
-                  [36m>[31m
-                    [0mD[0m
-                  [36m</span>[31m
-                [36m</div>[31m
-                [36m<div[31m
-                  [33mclass[31m=[32m"key black 
-               
-              
-              
-              
-              
-              
-            "[31m
-                  [33mdata-note[31m=[32m"D#"[31m
-                [36m>[31m
-                  [36m<span[31m
-                    [33mclass[31m=[32m"note-label"[31m
-                  [36m>[31m
-                    [0mD#[0m
-                  [36m</span>[31m
-                [36m</div>[31m
-                [36m<div[31m
-                  [33mclass[31m=[32m"key white 
-               
-              
-              
-              
-              
-              
-            "[31m
-                  [33mdata-note[31m=[32m"E"[31m
-                [36m>[31m
-                  [36m<span[31m
-                    [33mclass[31m=[32m"note-label"[31m
-                  [36m>[31m
-                    [0mE[0m
-                  [36m</span>[31m
-                [36m</div>[31m
-                [36m<div[31m
-                  [33mclass[31m=[32m"key white 
-               
-              
-              
-              
-              
-              
-            "[31m
-                  [33mdata-note[31m=[32m"F"[31m
-                [36m>[31m
-                  [36m<span[31m
-                    [33mclass[31m=[32m"note-label"[31m
-                  [36m>[31m
-                    [0mF[0m
-                  [36m</span>[31m
-                [36m</div>[31m
-                [36m<div[31m
-                  [33mclass[31m=[32m"key black 
-               
-              
-              
-              
-              
-              
-            "[31m
-                  [33mdata-note[31m=[32m"F#"[31m
-                [36m>[31m
-                  [36m<span[31m
-                    [33mclass[31m=[32m"note-label"[31m
-                  [36m>[31m
-                    [0mF#[0m
-                  [36m</span>[31m
-                [36m</div>[31m
-                [36m<div[31m
-                  [33mclass[31m=[32m"key white 
-               
-              
-              
-              
-              
-              
-            "[31m
-                  [33mdata-note[31m=[32m"G"[31m
-                [36m>[31m
-                  [36m<span[31m
-                    [33mclass[31m=[32m"note-label"[31m
-                  [36m>[31m
-                    [0mG[0m
-                  [36m</span>[31m
-                [36m</div>[31m
-                [36m<div[31m
-                  [33mclass[31m=[32m"key black 
-               
-              
-              
-              
-              
-              
-            "[31m
-                  [33mdata-note[31m=[32m"G#"[31m
-                [36m>[31m
-                  [36m<span[31m
-                    [33mclass[31m=[32m"note-label"[31m
-                  [36m>[31m
-                    [0mG#[0m
-                  [36m</span>[31m
-                [36m</div>[31m
-                [36m<div[31m
-                  [33mclass[31m=[32m"key white 
-               
-              
-              
-              
-              
-              
-            "[31m
-                  [33mdata-note[31m=[32m"A"[31m
-                [36m>[31m
-                  [36m<span[31m
-                    [33mclass[31m=[32m"note-label"[31m
-                  [36m>[31m
-                    [0mA[0m
-                  [36m</span>[31m
-                [36m</div>[31m
-                [36m<div[31m
-                  [33mclass[31m=[32m"key black 
-               
-              
-              
-              
-              
-              
-            "[31m
-                  [33mdata-note[31m=[32m"A#"[31m
-                [36m>[31m
-                  [36m<span[31m
-                    [33mclass[31m=[32m"note-label"[31m
-                  [36m>[31m
-                    [0mA#[0m
-                  [36m</span>[31m
-                [36m</div>[31m
-                [36m<div[31m
-                  [33mclass[31m=[32m"key white 
-               
-              
-              
-              
-              
-              
-            "[31m
-                  [33mdata-note[31m=[32m"B"[31m
-                [36m>[31m
-                  [36m<span[31m
-                    [33mclass[31m=[32m"note-label"[31m
-                  [36m>[31m
-                    [0mB[0m
-                  [36m</span>[31m
-                [36m</div>...[39m
+<body>
+  <div>
+    <div
+      class="app-container"
+    >
+      <header>
+        <h1>
+          Piano Trainer 
+          <span
+            class="midi-device-name"
+          >
+            (
+            Mock MIDI Device
+            )
+          </span>
+           
+          <a
+            class="usage-ideas-link"
+            href="/usage-ideas.md"
+            rel="noopener noreferrer"
+            target="_blank"
+          >
+            usage ideas
+          </a>
+        </h1>
+      </header>
+      <div
+        class="main-content"
+      >
+        <div
+          class="pyramid-container"
+        >
+          <div
+            class="pyramid-top"
+          >
+            <div
+              class="circle-of-fifths-container"
+            >
+              <div
+                class="circle-of-fifths"
+              >
+                <svg
+                  class="circle-svg"
+                  viewBox="-200 -200 400 400"
+                >
+                  <g>
+                    <path
+                      class="segment major-segment light selected "
+                      d="
+              M 9.797174393178826e-15 -160
+              A 160 160 0 0 1 80.00000000000001 -138.56406460551017
+              L 50.000000000000014 -86.60254037844386
+              A 100 100 0 0 0 6.123233995736766e-15 -100
+              Z
+            "
+                      data-key="major-C"
+                      style="cursor: pointer;"
+                    />
+                    <path
+                      class="segment minor-segment light selected "
+                      d="
+              M 6.123233995736766e-15 -100
+              A 100 100 0 0 1 50.000000000000014 -86.60254037844386
+              L 25.000000000000007 -43.30127018922193
+              A 50 50 0 0 0 3.061616997868383e-15 -50
+              Z
+            "
+                      data-key="minor-Am"
+                      style="cursor: pointer;"
+                    />
+                    <text
+                      class="major-label selected-text"
+                      dominant-baseline="middle"
+                      style="cursor: pointer; pointer-events: none;"
+                      text-anchor="middle"
+                      x="33.646475863327694"
+                      y="-125.57035741757888"
+                    >
+                      C
+                    </text>
+                    <text
+                      class="minor-label selected-text"
+                      dominant-baseline="middle"
+                      style="cursor: pointer; pointer-events: none;"
+                      text-anchor="middle"
+                      x="19.411428382689056"
+                      y="-72.44443697168012"
+                    >
+                      Am
+                    </text>
+                  </g>
+                  <g>
+                    <path
+                      class="segment major-segment dark  "
+                      d="
+              M 80.00000000000001 -138.56406460551017
+              A 160 160 0 0 1 138.5640646055102 -79.99999999999999
+              L 86.60254037844388 -49.99999999999999
+              A 100 100 0 0 0 50.000000000000014 -86.60254037844386
+              Z
+            "
+                      data-key="major-G"
+                      style="cursor: pointer;"
+                    />
+                    <path
+                      class="segment minor-segment dark  "
+                      d="
+              M 50.000000000000014 -86.60254037844386
+              A 100 100 0 0 1 86.60254037844388 -49.99999999999999
+              L 43.30127018922194 -24.999999999999996
+              A 50 50 0 0 0 25.000000000000007 -43.30127018922193
+              Z
+            "
+                      data-key="minor-Em"
+                      style="cursor: pointer;"
+                    />
+                    <text
+                      class="major-label "
+                      dominant-baseline="middle"
+                      style="cursor: pointer; pointer-events: none;"
+                      text-anchor="middle"
+                      x="91.92388155425118"
+                      y="-91.92388155425117"
+                    >
+                      G
+                    </text>
+                    <text
+                      class="minor-label "
+                      dominant-baseline="middle"
+                      style="cursor: pointer; pointer-events: none;"
+                      text-anchor="middle"
+                      x="53.033008588991066"
+                      y="-53.03300858899106"
+                    >
+                      Em
+                    </text>
+                  </g>
+                  <g>
+                    <path
+                      class="segment major-segment light  "
+                      d="
+              M 138.5640646055102 -79.99999999999999
+              A 160 160 0 0 1 160 0
+              L 100 0
+              A 100 100 0 0 0 86.60254037844388 -49.99999999999999
+              Z
+            "
+                      data-key="major-D"
+                      style="cursor: pointer;"
+                    />
+                    <path
+                      class="segment minor-segment light  "
+                      d="
+              M 86.60254037844388 -49.99999999999999
+  ...
+ Γ¥» waitForWrapper node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ Γ¥» node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ Γ¥» src/test/troubleshoot.test.jsx:35:22
+     33| 
+     34|         // Wait for MIDI initialization
+     35|         await screen.findByText(/MIDI Connected/, {}, { timeout: 3000 ΓÇª
+       |                      ^
+     36| 
+     37|         console.log('Test: MIDI Connected. Sending E Minor notes [52, ΓÇª
+
+ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»[1/1]ΓÄ»
 
 [2m Test Files [22m [1m[31m1 failed[39m[22m[90m (1)[39m
-[2m      Tests [22m [1m[31m2 failed[39m[22m[90m (2)[39m
-[2m   Start at [22m 21:45:44
-[2m   Duration [22m 6.94s[2m (transform 82ms, setup 50ms, collect 205ms, tests 6.08s, environment 340ms, prepare 96ms)[22m
+[2m      Tests [22m [1m[31m1 failed[39m[22m[90m (1)[39m
+[2m   Start at [22m 19:36:01
+[2m   Duration [22m 4.02s[2m (transform 139ms, setup 53ms, collect 295ms, tests 3.06s, environment 330ms, prepare 117ms)[22m
 

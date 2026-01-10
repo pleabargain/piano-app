@@ -5,99 +5,93 @@ import RecordingStorage from '../core/recording-storage';
 const mockIndexedDB = () => {
     const store = new Map();
     const indexes = {
-        createdAt: new Map(),
-        name: new Map()
+        createdAt: [],
+        name: []
     };
 
     const objectStore = {
         put: (value) => {
-            return new Promise((resolve) => {
+            const request = { onsuccess: null, onerror: null, result: value.id };
+            setTimeout(() => {
                 store.set(value.id, value);
-                indexes.createdAt.set(value.createdAt, value);
-                indexes.name.set(value.name, value);
-                resolve(value.id);
-            });
+                indexes.createdAt = indexes.createdAt.filter(v => v.id !== value.id);
+                indexes.createdAt.push(value);
+                indexes.name = indexes.name.filter(v => v.id !== value.id);
+                indexes.name.push(value);
+                request.onsuccess && request.onsuccess({ target: request });
+            }, 0);
+            return request;
         },
         get: (key) => {
-            return new Promise((resolve) => {
-                resolve(store.get(key) || undefined);
-            });
+            const request = { onsuccess: null, onerror: null, result: store.get(key) || undefined };
+            setTimeout(() => {
+                request.onsuccess && request.onsuccess({ target: request });
+            }, 0);
+            return request;
         },
         delete: (key) => {
-            return new Promise((resolve) => {
+            const request = { onsuccess: null, onerror: null };
+            setTimeout(() => {
                 const value = store.get(key);
                 if (value) {
                     store.delete(key);
-                    indexes.createdAt.delete(value.createdAt);
-                    indexes.name.delete(value.name);
+                    indexes.createdAt = indexes.createdAt.filter(v => v.id !== key);
+                    indexes.name = indexes.name.filter(v => v.id !== key);
                 }
-                resolve();
-            });
+                request.onsuccess && request.onsuccess({ target: request });
+            }, 0);
+            return request;
         },
-        index: (name) => {
-            return {
-                openCursor: (direction) => {
-                    const values = Array.from(indexes[name].values());
-                    const sorted = direction === 'prev' 
-                        ? values.sort((a, b) => b.createdAt - a.createdAt)
-                        : values.sort((a, b) => a.createdAt - b.createdAt);
-                    
-                    let index = 0;
-                    return {
-                        onsuccess: null,
-                        result: {
-                            value: sorted[index],
-                            continue: () => {
-                                index++;
-                                if (index < sorted.length) {
-                                    this.result.value = sorted[index];
-                                    if (this.onsuccess) this.onsuccess({ target: this });
-                                } else {
-                                    this.result = null;
-                                    if (this.onsuccess) this.onsuccess({ target: this });
-                                }
-                            }
-                        }
-                    };
-                }
-            };
-        }
+        index: (name) => ({
+            openCursor: (_query, direction) => {
+                const values = [...indexes[name]];
+                const sorted = direction === 'prev'
+                    ? values.sort((a, b) => {
+                        if (name === 'createdAt') return b.createdAt - a.createdAt;
+                        if (name === 'name') return b.name.localeCompare(a.name);
+                        return 0;
+                    })
+                    : values.sort((a, b) => {
+                        if (name === 'createdAt') return a.createdAt - b.createdAt;
+                        if (name === 'name') return a.name.localeCompare(b.name);
+                        return 0;
+                    });
+
+                let currentIndex = 0;
+                const cursorRequest = { onsuccess: null, onerror: null, result: null };
+
+                const makeCursor = () => ({
+                    value: sorted[currentIndex],
+                    continue: () => {
+                        currentIndex++;
+                        cursorRequest.result = currentIndex < sorted.length ? makeCursor() : null;
+                        setTimeout(() => cursorRequest.onsuccess && cursorRequest.onsuccess({ target: cursorRequest }), 0);
+                    }
+                });
+
+                cursorRequest.result = sorted.length > 0 ? makeCursor() : null;
+                setTimeout(() => cursorRequest.onsuccess && cursorRequest.onsuccess({ target: cursorRequest }), 0);
+                return cursorRequest;
+            }
+        })
     };
 
-    const transaction = {
-        objectStore: () => objectStore
-    };
+    const transaction = { objectStore: () => objectStore };
 
     const db = {
-        objectStoreNames: {
-            contains: () => false
-        },
-        createObjectStore: () => ({
-            createIndex: () => {}
-        }),
+        objectStoreNames: { contains: () => false },
+        createObjectStore: () => ({ createIndex: () => { } }),
         transaction: () => transaction
     };
 
     return {
-        open: (name, version) => {
-            return new Promise((resolve) => {
-                const request = {
-                    result: db,
-                    onsuccess: null,
-                    onerror: null,
-                    onupgradeneeded: null
-                };
-                
-                setTimeout(() => {
-                    if (request.onupgradeneeded) {
-                        request.onupgradeneeded({ target: request });
-                    }
-                    if (request.onsuccess) {
-                        request.onsuccess({ target: request });
-                    }
-                    resolve(request);
-                }, 0);
-            });
+        open: () => {
+            const request = { result: db, onsuccess: null, onerror: null, onupgradeneeded: null };
+            setTimeout(() => {
+                request.onupgradeneeded && request.onupgradeneeded({ target: request });
+                request.onsuccess && request.onsuccess({ target: request });
+            }, 0);
+            return request;
         }
     };
 };
@@ -110,6 +104,17 @@ describe('RecordingStorage', () => {
         originalIndexedDB = global.indexedDB;
         global.indexedDB = mockIndexedDB();
         storage = new RecordingStorage();
+
+        // Mock URL APIs used by downloadRecording (jsdom/Node may not provide these)
+        if (!global.URL) {
+            global.URL = {};
+        }
+        if (!global.URL.createObjectURL) {
+            global.URL.createObjectURL = vi.fn(() => 'blob:mock');
+        }
+        if (!global.URL.revokeObjectURL) {
+            global.URL.revokeObjectURL = vi.fn(() => undefined);
+        }
     });
 
     afterEach(() => {
@@ -283,11 +288,11 @@ describe('RecordingStorage', () => {
 
         it('should get all recordings', async () => {
             const recording1 = createValidRecording();
-            recording1.id = 'id1';
+            recording1.id = '550e8400-e29b-41d4-a716-446655440001';
             recording1.createdAt = Date.now() - 1000;
             
             const recording2 = createValidRecording();
-            recording2.id = 'id2';
+            recording2.id = '550e8400-e29b-41d4-a716-446655440002';
             recording2.createdAt = Date.now();
             
             await storage.save(recording1);
@@ -352,6 +357,7 @@ describe('RecordingStorage', () => {
 
         it('should download recording as file', () => {
             const recording = createValidRecording();
+            const clickSpy = vi.spyOn(HTMLAnchorElement.prototype, 'click').mockImplementation(() => {});
             const createElementSpy = vi.spyOn(document, 'createElement');
             const appendChildSpy = vi.spyOn(document.body, 'appendChild');
             const removeChildSpy = vi.spyOn(document.body, 'removeChild');
@@ -361,6 +367,8 @@ describe('RecordingStorage', () => {
             expect(createElementSpy).toHaveBeenCalledWith('a');
             expect(appendChildSpy).toHaveBeenCalled();
             expect(removeChildSpy).toHaveBeenCalled();
+
+            clickSpy.mockRestore();
         });
 
         it('should import recording from file', async () => {
