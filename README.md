@@ -1,6 +1,8 @@
 <!-- https://github.com/pleabargain/piano-app -->
 # Piano App
 
+Last updated: 2026-01-09
+
 A React-based piano training application built with Vite. Practice scales, chords, and free play with MIDI keyboard support.
 
 ## Screenshots
@@ -951,4 +953,18 @@ This enhancement helps users understand that the same notes can function as diff
 
 ---
 
-Last Updated: 2025-12-22
+## Current Status
+
+**2026-01-09**: Currently working on implementing local file saving functionality for chord progressions. The application allows users to create and save chord progressions to IndexedDB, but there have been issues with exporting/saving these progressions to local files. 
+
+**Current Issue**: Users are experiencing failures when attempting to save progressions locally. The File System Access API (`showSaveFilePicker`) is being used to provide a native file save dialog, but edge cases and error handling need improvement.
+
+**Testing Note**: Composer from Cursor has demonstrated difficulty writing unit tests that effectively isolate bugs, particularly for UI-related issues and browser API interactions. When debugging, it's important to:
+- Write granular tests that test individual functions/components in isolation
+- Mock browser APIs thoroughly (File System Access API, URL.createObjectURL, etc.)
+- Test error paths and edge cases explicitly
+- Verify both success and failure scenarios
+
+---
+
+Last Updated: 2026-01-09

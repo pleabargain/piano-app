@@ -146,6 +146,12 @@
     box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
 }
 
+.key-progression-builder .saved-item-actions {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+}
+
 .key-progression-builder .saved-item:hover {
     background: #f0f7ff;
     border-color: #2196F3;
@@ -173,10 +179,34 @@
     border: 1px solid #999;
 }
 
+.key-progression-builder .export-small {
+    padding: 2px 6px;
+    background: #2196F3;
+    color: white;
+    border: none;
+    border-radius: 3px;
+    font-size: 0.75rem;
+    cursor: pointer;
+    min-width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.key-progression-builder .export-small:hover {
+    background: #1976D2;
+}
+
 .key-progression-builder .delete-small {
     padding: 2px 6px;
     background: #f44336;
     font-size: 0.75rem;
+    min-width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .key-progression-builder .dialog-overlay {

@@ -9,8 +9,16 @@ const mockIndexedDB = () => {
         name: []
     };
 
-    const objectStore = {
-        put: (value) => {
+    const makeObjectStore = () => {
+        const indexSet = new Set(['createdAt', 'name']);
+        return {
+            indexNames: {
+                contains: (idxName) => indexSet.has(idxName)
+            },
+            createIndex: (idxName) => {
+                indexSet.add(idxName);
+            },
+            put: (value) => {
             const request = {
                 onsuccess: null,
                 onerror: null,
@@ -28,8 +36,8 @@ const mockIndexedDB = () => {
                 }
             }, 0);
             return request;
-        },
-        get: (key) => {
+            },
+            get: (key) => {
             const request = {
                 onsuccess: null,
                 onerror: null,
@@ -41,8 +49,8 @@ const mockIndexedDB = () => {
                 }
             }, 0);
             return request;
-        },
-        delete: (key) => {
+            },
+            delete: (key) => {
             const request = {
                 onsuccess: null,
                 onerror: null
@@ -59,8 +67,8 @@ const mockIndexedDB = () => {
                 }
             }, 0);
             return request;
-        },
-        index: (name) => {
+            },
+            index: (name) => {
             return {
                 openCursor: (direction) => {
                     const values = [...indexes[name]];
@@ -111,20 +119,30 @@ const mockIndexedDB = () => {
                     return cursor;
                 }
             };
-        }
+            }
+        };
     };
 
+    // Track created stores to simulate "object store not found" failures
+    const stores = new Map();
+
     const transaction = {
-        objectStore: () => objectStore
+        objectStore: (name) => {
+            const os = stores.get(name);
+            if (!os) throw new Error(`Object store not found: ${name}`);
+            return os;
+        }
     };
 
     const db = {
         objectStoreNames: {
-            contains: () => false
+            contains: (name) => stores.has(name)
         },
-        createObjectStore: () => ({
-            createIndex: () => {}
-        }),
+        createObjectStore: (name) => {
+            const os = makeObjectStore();
+            stores.set(name, os);
+            return os;
+        },
         transaction: () => transaction
     };
 
@@ -132,6 +150,7 @@ const mockIndexedDB = () => {
         open: (name, version) => {
             const request = {
                 result: db,
+                transaction: transaction,
                 onsuccess: null,
                 onerror: null,
                 onupgradeneeded: null
@@ -364,7 +383,13 @@ describe('ProgressionStorage', () => {
         it('should reject invalid Roman numeral', () => {
             const result = storage.validateProgressionString('I IV INVALID V', 'C', 'major');
             expect(result.valid).toBe(false);
-            expect(result.error).toContain('Invalid Roman numeral');
+            expect(result.error).toContain('Invalid symbol');
+        });
+
+        it('should accept absolute chords with pipes, slash chords, and unicode', () => {
+            const input = 'C | Eₘ⁷ | G/B | Aₘ⁷ | D | G | Eₘ | Dₘ | D/F♯ | Aₘ | E | Cₘ | Fᵐᵃʲ⁷ | F';
+            const result = storage.validateProgressionString(input, 'C', 'major');
+            expect(result.valid).toBe(true);
         });
     });
 
@@ -621,6 +646,81 @@ describe('ProgressionStorage', () => {
             expect(global.document.createElement).toHaveBeenCalledWith('a');
             expect(global.document.body.appendChild).toHaveBeenCalled();
             expect(global.document.body.removeChild).toHaveBeenCalled();
+        });
+
+        it('should save file to root directory using File System Access API with ISO timestamp filename', async () => {
+            const progression = createValidProgression();
+            progression.name = 'Test Progression';
+            
+            // Mock File System Access API
+            const mockWritable = {
+                write: vi.fn().mockResolvedValue(undefined),
+                close: vi.fn().mockResolvedValue(undefined)
+            };
+            const mockFileHandle = {
+                createWritable: vi.fn().mockResolvedValue(mockWritable)
+            };
+            const mockShowSaveFilePicker = vi.fn().mockResolvedValue(mockFileHandle);
+            
+            // Set up the mock - preserve existing window properties
+            const originalWindow = global.window;
+            global.window = { 
+                ...originalWindow, 
+                showSaveFilePicker: mockShowSaveFilePicker 
+            };
+            
+            // Mock Date methods to get predictable timestamp without breaking Date constructor
+            const originalDateNow = Date.now;
+            const originalDateGetFullYear = Date.prototype.getFullYear;
+            const originalDateGetMonth = Date.prototype.getMonth;
+            const originalDateGetDate = Date.prototype.getDate;
+            const originalDateGetHours = Date.prototype.getHours;
+            const originalDateGetMinutes = Date.prototype.getMinutes;
+            const originalDateGetSeconds = Date.prototype.getSeconds;
+            
+            // Mock specific Date methods for predictable timestamp
+            const mockDate = new Date('2026-01-09T14:30:45Z');
+            Date.prototype.getFullYear = vi.fn(() => 2026);
+            Date.prototype.getMonth = vi.fn(() => 0); // January (0-indexed)
+            Date.prototype.getDate = vi.fn(() => 9);
+            Date.prototype.getHours = vi.fn(() => 14);
+            Date.prototype.getMinutes = vi.fn(() => 30);
+            Date.prototype.getSeconds = vi.fn(() => 45);
+            
+            await storage.downloadProgression(progression);
+            
+            // Verify showSaveFilePicker was called (allows navigation to root directory)
+            expect(mockShowSaveFilePicker).toHaveBeenCalledTimes(1);
+            const callArgs = mockShowSaveFilePicker.mock.calls[0][0];
+            
+            // Verify filename uses ISO timestamp format: YYYY-MM-DD-HH-MM-SS
+            expect(callArgs.suggestedName).toMatch(/^\d{4}-\d{2}-\d{2}-\d{2}-\d{2}-\d{2}\.json$/);
+            expect(callArgs.suggestedName).toBe('2026-01-09-14-30-45.json');
+            
+            // Verify file types are correct
+            expect(callArgs.types).toEqual([{
+                description: 'JSON files',
+                accept: { 'application/json': ['.json'] }
+            }]);
+            
+            // Verify file was written
+            expect(mockFileHandle.createWritable).toHaveBeenCalled();
+            expect(mockWritable.write).toHaveBeenCalled();
+            expect(mockWritable.close).toHaveBeenCalled();
+            
+            // Verify the written content is valid JSON
+            const writtenBlob = mockWritable.write.mock.calls[0][0];
+            expect(writtenBlob).toBeInstanceOf(Blob);
+            expect(writtenBlob.type).toBe('application/json');
+            
+            // Restore mocks
+            Date.prototype.getFullYear = originalDateGetFullYear;
+            Date.prototype.getMonth = originalDateGetMonth;
+            Date.prototype.getDate = originalDateGetDate;
+            Date.prototype.getHours = originalDateGetHours;
+            Date.prototype.getMinutes = originalDateGetMinutes;
+            Date.prototype.getSeconds = originalDateGetSeconds;
+            global.window = originalWindow;
         });
 
         it('should import progression from file', async () => {

@@ -1,130 +1,23 @@
-<!-- https://github.com/pleabargain/piano-app -->
-# Agent Coding Rules
+# User Defined Agent Rules
 
-This document contains coding rules and guidelines for development of this project.
-
-## General Rules
-
-1a. functions should only one input and one output. build unit tests to make sure that is true.
-
-1. **Bug Fixing**: When a bug is discovered, add a unit test to isolate that bug and abstract the function causing the issue.
-
-2. **Testing**: All new features and bug fixes should include appropriate unit tests to verify desired behavior.
-
-3. **Error Handling**: Always include proper error handling and user-friendly error messages.
-
-4. **Code Organization**: 
-   - Keep functions focused and single-purpose
-   - Abstract reusable logic into separate functions
-   - Use descriptive function and variable names
-
-5. **Documentation**: 
-   - Include comments for complex logic
-   - Update README.md with accurate timestamps (YYYY-MM-DD format at the bottom)
-   - Document any breaking changes
-
-## Testing Rules
-
-1. **Test-Driven Development (TDD)**: 
-   - **Write tests BEFORE implementing code** whenever possible
-   - TDD helps clarify requirements and design before coding
-   - Tests serve as executable documentation of expected behavior
-   - Red-Green-Refactor cycle: Write failing test → Implement code → Refactor
-   - Benefits:
-     - Ensures code meets requirements from the start
-     - Prevents over-engineering by focusing on what's needed
-     - Creates safety net for refactoring
-     - Improves code design by forcing testable architecture
-   - When to use TDD:
-     - New features or functionality
-     - Bug fixes (write test that reproduces bug first)
-     - Complex logic that needs careful validation
-     - Critical user-facing features
-
-2. **Unit Tests**: Create unit tests for:
-   - Bug fixes (to prevent regression)
-   - Core functionality
-   - Abstracted functions
-
-3. **Test Structure**: 
-   - Use descriptive test names
-   - Isolate bugs in separate test cases
-   - Abstract functions being tested into testable units
-
-4. **Test Coverage**: Aim for meaningful test coverage, especially for:
-   - Critical user-facing features
-   - Complex logic
-   - Bug-prone areas
-
-5. **Test Console Messages**: All tests must include console.log messages that clearly explain:
-   - **WHAT** the test is doing (test description)
-   - **WHY** the test is important (purpose and context)
-   - **IMPORTANCE** of the test (impact on user experience or system reliability)
-   - Test data values when relevant (e.g., MIDI note numbers, chord names)
-   - Success confirmation when test passes
-   - Format: Use `[Test]` prefix for all console messages
-   - Example:
-     ```javascript
-     console.log('[Test] Testing C Major chord detection');
-     console.log('[Test] WHY: Major chords are fundamental - users need accurate detection');
-     console.log('[Test] IMPORTANCE: Validates core interval pattern [4, 7] works correctly');
-     console.log('[Test] MIDI Notes: C4=60, E4=64, G4=67');
-     // ... test code ...
-     console.log('[Test] ✅ C Major correctly detected');
-     ```
-   - These messages help developers understand test purpose and aid debugging
-
-## File Naming
-
-- Scripts: Use ISO DATETIME format prepended to filename: `YYYY-MM-DDTHH-MM-SS_scriptname.js`
-- Test files: Place in `src/test/` directory with `.test.jsx` or `.test.js` extension
-
-## Code Quality
-
-1. **Linting**: All code should pass ESLint checks
-2. **Type Safety**: Use TypeScript where applicable, or add JSDoc type annotations
-3. **Performance**: Consider performance implications of code changes
-4. **Accessibility**: Ensure UI components are accessible
-
-## UI/UX Rules
-
-1. **Centering**: The UI should be centered in the browser horizontally. Use flexbox or CSS Grid to achieve proper centering of the main application container.
-
-## React-Specific Rules
-
-1. **Component Structure**: 
-   - Use functional components with hooks
-   - Keep components focused and composable
-   - Extract complex logic into custom hooks when appropriate
-
-2. **State Management**: 
-   - Use useState for local component state
-   - Use useEffect properly with dependency arrays
-   - Avoid unnecessary re-renders
-
-3. **Error Boundaries**: Implement error boundaries for better error handling
-
-## Git Workflow
-
-1. **Commits**: Write clear, descriptive commit messages
-2. **Branches**: Use feature branches for new features
-3. **Pull Requests**: Include tests and documentation updates
-
-## User Interaction
-
-1. **Question Format**: When clarification is needed, ask only one multiple choice question at a time and provide a clear description of the options.
-2. **Multiple Choice Options**: Include "All of the above" as an option when applicable
-3. **Question Logging**: All questions and answers must be logged in `instructions.md` with ISO datestamp format (YYYY-MM-DDTHH:MM:SS)
-4. **One Question at a Time**: Ask one question at a time to avoid overwhelming the user
-
-## Documentation Updates
-
-- Update README.md with accurate YYYY-MM-DD timestamp at the bottom of the file
-- Document API changes
-- Update this file when new rules are established
-- Log all user interaction questions and answers in instructions.md with ISO datestamp
-
----
-
-Last Updated: 2025-01-27
-
+1. **Check for Latest Library Versions**: At the beginning of a project or when starting work, always check if the project is using the latest versions of its dependencies. Use `npm outdated` or `npm view <package> version` to check for updates. Update dependencies to their latest stable versions unless there are specific compatibility reasons not to. This helps ensure the project benefits from the latest features, bug fixes, and security patches.
+2. **Create Limit and Regression Tests**: Always create unit and regression tests to make sure that no functionality is lost when refactoring or adding features.
+3. **Granular Testing**: If a test fails, stop running it repeatedly. Instead, create new, more granular tests for each specific function or component connected to the failing test to isolate the issue.
+4. **File Save UI**: When a user wants to save a file, the application must show a UI dialog that allows the user to navigate the current root directory (or file system) to choose where to save the file. The default filename must use ISO timestamp format: YYYY-MM-DD-HH-MM-SS (e.g., 2026-01-09-14-30-45).
+5. **Best Practices for Debugging User Interfaces**:
+   - **Isolate the Problem**: When debugging UI issues, create specific unit tests that test individual functions/components in isolation rather than end-to-end tests that may mask the root cause.
+   - **Mock Browser APIs Thoroughly**: When testing features that use browser APIs (File System Access API, URL.createObjectURL, IndexedDB, etc.), mock these APIs comprehensively:
+     - Test both success and failure paths
+     - Mock edge cases (API not available, permission denied, user cancellation, etc.)
+     - Verify error handling and fallback mechanisms
+   - **Test Error Paths Explicitly**: Don't just test happy paths. Write tests for:
+     - Invalid input data
+     - API failures
+     - Network errors
+     - Permission denials
+     - User cancellations
+   - **Verify User Feedback**: When errors occur, ensure users receive clear, actionable error messages. Test that error messages are displayed correctly in the UI.
+   - **Check API Availability**: Before using browser APIs, verify they exist and are callable (e.g., `typeof window !== 'undefined' && 'showSaveFilePicker' in window && typeof window.showSaveFilePicker === 'function'`).
+   - **Test Fallback Mechanisms**: If a primary method fails, ensure fallback mechanisms work correctly and are tested.
+   - **Component State Management**: When debugging React components, verify that state updates correctly and that errors don't leave components in inconsistent states.
+   - **Async Error Handling**: Ensure async operations (promises, async/await) have proper error handling and that errors are caught and displayed to users.

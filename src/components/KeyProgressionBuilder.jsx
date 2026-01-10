@@ -3,6 +3,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import './KeyProgressionBuilder.css';
 import { NOTES } from '../core/music-theory';
 import KeyProgressionStorage from '../core/key-progression-storage';
+import { normalizeToken } from '../core/progression-parser';
 
 const KeyProgressionBuilder = ({ onProgressionSet, onClear, selectedScaleType }) => {
     const [input, setInput] = useState('');
@@ -60,11 +61,18 @@ const KeyProgressionBuilder = ({ onProgressionSet, onClear, selectedScaleType })
     };
 
     const normalizeNote = (note) => {
-        // Handle flats by converting to sharps
+        // Use shared normalization for basic cleanup (unicode, etc)
+        // PLUS remove chord suffixes to extract root
+        let root = normalizeToken(note);
+        root = root.replace(/^(.*?)(m|min|maj|dim|aug|sus|7|9|11|13|6).*$/i, '$1');
+
+        // Handle flats by converting to sharps (if needed for internal logic)
+        // Our existing flatToSharp logic:
         const flatToSharp = {
             'Db': 'C#', 'Eb': 'D#', 'Gb': 'F#', 'Ab': 'G#', 'Bb': 'A#', 'Cb': 'B', 'Fb': 'E'
         };
-        const capitalized = note.charAt(0).toUpperCase() + note.slice(1);
+
+        const capitalized = root.charAt(0).toUpperCase() + root.slice(1);
         return flatToSharp[capitalized] || capitalized;
     };
 
@@ -107,6 +115,22 @@ const KeyProgressionBuilder = ({ onProgressionSet, onClear, selectedScaleType })
         setInput(prog.progression);
         onProgressionSet(validateAndParse(prog.progression));
         setCurrentName(prog.name);
+    };
+
+    const handleExport = async (progression, e) => {
+        e.stopPropagation();
+
+        if (!storageRef.current) {
+            setError('Storage not initialized');
+            return;
+        }
+
+        try {
+            await storageRef.current.downloadProgression(progression);
+        } catch (err) {
+            console.error('[KeyProgressionBuilder] Failed to export progression:', err);
+            setError(`Failed to export: ${err.message}`);
+        }
     };
 
     const handleDelete = async (id, e) => {
@@ -175,10 +199,25 @@ const KeyProgressionBuilder = ({ onProgressionSet, onClear, selectedScaleType })
                             <div key={p.id} className="saved-item" onClick={() => handleLoad(p)}>
                                 <span className="name">{p.name || 'Untitled Progression'}</span>
                                 <span className="preview">{p.progression}</span>
-                                <button className="delete-small" onClick={(e) => {
-                                    e.stopPropagation();
-                                    handleDelete(p.id, e);
-                                }}>×</button>
+                                <div className="saved-item-actions">
+                                    <button 
+                                        className="export-small" 
+                                        onClick={(e) => handleExport(p, e)}
+                                        title="Export to file"
+                                    >
+                                        ⬇
+                                    </button>
+                                    <button 
+                                        className="delete-small" 
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                            handleDelete(p.id, e);
+                                        }}
+                                        title="Delete"
+                                    >
+                                        ×
+                                    </button>
+                                </div>
                             </div>
                         ))}
                     </div>

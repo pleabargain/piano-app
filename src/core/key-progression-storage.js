@@ -1,11 +1,17 @@
 // https://github.com/pleabargain/piano-app
 import { NOTES } from './music-theory';
+import {
+    openProgressionsDb,
+    PROGRESSIONS_DB_NAME,
+    PROGRESSIONS_DB_VERSION,
+    STORE_KEY_PROGRESSIONS,
+} from './progressions-db';
 
 class KeyProgressionStorage {
     constructor() {
-        this.dbName = 'piano-progressions';
-        this.dbVersion = 1;
-        this.storeName = 'key_progressions';
+        this.dbName = PROGRESSIONS_DB_NAME;
+        this.dbVersion = PROGRESSIONS_DB_VERSION;
+        this.storeName = STORE_KEY_PROGRESSIONS;
         this.db = null;
     }
 
@@ -14,29 +20,7 @@ class KeyProgressionStorage {
      * @returns {Promise<void>}
      */
     async init() {
-        return new Promise((resolve, reject) => {
-            const request = indexedDB.open(this.dbName, this.dbVersion);
-
-            request.onerror = () => {
-                reject(new Error('Failed to open IndexedDB'));
-            };
-
-            request.onsuccess = () => {
-                this.db = request.result;
-                resolve();
-            };
-
-            request.onupgradeneeded = (event) => {
-                const db = event.target.result;
-
-                // Create object store if it doesn't exist
-                if (!db.objectStoreNames.contains(this.storeName)) {
-                    const objectStore = db.createObjectStore(this.storeName, { keyPath: 'id' });
-                    objectStore.createIndex('createdAt', 'createdAt', { unique: false });
-                    objectStore.createIndex('name', 'name', { unique: false });
-                }
-            };
-        });
+        this.db = await openProgressionsDb();
     }
 
     /**
@@ -159,20 +143,72 @@ class KeyProgressionStorage {
     }
 
     exportToJSON(progression) {
+        // Validate before exporting
+        const validation = this.validateProgression(progression);
+        if (!validation.valid) {
+            throw new Error(`Invalid progression format: ${validation.error}`);
+        }
         return JSON.stringify(progression, null, 2);
     }
 
-    downloadProgression(progression) {
+    async downloadProgression(progression) {
         const json = this.exportToJSON(progression);
         const blob = new Blob([json], { type: 'application/json' });
-        const url = URL.createObjectURL(blob);
-        const link = document.createElement('a');
-        link.href = url;
-        link.download = `${progression.name.replace(/[^a-z0-9]/gi, '_')}.json`;
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-        URL.revokeObjectURL(url);
+        
+        // Generate ISO timestamp filename: YYYY-MM-DD-HH-MM-SS
+        const generateISOTimestamp = () => {
+            const now = new Date();
+            const year = now.getFullYear();
+            const month = String(now.getMonth() + 1).padStart(2, '0');
+            const day = String(now.getDate()).padStart(2, '0');
+            const hours = String(now.getHours()).padStart(2, '0');
+            const minutes = String(now.getMinutes()).padStart(2, '0');
+            const seconds = String(now.getSeconds()).padStart(2, '0');
+            return `${year}-${month}-${day}-${hours}-${minutes}-${seconds}.json`;
+        };
+        
+        const defaultFilename = generateISOTimestamp();
+
+        // Try to use File System Access API for save dialog (Chrome/Edge)
+        // This allows user to navigate to root directory or any location
+        if (typeof window !== 'undefined' && 'showSaveFilePicker' in window && typeof window.showSaveFilePicker === 'function') {
+            try {
+                const fileHandle = await window.showSaveFilePicker({
+                    suggestedName: defaultFilename,
+                    types: [{
+                        description: 'JSON files',
+                        accept: { 'application/json': ['.json'] }
+                    }]
+                });
+                const writable = await fileHandle.createWritable();
+                await writable.write(blob);
+                await writable.close();
+                return;
+            } catch (err) {
+                // User cancelled or error occurred, fall back to download
+                if (err.name !== 'AbortError') {
+                    console.warn('[KeyProgressionStorage] File System Access API failed, using fallback:', err);
+                } else {
+                    // User cancelled - don't proceed with fallback
+                    return;
+                }
+            }
+        }
+
+        // Fallback: use download attribute (no save dialog, saves to Downloads)
+        try {
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = defaultFilename;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            URL.revokeObjectURL(url);
+        } catch (fallbackErr) {
+            console.error('[KeyProgressionStorage] Fallback download failed:', fallbackErr);
+            throw new Error(`Failed to save file: ${fallbackErr.message}`);
+        }
     }
 
     async importFromFile(file) {

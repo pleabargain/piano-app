@@ -14,7 +14,7 @@ import { midiManager } from './core/midi-manager';
 import RecordingManager from './core/recording-manager';
 import PlaybackManager from './core/playback-manager';
 import RecordingStorage from './core/recording-storage';
-import { getScaleNotes, getChordNotes, identifyChord, getChordNotesAsMidi, parseChordName, findPotentialChords, NOTES, CHORD_TYPES } from './core/music-theory';
+import { getScaleNotes, getChordNotes, identifyChord, getChordNotesAsMidi, parseChordName, findPotentialChords, NOTES, CHORD_TYPES, getNoteIndex } from './core/music-theory';
 import { useChordDetection } from './hooks/useChordDetection';
 import './App.css';
 
@@ -37,6 +37,12 @@ function App() {
   const [currentStepIndex, setCurrentStepIndex] = useState(0);
   const [feedbackState, setFeedbackState] = useState({}); // { midiNumber: 'correct' | 'incorrect' }
   const [statusMessage, setStatusMessage] = useState('Connect MIDI keyboard to start');
+
+  // UI State
+  const [isPracticeCollapsed, setIsPracticeCollapsed] = useState(false);
+  const [isScaleSelectorCollapsed, setIsScaleSelectorCollapsed] = useState(false);
+  const [isChordDisplayCollapsed, setIsChordDisplayCollapsed] = useState(false);
+  const [isRecordingListCollapsed, setIsRecordingListCollapsed] = useState(false);
 
   // Use custom hook for chord detection
   const { detectedChord, detectedChords, chordSuggestions } = useChordDetection(activeNotes);
@@ -115,6 +121,7 @@ function App() {
       }
 
       setLavaKeys(lavaKeyIndices);
+      console.log('[App] setLavaKeys:', lavaKeyIndices.length, 'keys');
     }
   }, [mode, selectedRoot, selectedScaleType, keyboardSize]);
 
@@ -327,6 +334,8 @@ function App() {
       setStatusMessage(`Practice ${displayRoot} ${selectedScaleType} Scale`);
     } else if (mode === 'chord') {
       setStatusMessage('Set a progression or practice chords');
+    } else if (mode === 'lava') {
+      setStatusMessage(`🔥 Lava Game - ${selectedRoot} ${selectedScaleType} | Good: 0 | Bad: 0`);
     } else {
       setStatusMessage('Free Play - Play anything!');
     }
@@ -595,14 +604,8 @@ function App() {
 
   // Separate effect for Chord validation (state-based, not edge-based)
   useEffect(() => {
-    console.log('[App] Chord validation useEffect triggered', {
-      mode,
-      progressionLength: progression.length,
-      activeNotesLength: activeNotes.length,
-      currentStepIndex,
-      activeNotes
-    });
-
+    // Only run chord validation when we actually have enough notes to form a chord.
+    // This avoids noisy logs like "conditions not met" during normal flows (e.g. setting/saving a progression).
     if (mode === 'chord' && progression.length > 0 && activeNotes.length >= 3) {
       const targetChord = progression[currentStepIndex % progression.length];
       console.log('[App] Chord validation: target chord', targetChord);
@@ -610,40 +613,33 @@ function App() {
       const detected = identifyChord(activeNotes);
       console.log('[App] Chord validation: detected chord', detected);
 
-      // Normalize chord names for comparison (handle both "C Major" and "C" formats)
-      const normalizeChordName = (name) => {
-        if (!name) {
-          console.log('[App] normalizeChordName: empty name');
-          return '';
-        }
-        // If it's already in full format (e.g., "C Major"), return as is
-        if (name.includes('Major') || name.includes('Minor') || name.includes('Diminished') || name.includes('Augmented') || name.includes('Sus2') || name.includes('Sus4')) {
-          console.log('[App] normalizeChordName: already full format', name);
-          return name;
-        }
-        // If it's short format (e.g., "C", "Cm"), convert to full format
-        if (name.endsWith('m')) {
-          const result = name.slice(0, -1) + ' Minor';
-          console.log('[App] normalizeChordName: converted minor', { name, result });
-          return result;
-        }
-        const result = name + ' Major';
-        console.log('[App] normalizeChordName: converted major', { name, result });
-        return result;
-      };
+      // Compare chords robustly by (root pitch class + chordType), not by display string.
+      const targetParsed = parseChordName(targetChord.name);
+      const detectedParsed = detected
+        ? (detected.root && detected.type
+          ? { root: detected.root, chordType: detected.type }
+          : parseChordName(detected.name))
+        : null;
 
-      const normalizedTarget = normalizeChordName(targetChord.name);
-      const normalizedDetected = detected ? normalizeChordName(detected.name) : '';
+      const targetRootIdx = targetParsed ? getNoteIndex(targetParsed.root) : -1;
+      const detectedRootIdx = detectedParsed ? getNoteIndex(detectedParsed.root) : -1;
+      const match = !!(targetParsed && detectedParsed
+        && targetParsed.chordType === detectedParsed.chordType
+        && targetRootIdx !== -1
+        && detectedRootIdx !== -1
+        && targetRootIdx === detectedRootIdx);
 
-      console.log('[App] Chord validation: name comparison', {
+      console.log('[App] Chord validation: comparison', {
         targetChordName: targetChord.name,
         detectedName: detected?.name,
-        normalizedTarget,
-        normalizedDetected,
-        match: detected && normalizedDetected === normalizedTarget
+        targetParsed,
+        detectedParsed,
+        targetRootIdx,
+        detectedRootIdx,
+        match
       });
 
-      if (detected && normalizedDetected === normalizedTarget) {
+      if (detected && match) {
         console.log('[App] Chord validation: MATCH! Advancing to next chord');
         // Correct chord held!
         // Advance after a short delay to let them hear/see it
@@ -666,9 +662,9 @@ function App() {
       } else {
         console.log('[App] Chord validation: NO MATCH', {
           detected: !!detected,
-          normalizedDetected,
-          normalizedTarget,
-          areEqual: normalizedDetected === normalizedTarget
+          match,
+          targetParsed,
+          detectedParsed
         });
 
         if (rejectErrors && detected) {
@@ -678,12 +674,6 @@ function App() {
           setStatusMessage(`Wrong chord! Restarting progression. Target: ${progression[0].roman} (${progression[0].name})`);
         }
       }
-    } else {
-      console.log('[App] Chord validation: conditions not met', {
-        modeIsChord: mode === 'chord',
-        hasProgression: progression.length > 0,
-        hasEnoughNotes: activeNotes.length >= 3
-      });
     }
   }, [activeNotes, mode, progression, currentStepIndex]);
 
@@ -848,6 +838,7 @@ function App() {
           {' '}
           <a href="/usage-ideas.md" target="_blank" rel="noopener noreferrer" className="usage-ideas-link">usage ideas</a>
         </h1>
+        <div className="status-message">{statusMessage}</div>
       </header>
 
       <div className="main-content">
@@ -911,8 +902,77 @@ function App() {
               selectedScaleType={selectedScaleType}
               onScaleTypeChange={setSelectedScaleType}
               lockedChordRoot={lockedChord ? lockedChord.root : null}
+              isCollapsed={isScaleSelectorCollapsed}
+              onToggleCollapse={() => setIsScaleSelectorCollapsed(!isScaleSelectorCollapsed)}
             />
           </div>
+
+          {(mode === 'scale' || mode === 'chord') && (
+              <div className={`practice-column ${isPracticeCollapsed ? 'collapsed' : ''}`}>
+                <button
+                  className="section-toggle-btn"
+                  onClick={() => setIsPracticeCollapsed(!isPracticeCollapsed)}
+                  title={isPracticeCollapsed ? "Expand Practice Tools" : "Collapse Practice Tools"}
+                >
+                  {isPracticeCollapsed ? '← Practice' : 'Practice →'}
+                </button>
+
+                {!isPracticeCollapsed && (
+                  <div className="practice-content">
+                    {mode === 'scale' && (
+                      <KeyProgressionBuilder
+                        onProgressionSet={(keys) => {
+                          setKeyProgression(keys);
+                          setCurrentKeyIndex(0);
+                          setCurrentStepIndex(0);
+                          if (keys.length > 0) {
+                            setSelectedRoot(keys[0]);
+                          }
+                        }}
+                        onClear={() => {
+                          setKeyProgression([]);
+                          setCurrentKeyIndex(0);
+                          setCurrentStepIndex(0);
+                        }}
+                        selectedScaleType={selectedScaleType}
+                      />
+                    )}
+
+                    {mode === 'chord' && (
+                      <div className="chord-practice-column">
+                        <ProgressionBuilder
+                          selectedRoot={selectedRoot}
+                          selectedScaleType={selectedScaleType}
+                          onProgressionSet={(p) => {
+                            console.log('[App] onProgressionSet called (chord progression)', p);
+                            setProgression(p);
+                            setCurrentStepIndex(0);
+                            setClickedChord(null);
+                            setChordMidiNotes([]);
+                          }}
+                          onChordClick={handleChordClick}
+                        />
+
+                        {clickedChord && (
+                          <div className="clicked-chord-display">
+                            <div className="clicked-chord-label">Showing on Piano:</div>
+                            <div className="clicked-chord-name">{clickedChord.name}</div>
+                            <div className="clicked-chord-inversion">
+                              {clickedChord.inversion === 0 ? 'Root Position' :
+                                clickedChord.inversion === 1 ? '1st Inversion' :
+                                  clickedChord.inversion === 2 ? '2nd Inversion' :
+                                    clickedChord.inversion === 3 ? '3rd Inversion' :
+                                      `${clickedChord.inversion}th Inversion`}
+                            </div>
+                            <div className="clicked-chord-hint">Click again to invert</div>
+                          </div>
+                        )}
+                      </div>
+                    )}
+                  </div>
+                )}
+              </div>
+            )}
 
           {/* Bottom Row: Unified Piano */}
           <div className="pyramid-bottom">
@@ -947,71 +1007,38 @@ function App() {
             onRejectErrorsChange={setRejectErrors}
           />
 
-          <RecordingControls
-            recordingManager={recordingManagerRef.current}
-            playbackManager={playbackManagerRef.current}
-            onRecordingStart={handleRecordingStart}
-            onRecordingStop={handleRecordingStop}
-            onPlaybackStart={handlePlaybackStart}
-            onPlaybackStop={handlePlaybackStop}
-            onPlaybackPause={handlePlaybackPause}
-            onPlaybackResume={handlePlaybackResume}
-            isPlayAlongMode={isPlayAlongMode}
-            onPlayAlongToggle={handlePlayAlongToggle}
-            isWaitForInput={isWaitForInputMode}
-            onWaitForInputToggle={handleWaitForInputToggle}
-            isLoop={isLoopMode}
-            onLoopToggle={handleLoopToggle}
-          />
-
-          <RecordingList
-            recordingStorage={recordingStorageRef.current}
-            playbackManager={playbackManagerRef.current}
-            onRecordingSelect={handleRecordingSelect}
-            onRecordingDelete={handleRecordingDelete}
-          />
-
-          <div className="circle-and-chord-container">
-            {/* CircleOfFifths moved up */}
-
-            <KeyDisplay
-              selectedRoot={selectedRoot}
-              selectedScaleType={selectedScaleType}
-              onRootSelect={setSelectedRoot}
-              onScaleTypeSelect={setSelectedScaleType}
-            />
-            {(mode === 'free' || mode === 'chord') && (
-              <div className="chord-detection-wrapper">
-                <div className="chord-display-in-controls">
-                  <div className="chord-label">Detected Chord:</div>
-                  {detectedChord ? (
-                    <>
-                      <div className="chord-name-in-controls">
-                        {(() => {
-                          const chordName = detectedChord.name;
-                          console.log('[App] 🎵 DISPLAYING CHORD IN UI:', chordName, detectedChord.inversion);
-                          return chordName;
-                        })()}
+          <div className="unified-controls-row">
+            {/* Left Panel: Chord Display */}
+            <div className="controls-left-panel">
+              <KeyDisplay
+                selectedRoot={selectedRoot}
+                selectedScaleType={selectedScaleType}
+                onRootSelect={setSelectedRoot}
+                onScaleTypeSelect={setSelectedScaleType}
+              />
+              {(mode === 'free' || mode === 'chord') && (
+                <div className="chord-detection-wrapper">
+                  <div className="chord-display-in-controls">
+                    <div className="chord-label">Detected Chord:</div>
+                    {detectedChord ? (
+                      <>
+                        <div className="chord-name-in-controls">
+                          {detectedChord.name}
+                        </div>
+                        {detectedChord.inversion && (
+                          <div className="chord-inversion-in-controls">{detectedChord.inversion}</div>
+                        )}
+                      </>
+                    ) : (
+                      <div className="chord-placeholder">
+                        {activeNotes.length > 0 ? 'Playing...' : 'No chord detected'}
                       </div>
-                      {detectedChord.inversion && (
-                        <div className="chord-inversion-in-controls">{detectedChord.inversion}</div>
-                      )}
-                    </>
-                  ) : (
-                    <div className="chord-placeholder">
-                      {(() => {
-                        const status = activeNotes.length > 0 ? 'Playing...' : 'No chord detected';
-                        console.log('[App] Chord display status:', status, { activeNotes, activeNotesLength: activeNotes.length });
-                        return status;
-                      })()}
-                    </div>
-                  )}
+                    )}
+                  </div>
 
-                  {(mode === 'chord' || mode === 'free') && chordSuggestions.length > 0 && (
+                  {chordSuggestions.length > 0 && (
                     <div className="chord-suggestions">
-                      <div className="suggestions-label">
-                        {detectedChord ? 'Extensions / Variations:' : 'Possible Chords:'}
-                      </div>
+                      <div className="suggestions-label">Suggestions:</div>
                       <div className="suggestions-list">
                         {chordSuggestions.map((s, i) => (
                           <div key={i} className="suggestion-item">
@@ -1023,89 +1050,36 @@ function App() {
                     </div>
                   )}
                 </div>
-                {mode === 'chord' && (
-                  <ProgressionBuilder
-                    selectedRoot={selectedRoot}
-                    selectedScaleType={selectedScaleType}
-                    onProgressionSet={(p) => {
-                      console.log('[App] onProgressionSet called (chord progression)', p);
-                      setProgression(p);
-                      setCurrentStepIndex(0);
-                      // Clear clicked chord when progression changes
-                      setClickedChord(null);
-                      setChordMidiNotes([]);
-                      console.log('[App] Chord progression set, step index reset to 0');
-                    }}
-                    onChordClick={handleChordClick}
-                  />
-                )}
-              </div>
-            )}
-            {mode === 'lava' && (
-              <div className="lava-game-score">
-                <h3>🔥 Lava Game Score 🔥</h3>
-                <div className="score-display">
-                  <div className="score-item good-keys">
-                    <span className="score-label">Good Keys:</span>
-                    <span className="score-value">{lavaScore.good}</span>
-                  </div>
-                  <div className="score-item bad-keys">
-                    <span className="score-label">Lava Keys Hit:</span>
-                    <span className="score-value">{lavaScore.bad}</span>
-                  </div>
-                </div>
-                <div className="lava-instructions">
-                  <p>🎹 Ice Blue keys = Good (in {selectedRoot} {selectedScaleType})</p>
-                  <p>🔥 Red keys = Lava (avoid these!)</p>
-                  <p>Play continuously - no time limit!</p>
-                </div>
-              </div>
-            )}
+              )}
+            </div>
           </div>
-        </div>
-
-        {mode === 'scale' && (
-          <KeyProgressionBuilder
-            onProgressionSet={(keys) => {
-              setKeyProgression(keys);
-              setCurrentKeyIndex(0);
-              setCurrentStepIndex(0);
-              if (keys.length > 0) {
-                setSelectedRoot(keys[0]);
-              }
-            }}
-            onClear={() => {
-              setKeyProgression([]);
-              setCurrentKeyIndex(0);
-              setCurrentStepIndex(0);
-            }}
-            selectedScaleType={selectedScaleType}
-          />
-        )}
-
-        {mode === 'chord' && (
-          <>
-            {clickedChord && (
-              <div className="chord-practice-wrapper">
-                <div className="clicked-chord-display">
-                  <div className="clicked-chord-label">Showing on Piano:</div>
-                  <div className="clicked-chord-name">{clickedChord.name}</div>
-                  <div className="clicked-chord-inversion">
-                    {clickedChord.inversion === 0 ? 'Root Position' :
-                      clickedChord.inversion === 1 ? '1st Inversion' :
-                        clickedChord.inversion === 2 ? '2nd Inversion' :
-                          clickedChord.inversion === 3 ? '3rd Inversion' :
-                            `${clickedChord.inversion}th Inversion`}
-                  </div>
-                  <div className="clicked-chord-hint">Click chord again to cycle inversions</div>
+          {mode === 'lava' && (
+            <div className="lava-game-score">
+              <h3>🔥 Lava Game Score 🔥</h3>
+              <div className="score-display">
+                <div className="score-item good-keys">
+                  <span className="score-label">Good Keys:</span>
+                  <span className="score-value">{lavaScore.good}</span>
                 </div>
-                <h3 className="chord-practice-title">Chord Practice</h3>
+                <div className="score-item bad-keys">
+                  <span className="score-label">Lava Keys Hit:</span>
+                  <span className="score-value">{lavaScore.bad}</span>
+                </div>
               </div>
-            )}
-          </>
-        )}
+              <div className="lava-instructions">
+                <p>🎹 Ice Blue keys = Good (in {selectedRoot} {selectedScaleType})</p>
+                <p>🔥 Red keys = Lava (avoid these!)</p>
+                <p>Play continuously - no time limit!</p>
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
 
-        {mode === 'scale' && keyProgression.length > 0 && (
+      {/* Practice content moved to pyramid-top */}
+
+      {
+        mode === 'scale' && keyProgression.length > 0 && (
           <div className="current-target">
             <h2>Key Progression Practice</h2>
             <h3>Current Key: {keyProgression[currentKeyIndex]} {selectedScaleType}</h3>
@@ -1120,23 +1094,27 @@ function App() {
               ))}
             </div>
           </div>
-        )}
+        )
+      }
 
-        {mode === 'chord' && progression.length > 0 && (
+      {
+        mode === 'chord' && progression.length > 0 && (
           <div className="current-target">
             <h2>Target: {progression[currentStepIndex % progression.length].roman}</h2>
             <h3>{progression[currentStepIndex % progression.length].name}</h3>
           </div>
-        )}
+        )
+      }
 
-        {(mode === 'free' || mode === 'chord') && detectedChord && (
+      {
+        (mode === 'free' || mode === 'chord') && detectedChord && (
           <div className="current-target detected-chord-card">
             <h2 className="chord-name-display">{detectedChord.name}</h2>
             <h3 className="chord-inversion-display">{detectedChord.inversion}</h3>
           </div>
-        )}
-      </div>
-    </div >
+        )
+      }
+    </div>
   );
 }
 

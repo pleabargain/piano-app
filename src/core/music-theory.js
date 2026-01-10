@@ -1,4 +1,5 @@
 // https://github.com/pleabargain/piano-app
+import { normalizeChordText } from './chord-text';
 export const NOTES = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
 
 export const SCALES = {
@@ -117,7 +118,9 @@ export function getChordNotesAsMidi(root, chordType, inversion = 0, baseOctave =
       currentOctave = baseOctave;
     }
 
-    const midiNumber = currentOctave * 12 + noteIndex;
+    // MIDI octave numbering: C-1 = 0, C4 (middle C) = 60.
+    // So midi = (octave + 1) * 12 + noteIndex.
+    const midiNumber = (currentOctave + 1) * 12 + noteIndex;
     midiNotes.push(midiNumber);
     prevNoteIndex = noteIndex;
   });
@@ -131,8 +134,17 @@ export function getChordNotesAsMidi(root, chordType, inversion = 0, baseOctave =
 export function parseChordName(chordName) {
   if (!chordName || chordName === '?') return null;
 
+  // Normalize unicode variants and trim
+  let normalized = normalizeChordText(chordName);
+
+  // Support slash chords by ignoring the bass note portion (e.g., "G/B" -> "G")
+  // (Inversion handling could be added later; for now, we at least parse reliably.)
+  if (normalized.includes('/')) {
+    normalized = normalized.split('/')[0].trim();
+  }
+
   // Handle format like "C Major", "D Minor 7", "F# Diminished"
-  const parts = chordName.split(' ');
+  const parts = normalized.split(/\s+/).filter(Boolean);
   if (parts.length >= 2) {
     const root = parts[0];
     const typeName = parts.slice(1).join(' ').toLowerCase();
@@ -171,52 +183,119 @@ export function parseChordName(chordName) {
 
   // Handle format like "Cm", "Cm7", "Cdim", "Caug", "C7", etc.
   // Extract root note (can be C, C#, D, D#, E, F, F#, G, G#, A, A#, B)
-  const match = chordName.match(/^([A-G]#?)(.*)$/);
+  const match = normalized.match(/^([A-G])([b#]?)(.*)$/);
   if (!match) return null;
 
-  const root = match[1];
-  const suffix = match[2].toLowerCase();
+  const root = `${match[1]}${match[2] || ''}`;
+  const rawSuffix = match[3] || '';
+  const suffixLower = rawSuffix.toLowerCase();
+  const suffixRaw = rawSuffix; // preserve case for M7 vs m7
 
   // Map suffixes to chord types
   let chordType = 'major'; // default
 
-  if (suffix === '' || suffix === 'maj') {
+  if (suffixLower === '' || suffixLower === 'maj') {
     chordType = 'major';
-  } else if (suffix === 'm' || suffix === 'min') {
+  } else if (suffixLower === 'm' || suffixLower === 'min') {
     chordType = 'minor';
-  } else if (suffix === 'dim' || suffix === '°') {
+  } else if (suffixLower === 'dim' || suffixLower === '°') {
     chordType = 'diminished';
-  } else if (suffix === 'aug' || suffix === '+') {
+  } else if (suffixLower === 'aug' || suffixLower === '+') {
     chordType = 'augmented';
-  } else if (suffix === 'sus2' || suffix === 'sus2nd') {
+  } else if (suffixLower === 'sus2' || suffixLower === 'sus2nd') {
     chordType = 'sus2';
-  } else if (suffix === 'sus4' || suffix === 'sus4th') {
+  } else if (suffixLower === 'sus4' || suffixLower === 'sus4th') {
     chordType = 'sus4';
-  } else if (suffix === 'm7' || suffix === 'min7') {
+  } else if (suffixLower === 'm7' || suffixLower === 'min7') {
     chordType = 'minor7';
-  } else if (suffix === 'maj7' || suffix === 'M7') {
+  } else if (suffixLower === 'maj7' || suffixLower === 'maj 7') {
     chordType = 'major7';
-  } else if (suffix === '7') {
+  } else if (suffixRaw === 'M7') {
+    // Preserve common jazz-style "CM7" meaning C Major 7 (NOT C minor 7)
+    chordType = 'major7';
+  } else if (suffixLower === '7') {
     chordType = 'dominant7';
-  } else if (suffix === 'dim7' || suffix === '°7') {
+  } else if (suffixLower === 'dim7' || suffixLower === '°7') {
     chordType = 'diminished7';
-  } else if (suffix === 'm7b5' || suffix === 'ø7') {
+  } else if (suffixLower === 'm7b5' || suffixLower === 'ø7') {
     chordType = 'half_diminished7';
-  } else if (suffix === '6' || suffix === 'maj6') {
+  } else if (suffixLower === '6' || suffixLower === 'maj6') {
     chordType = 'major6';
-  } else if (suffix === 'add6') {
+  } else if (suffixLower === 'add6') {
     chordType = 'add6';
-  } else if (suffix === '6/9' || suffix === '69') {
+  } else if (suffixLower === '6/9' || suffixLower === '69') {
     chordType = 'sixNine';
-  } else if (suffix === 'add9') {
+  } else if (suffixLower === 'add9') {
     chordType = 'add9';
-  } else if (suffix === 'maj9' || suffix === 'M9') {
+  } else if (suffixLower === 'maj9') {
     chordType = 'major9';
-  } else if (suffix === 'm9' || suffix === 'min9') {
+  } else if (suffixRaw === 'M9') {
+    chordType = 'major9';
+  } else if (suffixLower === 'm9' || suffixLower === 'min9') {
     chordType = 'minor9';
   }
 
   return { root, chordType };
+}
+
+// Convert a Roman Numeral (e.g. "I", "iv", "V7", "bVII") into a chord name string
+// (e.g. "C Major", "D Minor", "G Dominant 7"), using scaleNotes as context.
+// This is intentionally simplified and matches what ProgressionBuilder expects.
+export function getChordNameFromRoman(roman, scaleNotes) {
+  if (!roman || !scaleNotes || scaleNotes.length === 0) return '?';
+
+  const degreeMap = {
+    'i': 0, 'ii': 1, 'iii': 2, 'iv': 3, 'v': 4, 'vi': 5, 'vii': 6,
+    'I': 0, 'II': 1, 'III': 2, 'IV': 3, 'V': 4, 'VI': 5, 'VII': 6
+  };
+
+  // Extract base degree (case insensitive match for I, II, etc)
+  const match = roman.match(/^(b|#)?(VII|III|IV|VI|II|V|I)/i);
+  if (!match) return '?';
+
+  const baseRoman = match[2];
+  const suffix = roman.substring(match[0].length);
+
+  const degreeIndex = degreeMap[baseRoman];
+  if (typeof degreeIndex !== 'number') return '?';
+
+  // NOTE: accidentals (b/#) are not applied chromatically yet; we use scale degree note.
+  const rootNote = scaleNotes[degreeIndex];
+  if (!rootNote) return '?';
+
+  // Determine quality from case and suffix
+  const isLowerCase = baseRoman === baseRoman.toLowerCase();
+  let chordType = 'major';
+
+  if (suffix === '°' || suffix === 'dim') chordType = 'diminished';
+  else if (suffix === '+'
+    || suffix === 'aug') chordType = 'augmented';
+  else if (isLowerCase) chordType = 'minor';
+  else chordType = 'major';
+
+  // Handle 7th chords
+  if (suffix.includes('7')) {
+    if (isLowerCase) {
+      chordType = suffix.includes('maj7') || suffix.includes('M7') ? 'minor7' : 'minor7';
+    } else {
+      if (suffix.includes('maj7') || suffix.includes('M7')) chordType = 'major7';
+      else if (suffix.includes('dim7')) chordType = 'diminished7';
+      else chordType = 'dominant7';
+    }
+  }
+
+  const chordTypeNames = {
+    major: 'Major',
+    minor: 'Minor',
+    diminished: 'Diminished',
+    augmented: 'Augmented',
+    major7: 'Major 7',
+    minor7: 'Minor 7',
+    dominant7: 'Dominant 7',
+    diminished7: 'Diminished 7'
+  };
+
+  return `${rootNote} ${chordTypeNames[chordType] || 'Major'}`;
 }
 
 // Helper to normalize notes to 0-11 range

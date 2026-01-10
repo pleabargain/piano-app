@@ -1,9 +1,18 @@
 // https://github.com/pleabargain/piano-app
+import { getScaleNotes } from './music-theory';
+import { parseProgression } from './progression-parser';
+import {
+    openProgressionsDb,
+    PROGRESSIONS_DB_NAME,
+    PROGRESSIONS_DB_VERSION,
+    STORE_PROGRESSIONS,
+} from './progressions-db';
+
 class ProgressionStorage {
     constructor() {
-        this.dbName = 'piano-progressions';
-        this.dbVersion = 1;
-        this.storeName = 'progressions';
+        this.dbName = PROGRESSIONS_DB_NAME;
+        this.dbVersion = PROGRESSIONS_DB_VERSION;
+        this.storeName = STORE_PROGRESSIONS;
         this.db = null;
     }
 
@@ -12,29 +21,7 @@ class ProgressionStorage {
      * @returns {Promise<void>}
      */
     async init() {
-        return new Promise((resolve, reject) => {
-            const request = indexedDB.open(this.dbName, this.dbVersion);
-
-            request.onerror = () => {
-                reject(new Error('Failed to open IndexedDB'));
-            };
-
-            request.onsuccess = () => {
-                this.db = request.result;
-                resolve();
-            };
-
-            request.onupgradeneeded = (event) => {
-                const db = event.target.result;
-                
-                // Create object store if it doesn't exist
-                if (!db.objectStoreNames.contains(this.storeName)) {
-                    const objectStore = db.createObjectStore(this.storeName, { keyPath: 'id' });
-                    objectStore.createIndex('createdAt', 'createdAt', { unique: false });
-                    objectStore.createIndex('name', 'name', { unique: false });
-                }
-            };
-        });
+        this.db = await openProgressionsDb();
     }
 
     /**
@@ -118,15 +105,26 @@ class ProgressionStorage {
             return { valid: false, error: 'Progression string cannot be empty' };
         }
 
-        // Basic validation: check if it matches Roman numeral pattern
-        // This is a simplified check - actual parsing happens in ProgressionBuilder
-        const ROMAN_REGEX = /^(b|#)?(VII|III|IV|VI|II|V|I|vii|iii|iv|vi|ii|v|i)(°|\+|dim|aug|7|maj7|min7)?$/;
-        const tokens = trimmed.split(/\s+/);
-        
-        for (let token of tokens) {
-            if (!ROMAN_REGEX.test(token)) {
-                return { valid: false, error: `Invalid Roman numeral: ${token}` };
+        // Validate using the same parser as the UI (supports Roman numerals + absolute chords)
+        let scaleNotes = [];
+        try {
+            if (root && scaleType) {
+                // Backwards-compat alias: some callers may use "minor" to mean natural minor
+                const resolvedScaleType = scaleType === 'minor' ? 'natural_minor' : scaleType;
+                scaleNotes = getScaleNotes(root, resolvedScaleType);
             }
+        } catch (err) {
+            // If key context is invalid/unavailable, parser can still validate absolute chords.
+            scaleNotes = [];
+        }
+
+        const { chords, error } = parseProgression(trimmed, scaleNotes);
+        if (error) {
+            return { valid: false, error };
+        }
+
+        if (!chords || chords.length === 0) {
+            return { valid: false, error: 'Progression could not be parsed' };
         }
 
         return { valid: true };
@@ -173,16 +171,45 @@ class ProgressionStorage {
         }
 
         return new Promise((resolve, reject) => {
-            const transaction = this.db.transaction([this.storeName], 'readwrite');
-            const store = transaction.objectStore(this.storeName);
-            const request = store.put(progression);
-
-            request.onsuccess = () => {
-                resolve(progression.id);
+            let settled = false;
+            const finish = (err, value) => {
+                if (settled) return;
+                settled = true;
+                clearTimeout(timeoutId);
+                if (err) reject(err);
+                else resolve(value);
             };
 
+            // Prevent UI from hanging forever if IndexedDB is blocked/hung
+            const timeoutId = setTimeout(() => {
+                finish(new Error('Timed out saving progression (IndexedDB did not respond).'));
+            }, 5000);
+
+            let transaction;
+            try {
+                transaction = this.db.transaction([this.storeName], 'readwrite');
+            } catch (err) {
+                finish(err);
+                return;
+            }
+
+            transaction.oncomplete = () => finish(null, progression.id);
+            transaction.onerror = () => finish(transaction.error || new Error('Failed to save progression'));
+            transaction.onabort = () => finish(transaction.error || new Error('Failed to save progression (transaction aborted)'));
+
+            let request;
+            try {
+                const store = transaction.objectStore(this.storeName);
+                request = store.put(progression);
+            } catch (err) {
+                finish(err);
+                return;
+            }
+
             request.onerror = () => {
-                reject(new Error('Failed to save progression'));
+                // transaction.onerror will handle the final rejection in most browsers,
+                // but keep a fallback here.
+                finish(request.error || new Error('Failed to save progression'));
             };
         });
     }
@@ -327,13 +354,55 @@ class ProgressionStorage {
      * @param {Object} progression - Progression object
      * @param {string} filename - Optional filename (defaults to progression name)
      */
-    downloadProgression(progression, filename = null) {
+    async downloadProgression(progression, filename = null) {
         const json = this.exportToJSON(progression);
         const blob = new Blob([json], { type: 'application/json' });
+        
+        // Generate ISO timestamp filename: YYYY-MM-DD-HH-MM-SS
+        const generateISOTimestamp = () => {
+            const now = new Date();
+            const year = now.getFullYear();
+            const month = String(now.getMonth() + 1).padStart(2, '0');
+            const day = String(now.getDate()).padStart(2, '0');
+            const hours = String(now.getHours()).padStart(2, '0');
+            const minutes = String(now.getMinutes()).padStart(2, '0');
+            const seconds = String(now.getSeconds()).padStart(2, '0');
+            return `${year}-${month}-${day}-${hours}-${minutes}-${seconds}.json`;
+        };
+        
+        const defaultFilename = filename || generateISOTimestamp();
+
+        // Try to use File System Access API for save dialog (Chrome/Edge)
+        // This allows user to navigate to root directory or any location
+        if (typeof window !== 'undefined' && 'showSaveFilePicker' in window && typeof window.showSaveFilePicker === 'function') {
+            try {
+                const fileHandle = await window.showSaveFilePicker({
+                    suggestedName: defaultFilename,
+                    types: [{
+                        description: 'JSON files',
+                        accept: { 'application/json': ['.json'] }
+                    }]
+                });
+                const writable = await fileHandle.createWritable();
+                await writable.write(blob);
+                await writable.close();
+                return;
+            } catch (err) {
+                // User cancelled or error occurred, fall back to download
+                if (err.name !== 'AbortError') {
+                    console.warn('[ProgressionStorage] File System Access API failed, using fallback:', err);
+                } else {
+                    // User cancelled - don't proceed with fallback
+                    return;
+                }
+            }
+        }
+
+        // Fallback: use download attribute (no save dialog, saves to Downloads)
         const url = URL.createObjectURL(blob);
         const link = document.createElement('a');
         link.href = url;
-        link.download = filename || `${progression.name.replace(/[^a-z0-9]/gi, '_')}.json`;
+        link.download = defaultFilename;
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);

@@ -1,8 +1,9 @@
 // https://github.com/pleabargain/piano-app
 import React, { useState, useEffect, useRef } from 'react';
 import './ProgressionBuilder.css';
-import { getScaleNotes, NOTES } from '../core/music-theory';
+import { getScaleNotes, NOTES, getChordNameFromRoman } from '../core/music-theory';
 import ProgressionStorage from '../core/progression-storage';
+import { parseProgression } from '../core/progression-parser';
 
 const ROMAN_REGEX = /^(b|#)?(VII|III|IV|VI|II|V|I|vii|iii|iv|vi|ii|v|i)(°|\+|dim|aug|7|maj7|min7)?$/;
 
@@ -93,50 +94,25 @@ const ProgressionBuilder = ({ selectedRoot, selectedScaleType, onProgressionSet,
 
     const validateAndParse = (text) => {
         console.log('[ProgressionBuilder] validateAndParse called', { text, selectedRoot, selectedScaleType });
-        if (!text.trim()) {
-            console.log('[ProgressionBuilder] Empty input, clearing parsedChords');
+
+        let scaleNotes = [];
+        try {
+            scaleNotes = getScaleNotes(selectedRoot, selectedScaleType);
+        } catch (err) {
+            console.error('[ProgressionBuilder] unexpected error getting scale notes:', err);
+            scaleNotes = [];
+        }
+
+        const { chords, error: parseError } = parseProgression(text, scaleNotes);
+
+        if (parseError) {
+            console.error('[ProgressionBuilder] Parse error:', parseError);
+            setError(parseError);
             setParsedChords([]);
-            setError('');
-            return;
-        }
-
-        const tokens = text.trim().split(/\s+/);
-        console.log('[ProgressionBuilder] Tokens:', tokens);
-        const scaleNotes = getScaleNotes(selectedRoot, selectedScaleType);
-        console.log('[ProgressionBuilder] Scale notes:', scaleNotes);
-
-        if (scaleNotes.length === 0) {
-            console.warn('[ProgressionBuilder] No scale notes found for', { selectedRoot, selectedScaleType });
-            return;
-        }
-
-        const results = [];
-        let isValid = true;
-
-        for (let token of tokens) {
-            console.log('[ProgressionBuilder] Processing token:', token);
-            if (!ROMAN_REGEX.test(token)) {
-                console.error('[ProgressionBuilder] Invalid token:', token);
-                isValid = false;
-                setError(`Invalid symbol: ${token}`);
-                break;
-            }
-
-            // Simple mapping logic (can be expanded)
-            // This is a basic implementation to show the chord name
-            // Real implementation would need a robust Roman Numeral parser
-            const chordName = getChordNameFromRoman(token, scaleNotes);
-            console.log('[ProgressionBuilder] Token -> Chord:', { token, chordName });
-            results.push({ roman: token, name: chordName });
-        }
-
-        if (isValid) {
-            console.log('[ProgressionBuilder] Validation successful, parsed chords:', results);
-            setError('');
-            setParsedChords(results);
         } else {
-            console.warn('[ProgressionBuilder] Validation failed');
-            setParsedChords([]);
+            console.log('[ProgressionBuilder] Validation successful:', chords);
+            setError('');
+            setParsedChords(chords);
         }
     };
 
@@ -180,6 +156,12 @@ const ProgressionBuilder = ({ selectedRoot, selectedScaleType, onProgressionSet,
                 }
             };
 
+            console.log('[ProgressionBuilder] User saving progression:', {
+                name: progression.name,
+                progression: progression.progression,
+                metadata: progression.metadata
+            });
+
             // Validate progression string can be parsed
             const validation = storageRef.current.validateProgressionString(
                 progression.progression,
@@ -188,12 +170,18 @@ const ProgressionBuilder = ({ selectedRoot, selectedScaleType, onProgressionSet,
             );
 
             if (!validation.valid) {
+                console.error('[ProgressionBuilder] Validation failed:', validation.error);
                 setError(validation.error);
                 setIsLoading(false);
                 return;
             }
 
-            await storageRef.current.save(progression);
+            const savedId = await storageRef.current.save(progression);
+            console.log('[ProgressionBuilder] Successfully saved progression:', {
+                id: savedId,
+                name: progression.name
+            });
+            
             setShowSaveDialog(false);
             setSaveName('');
             setError('');
@@ -214,6 +202,13 @@ const ProgressionBuilder = ({ selectedRoot, selectedScaleType, onProgressionSet,
 
         try {
             setIsLoading(true);
+            console.log('[ProgressionBuilder] User loading progression:', {
+                id: progression.id,
+                name: progression.name,
+                progression: progression.progression,
+                metadata: progression.metadata
+            });
+
             setInput(progression.progression);
             setCurrentLoadedProgressionId(progression.id);
 
@@ -227,6 +222,11 @@ const ProgressionBuilder = ({ selectedRoot, selectedScaleType, onProgressionSet,
                     console.warn('[ProgressionBuilder] Failed to update lastUsed:', err);
                 }
             }
+
+            console.log('[ProgressionBuilder] Successfully loaded progression:', {
+                id: progression.id,
+                name: progression.name
+            });
 
             setError('');
             setStorageError(null);
@@ -276,7 +276,7 @@ const ProgressionBuilder = ({ selectedRoot, selectedScaleType, onProgressionSet,
         }
 
         try {
-            storageRef.current.downloadProgression(progression);
+            await storageRef.current.downloadProgression(progression);
         } catch (err) {
             console.error('[ProgressionBuilder] Failed to export progression:', err);
             setStorageError(`Failed to export: ${err.message}`);
@@ -294,7 +294,31 @@ const ProgressionBuilder = ({ selectedRoot, selectedScaleType, onProgressionSet,
 
         try {
             setIsLoading(true);
+            console.log('[ProgressionBuilder] User importing progression file:', {
+                fileName: file.name,
+                fileSize: file.size,
+                fileType: file.type
+            });
+
             const progression = await storageRef.current.importFromFile(file);
+            console.log('[ProgressionBuilder] Parsed imported progression:', {
+                name: progression.name,
+                progression: progression.progression,
+                metadata: progression.metadata,
+                version: progression.version
+            });
+
+            // If metadata.key is missing, try to infer it or use default
+            if (progression.metadata && !progression.metadata.key) {
+                console.warn('[ProgressionBuilder] Imported progression missing metadata.key, using default:', selectedRoot);
+                progression.metadata.key = selectedRoot || 'C';
+            }
+
+            // If metadata.scaleType is missing, use default
+            if (progression.metadata && !progression.metadata.scaleType) {
+                console.warn('[ProgressionBuilder] Imported progression missing metadata.scaleType, using default:', selectedScaleType);
+                progression.metadata.scaleType = selectedScaleType || 'major';
+            }
 
             // Generate new ID to avoid conflicts
             if (typeof crypto !== 'undefined' && crypto.randomUUID) {
@@ -309,7 +333,12 @@ const ProgressionBuilder = ({ selectedRoot, selectedScaleType, onProgressionSet,
             }
             progression.createdAt = Date.now();
 
-            await storageRef.current.save(progression);
+            const savedId = await storageRef.current.save(progression);
+            console.log('[ProgressionBuilder] Successfully imported and saved progression:', {
+                id: savedId,
+                name: progression.name
+            });
+
             await loadSavedProgressions();
             setError('');
             setStorageError(null);
@@ -589,73 +618,5 @@ const ProgressionBuilder = ({ selectedRoot, selectedScaleType, onProgressionSet,
         </div>
     );
 };
-
-// Helper to guess chord name from Roman Numeral
-// This is a simplified version.
-function getChordNameFromRoman(roman, scaleNotes) {
-    console.log('[ProgressionBuilder] getChordNameFromRoman called', { roman, scaleNotes });
-    const degreeMap = {
-        'i': 0, 'ii': 1, 'iii': 2, 'iv': 3, 'v': 4, 'vi': 5, 'vii': 6,
-        'I': 0, 'II': 1, 'III': 2, 'IV': 3, 'V': 4, 'VI': 5, 'VII': 6
-    };
-
-    // Extract base degree (case insensitive match for I, II, etc)
-    const match = roman.match(/^(b|#)?(VII|III|IV|VI|II|V|I)/i);
-    if (!match) {
-        console.warn('[ProgressionBuilder] No match for roman:', roman);
-        return '?';
-    }
-
-    const accidental = match[1] || '';
-    const baseRoman = match[2];
-    const suffix = roman.substring(match[0].length);
-
-    let degreeIndex = degreeMap[baseRoman];
-    console.log('[ProgressionBuilder] Parsed roman:', { roman, accidental, baseRoman, suffix, degreeIndex });
-
-    // Handle accidental on the root (e.g. bIII)
-    // This is complex because scaleNotes are fixed. 
-    // For now, we just grab the note at the degree index.
-    // A real implementation would handle chromatic alterations.
-
-    let rootNote = scaleNotes[degreeIndex];
-    console.log('[ProgressionBuilder] Root note:', rootNote);
-
-    // Determine quality from case and suffix
-    const isLowerCase = baseRoman === baseRoman.toLowerCase();
-    let chordType = 'major';
-
-    if (suffix === '°' || suffix === 'dim') chordType = 'diminished';
-    else if (suffix === '+') chordType = 'augmented';
-    else if (isLowerCase) chordType = 'minor';
-    else chordType = 'major';
-
-    // Handle 7th chords
-    if (suffix.includes('7')) {
-        if (isLowerCase) {
-            chordType = suffix.includes('maj7') || suffix.includes('M7') ? 'minor7' : 'minor7';
-        } else {
-            if (suffix.includes('maj7') || suffix.includes('M7')) chordType = 'major7';
-            else if (suffix.includes('dim7')) chordType = 'diminished7';
-            else chordType = 'dominant7';
-        }
-    }
-
-    // Return full name format to match identifyChord output: "C Major", "D Minor", etc.
-    const chordTypeNames = {
-        'major': 'Major',
-        'minor': 'Minor',
-        'diminished': 'Diminished',
-        'augmented': 'Augmented',
-        'major7': 'Major 7',
-        'minor7': 'Minor 7',
-        'dominant7': 'Dominant 7',
-        'diminished7': 'Diminished 7'
-    };
-
-    const result = `${rootNote} ${chordTypeNames[chordType] || 'Major'}`;
-    console.log('[ProgressionBuilder] Final chord name:', result);
-    return result;
-}
 
 export default ProgressionBuilder;
