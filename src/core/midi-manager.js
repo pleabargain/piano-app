@@ -51,7 +51,12 @@ class MIDIManager {
         const [status, note, velocity] = message.data;
         const command = status & 0xf0; // Mask channel
         const channel = status & 0x0f; // Extract channel
-        console.log('[MIDIManager] handleMessage', { status, note, velocity, command, activeNotes: Array.from(this.activeNotes) });
+
+        // Only process and log note events (Note On: 144, Note Off: 128)
+        // Ignore system messages (status 254, command 240, etc.) to prevent console flooding
+        if (command !== 144 && command !== 128) {
+            return; // Skip non-note messages
+        }
 
         // Note On: 144 (0x90), Note Off: 128 (0x80)
         if (command === 144 && velocity > 0) {
@@ -81,9 +86,11 @@ class MIDIManager {
 
     notifyListeners(event) {
         const activeNotesArray = Array.from(this.activeNotes);
-        console.log('[MIDIManager] notifyListeners', { eventType: event.type, activeNotes: activeNotesArray, listenerCount: this.listeners.size });
+        // Reduced logging to prevent console flooding - only log if debugging is needed
+        // console.log('[MIDIManager] notifyListeners', { eventType: event.type, activeNotes: activeNotesArray, listenerCount: this.listeners.size });
         this.listeners.forEach(cb => {
-            console.log('[MIDIManager] Calling listener callback', { eventType: event.type, activeNotes: activeNotesArray });
+            // Reduced logging to prevent console flooding
+            // console.log('[MIDIManager] Calling listener callback', { eventType: event.type, activeNotes: activeNotesArray });
             cb(event, activeNotesArray);
         });
     }

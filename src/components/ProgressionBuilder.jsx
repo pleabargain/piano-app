@@ -4,6 +4,7 @@ import './ProgressionBuilder.css';
 import { getScaleNotes, NOTES, getChordNameFromRoman } from '../core/music-theory';
 import ProgressionStorage from '../core/progression-storage';
 import { parseProgression } from '../core/progression-parser';
+import { cleanInputText, suggestFix, getSampleInputs } from '../core/data-cleanup';
 
 const ROMAN_REGEX = /^(b|#)?(VII|III|IV|VI|II|V|I|vii|iii|iv|vi|ii|v|i)(°|\+|dim|aug|7|maj7|min7)?$/;
 
@@ -55,6 +56,8 @@ const ProgressionBuilder = ({ selectedRoot, selectedScaleType, onProgressionSet,
     const [storageError, setStorageError] = useState(null);
     const [showTooltip, setShowTooltip] = useState(false);
     const [currentLoadedProgressionId, setCurrentLoadedProgressionId] = useState(null);
+    const [suggestion, setSuggestion] = useState('');
+    const [showSamples, setShowSamples] = useState(false);
 
     const storageRef = useRef(null);
     const inputRef = useRef(null);
@@ -116,6 +119,16 @@ const ProgressionBuilder = ({ selectedRoot, selectedScaleType, onProgressionSet,
     const validateAndParse = (text) => {
         console.log('[ProgressionBuilder] validateAndParse called', { text, selectedRoot, selectedScaleType });
 
+        // Clean input before parsing
+        const cleanedText = cleanInputText(text);
+        
+        // If cleaning changed the text, update input and show suggestion
+        if (cleanedText !== text.trim() && text.trim()) {
+            setSuggestion(`Cleaned input: "${cleanedText}"`);
+        } else {
+            setSuggestion('');
+        }
+
         let scaleNotes = [];
         try {
             scaleNotes = getScaleNotes(selectedRoot, selectedScaleType);
@@ -124,15 +137,27 @@ const ProgressionBuilder = ({ selectedRoot, selectedScaleType, onProgressionSet,
             scaleNotes = [];
         }
 
-        const { chords, error: parseError } = parseProgression(text, scaleNotes);
+        const { chords, error: parseError } = parseProgression(cleanedText || text, scaleNotes);
 
         if (parseError) {
-            console.error('[ProgressionBuilder] Parse error:', parseError);
+            console.error('[ProgressionBuilder] Parse error:', parseError, { 
+                originalInput: text, 
+                cleanedInput: cleanedText,
+                selectedRoot,
+                selectedScaleType 
+            });
+            const fixSuggestion = suggestFix(text, parseError);
+            if (fixSuggestion) {
+                setSuggestion(fixSuggestion);
+            } else {
+                setSuggestion('');
+            }
             setError(parseError);
             setParsedChords([]);
         } else {
             console.log('[ProgressionBuilder] Validation successful:', chords);
             setError('');
+            setSuggestion('');
             setParsedChords(chords);
         }
     };
@@ -513,44 +538,63 @@ const ProgressionBuilder = ({ selectedRoot, selectedScaleType, onProgressionSet,
                             type="text"
                             value={input}
                             onChange={(e) => {
-                                setInput(e.target.value);
+                                const rawValue = e.target.value;
+                                // Auto-clean on paste/input to remove invisible characters
+                                const cleaned = cleanInputText(rawValue);
+                                setInput(cleaned !== rawValue.trim() ? cleaned : rawValue);
                                 setError('');
+                                setSuggestion('');
                             }}
-                            placeholder="e.g., I IV V ii"
+                            placeholder="e.g., I IV V ii or C F G Am"
                             aria-label="Chord progression input"
                         />
                         {showTooltip && (
                             <div ref={tooltipRef} className="input-tooltip">
                                 <div className="tooltip-content">
-                                    <strong>Enter chord progressions using Roman numeral notation.</strong>
+                                    <strong>Enter chord progressions using Roman numeral notation OR absolute chord names.</strong>
+                                    
                                     <div className="tooltip-section">
-                                        <strong>BASIC CHORDS:</strong>
+                                        <strong>ROMAN NUMERAL NOTATION:</strong>
+                                        <div><strong>Basic Chords:</strong></div>
                                         <div>• I, II, III, IV, V, VI, VII (uppercase = major)</div>
                                         <div>• i, ii, iii, iv, v, vi, vii (lowercase = minor)</div>
-                                    </div>
-                                    <div className="tooltip-section">
-                                        <strong>ACCIDENTALS:</strong>
+                                        <div><strong>Accidentals:</strong></div>
                                         <div>• bIII, bVI, bVII (flat - e.g., bIII = flat 3)</div>
                                         <div>• #IV, #V (sharp - e.g., #IV = sharp 4)</div>
-                                    </div>
-                                    <div className="tooltip-section">
-                                        <strong>CHORD QUALITIES:</strong>
+                                        <div><strong>Chord Qualities:</strong></div>
                                         <div>• I7, V7 (dominant 7th)</div>
                                         <div>• Imaj7, Vmaj7 (major 7th)</div>
                                         <div>• ii7, vi7 (minor 7th)</div>
                                         <div>• I° or Idim (diminished)</div>
                                         <div>• I+ or Iaug (augmented)</div>
                                     </div>
+                                    
+                                    <div className="tooltip-section">
+                                        <strong>ABSOLUTE CHORD NAMES:</strong>
+                                        <div>• Use note names: C, D, E, F, G, A, B</div>
+                                        <div>• Flats: Use 'b' (Bb, Eb, Ab) or Unicode ♭ (B♭, E♭, A♭)</div>
+                                        <div>• Sharps: Use '#' (C#, F#, G#) or Unicode ♯ (C♯, F♯, G♯)</div>
+                                        <div>• Chord suffixes: m, min, maj, 7, 9, dim, aug, sus, etc.</div>
+                                        <div>• Examples: C, Fm, G7, B♭m, A♭, E♭, D♭</div>
+                                    </div>
+                                    
                                     <div className="tooltip-section">
                                         <strong>EXAMPLES:</strong>
+                                        <div><strong>Roman Numerals:</strong></div>
                                         <div>• I IV V I (basic major progression)</div>
                                         <div>• i bVII bVI V (minor progression with flats)</div>
                                         <div>• I vi IV V (major with minor vi)</div>
                                         <div>• I7 IV7 V7 (dominant 7th chords)</div>
                                         <div>• ii7 V7 I (jazz progression)</div>
+                                        <div><strong>Absolute Chords:</strong></div>
+                                        <div>• C F G C (basic major progression)</div>
+                                        <div>• A♭ E♭ Fm D♭ B♭m (with Unicode flats)</div>
+                                        <div>• Ab Eb Fm Db Bbm (with ASCII flats)</div>
+                                        <div>• C Am F G (major with minor)</div>
+                                        <div>• C7 F7 G7 (dominant 7th chords)</div>
                                     </div>
                                     <div className="tooltip-footer">
-                                        Separate chords with spaces. The progression will transpose to your selected key.
+                                        Separate chords with spaces. Roman numerals transpose to your selected key. Absolute chords use the exact notes specified.
                                     </div>
                                 </div>
                             </div>
@@ -574,8 +618,93 @@ const ProgressionBuilder = ({ selectedRoot, selectedScaleType, onProgressionSet,
             {isLoading && <div className="loading-indicator">Loading...</div>}
 
             {/* Error messages */}
-            {error && <div className="error-msg">{error}</div>}
+            {error && (
+                <div className="error-msg">
+                    {error}
+                    {suggestion && (
+                        <div className="suggestion-msg" style={{ marginTop: '8px', fontSize: '0.9em', color: '#666' }}>
+                            💡 {suggestion}
+                            {suggestion.includes('Cleaned input') && (
+                                <button 
+                                    onClick={() => {
+                                        const cleaned = cleanInputText(input);
+                                        setInput(cleaned);
+                                        setSuggestion('');
+                                    }}
+                                    style={{ marginLeft: '8px', padding: '2px 8px', fontSize: '0.85em' }}
+                                >
+                                    Apply
+                                </button>
+                            )}
+                        </div>
+                    )}
+                </div>
+            )}
             {storageError && <div className="error-msg storage-error">{storageError}</div>}
+            
+            {/* Sample inputs */}
+            <div className="sample-inputs-section" style={{ marginTop: '16px', padding: '12px', backgroundColor: '#f5f5f5', borderRadius: '4px' }}>
+                <button 
+                    onClick={() => setShowSamples(!showSamples)}
+                    style={{ background: 'none', border: 'none', cursor: 'pointer', fontWeight: 'bold', marginBottom: '8px' }}
+                >
+                    {showSamples ? '▼' : '▶'} Sample Inputs
+                </button>
+                {showSamples && (
+                    <div style={{ marginTop: '8px' }}>
+                        <div style={{ marginBottom: '12px' }}>
+                            <strong>Roman Numerals:</strong>
+                            <div style={{ marginTop: '4px', display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
+                                {getSampleInputs().romanNumerals.map((ex, idx) => (
+                                    <code 
+                                        key={idx}
+                                        onClick={() => {
+                                            setInput(ex);
+                                            setShowSamples(false);
+                                        }}
+                                        style={{ 
+                                            padding: '4px 8px', 
+                                            backgroundColor: '#fff', 
+                                            border: '1px solid #ddd', 
+                                            borderRadius: '3px',
+                                            cursor: 'pointer',
+                                            fontSize: '0.9em'
+                                        }}
+                                        title="Click to use"
+                                    >
+                                        {ex}
+                                    </code>
+                                ))}
+                            </div>
+                        </div>
+                        <div>
+                            <strong>Absolute Chords:</strong>
+                            <div style={{ marginTop: '4px', display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
+                                {getSampleInputs().absoluteChords.map((ex, idx) => (
+                                    <code 
+                                        key={idx}
+                                        onClick={() => {
+                                            setInput(ex);
+                                            setShowSamples(false);
+                                        }}
+                                        style={{ 
+                                            padding: '4px 8px', 
+                                            backgroundColor: '#fff', 
+                                            border: '1px solid #ddd', 
+                                            borderRadius: '3px',
+                                            cursor: 'pointer',
+                                            fontSize: '0.9em'
+                                        }}
+                                        title="Click to use"
+                                    >
+                                        {ex}
+                                    </code>
+                                ))}
+                            </div>
+                        </div>
+                    </div>
+                )}
+            </div>
 
             {/* Save Dialog */}
             {showSaveDialog && (

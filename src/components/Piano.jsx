@@ -9,6 +9,7 @@ const Piano = ({
     activeNotes = [],
     highlightedNotes = [], // Notes to show as part of scale/chord (pitch classes)
     chordMidiNotes = [], // Specific MIDI notes to highlight for chord display
+    sharedKeysMidiNotes = [], // MIDI notes that are shared between target and next chord
     lavaKeys = [], // MIDI numbers that are "lava" (bad keys) in lava game mode
     mode = 'free', // Current mode to determine styling
     feedbackState = {}, // { noteNumber: 'correct' | 'incorrect' }
@@ -31,6 +32,7 @@ const Piano = ({
             // Don't apply 'highlighted' class in lava mode - use lava-good-key instead
             isHighlighted: mode !== 'lava' && (highlightedNotes.includes(i % 12) || chordMidiNotes.includes(i)), // Compare pitch class or exact MIDI
             isChordNote: chordMidiNotes.includes(i), // Specific chord note highlighting
+            isSharedKey: sharedKeysMidiNotes.includes(i), // Shared key between target and next chord
             isLavaKey: isLavaKey, // Lava key (bad key) in lava game
             isLavaGoodKey: isLavaGoodKey, // Good key in lava game (ice blue)
             status: feedbackState[i] || null,
@@ -48,6 +50,7 @@ const Piano = ({
               ${key.isActive ? 'active' : ''} 
               ${key.isHighlighted ? 'highlighted' : ''}
               ${key.isChordNote ? 'chord-note' : ''}
+              ${key.isSharedKey ? 'shared-key' : ''}
               ${key.isLavaKey ? 'lava-key' : ''}
               ${key.isLavaGoodKey ? 'lava-good-key' : ''}
               ${key.isExpected ? 'expected' : ''}

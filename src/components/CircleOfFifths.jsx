@@ -1,5 +1,5 @@
 // https://github.com/pleabargain/piano-app
-import React from 'react';
+import React, { useState } from 'react';
 import './CircleOfFifths.css';
 import { parseChordName } from '../core/music-theory';
 
@@ -39,6 +39,9 @@ const NOTE_MAP = {
 };
 
 const CircleOfFifths = ({ selectedRoot, onRootSelect, detectedChord, onChordClick, hideTitle = false }) => {
+  const [hoveredEnharmonic, setHoveredEnharmonic] = useState(null);
+  const [tooltipPosition, setTooltipPosition] = useState({ x: 0, y: 0 });
+
   const handleSegmentClick = (majorNote, chordName) => {
     // Map the circle of fifths note to app's note system
     const mappedNote = NOTE_MAP[majorNote] || majorNote;
@@ -47,6 +50,22 @@ const CircleOfFifths = ({ selectedRoot, onRootSelect, detectedChord, onChordClic
     if (onChordClick && chordName) {
       onChordClick(chordName);
     }
+  };
+
+  const handleEnharmonicHover = (enharmonic, primary, event, index) => {
+    if (enharmonic === 'G#') {
+      setHoveredEnharmonic({ enharmonic, primary });
+      // Get the position of the enharmonic text in SVG coordinates
+      const majorPos = getSegmentCenterPosition(index, 12, 130);
+      setTooltipPosition({
+        x: majorPos.x,
+        y: majorPos.y + 20 // Position below the enharmonic text
+      });
+    }
+  };
+
+  const handleEnharmonicLeave = () => {
+    setHoveredEnharmonic(null);
   };
 
   // Check if a segment is selected
@@ -233,7 +252,14 @@ const CircleOfFifths = ({ selectedRoot, onRootSelect, detectedChord, onChordClic
                     >
                       {key.major}
                       {key.enharmonicMajor && (
-                        <tspan x={majorPos.x} dy="12" className="enharmonic">
+                        <tspan 
+                          x={majorPos.x} 
+                          dy="12" 
+                          className="enharmonic"
+                          onMouseEnter={(e) => handleEnharmonicHover(key.enharmonicMajor, key.major, e, index)}
+                          onMouseLeave={handleEnharmonicLeave}
+                          style={{ cursor: key.enharmonicMajor === 'G#' ? 'help' : 'pointer', pointerEvents: 'all' }}
+                        >
                           {key.enharmonicMajor}
                         </tspan>
                       )}
@@ -272,6 +298,33 @@ const CircleOfFifths = ({ selectedRoot, onRootSelect, detectedChord, onChordClic
 
           {/* Center circle */}
           <circle cx="0" cy="0" r="50" className="center-circle" />
+          
+          {/* Tooltip for enharmonic equivalents */}
+          {hoveredEnharmonic && hoveredEnharmonic.enharmonic === 'G#' && (
+            <g>
+              <foreignObject 
+                x={tooltipPosition.x - 150} 
+                y={tooltipPosition.y} 
+                width="300" 
+                height="140"
+                style={{ pointerEvents: 'none' }}
+              >
+                <div xmlns="http://www.w3.org/1999/xhtml" className="enharmonic-tooltip" style={{
+                  backgroundColor: 'rgba(0, 0, 0, 0.9)',
+                  color: 'white',
+                  padding: '12px',
+                  borderRadius: '6px',
+                  fontSize: '13px',
+                  lineHeight: '1.5',
+                  boxShadow: '0 4px 12px rgba(0, 0, 0, 0.3)',
+                  textAlign: 'left',
+                  fontFamily: 'system-ui, -apple-system, sans-serif'
+                }}>
+                  <strong>G♯ (G-sharp) and A♭ (A-flat)</strong> are the same pitch in modern Western music's 12-tone equal temperament system. They are what is known as <strong>enharmonic equivalents</strong>, meaning they sound identical and are played on the same black key on a piano.
+                </div>
+              </foreignObject>
+            </g>
+          )}
         </svg>
       </div>
     </div>

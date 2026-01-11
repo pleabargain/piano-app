@@ -1,7 +1,7 @@
 {
     "$schema": "http://json-schema.org/draft-07/schema#",
-    "title": "Key Progression Schema",
-    "description": "Schema for scale practice key progression files in the Piano App",
+    "title": "Progression Schema",
+    "description": "Schema for chord progression and key progression files in the Piano App. Supports both Roman numeral chord progressions (e.g., 'I IV V I') and key progressions with note names (e.g., 'C F Bb Eb').",
     "type": "object",
     "properties": {
         "version": {
@@ -11,7 +11,7 @@
         },
         "id": {
             "type": "string",
-            "description": "A unique identifier for the progression (UUID)",
+            "description": "A unique identifier for the progression (UUID). Optional, can be generated if not provided.",
             "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
         },
         "name": {
@@ -21,25 +21,42 @@
         },
         "progression": {
             "type": "string",
-            "description": "Space-separated musical notes (e.g., 'C F Bb Eb')",
-            "example": "C F Bb Eb Ab Db Gb B E A D G"
+            "description": "Progression string. Can be Roman numeral chord progressions (e.g., 'I IV V I', 'ii7 V7 I vi') or space-separated musical note names (e.g., 'C F Bb Eb').",
+            "examples": [
+                "I IV V I",
+                "ii7 V7 I vi",
+                "C F Bb Eb Ab Db Gb B E A D G"
+            ]
         },
         "createdAt": {
             "type": "number",
-            "description": "Creation timestamp in milliseconds"
+            "description": "Creation timestamp in milliseconds. Optional, can be generated if not provided."
         },
         "metadata": {
             "type": "object",
             "properties": {
                 "scaleType": {
                     "type": "string",
-                    "description": "Target scale type for this progression"
+                    "description": "Target scale type for this progression (e.g., 'major', 'minor', 'natural_minor')"
                 },
                 "description": {
                     "type": "string",
                     "description": "Optional description of the progression"
+                },
+                "tags": {
+                    "type": "array",
+                    "description": "Optional array of tags for categorizing the progression",
+                    "items": {
+                        "type": "string"
+                    },
+                    "example": ["jazz", "classic", "sample"]
+                },
+                "key": {
+                    "type": "string",
+                    "description": "Root key for the progression (e.g., 'C', 'F#', 'Bb'). Used primarily for Roman numeral chord progressions."
                 }
-            }
+            },
+            "additionalProperties": false
         }
     },
     "required": [

@@ -831,12 +831,84 @@ function App() {
     // If a chord is clicked in Circle of Fifths, show that regardless of mode
     if (chordMidiNotes.length > 0) return chordMidiNotes;
 
-    // In chord mode, show target chord from progression if available
+    // In chord mode, show target chord from progression with all inversions supported
+    // Highlight all octaves of chord notes to support inversions
     if (mode === 'chord' && progression.length > 0) {
-      // Could show target chord from progression here if needed
-      return [];
+      const targetChord = progression[currentStepIndex % progression.length];
+      const parsed = parseChordName(targetChord.name);
+      if (parsed) {
+        // Get chord notes and generate MIDI notes for all octaves in the piano range
+        // This ensures inversions are visible - any octave of the chord notes will be highlighted
+        const chordNotes = getChordNotes(parsed.root, parsed.chordType);
+        // Use getNoteIndex to get pitch class indices directly (handles flats->sharps conversion)
+        const pitchClasses = chordNotes.map(note => getNoteIndex(note)).filter(idx => idx !== -1);
+        
+        // Generate MIDI notes for all octaves in the piano range (36-96)
+        const allMidiNotes = [];
+        for (let octave = 2; octave <= 7; octave++) {
+          pitchClasses.forEach(pitchClass => {
+            const midiNote = (octave + 1) * 12 + pitchClass;
+            if (midiNote >= 36 && midiNote <= 96) {
+              allMidiNotes.push(midiNote);
+            }
+          });
+        }
+        // #region agent log
+        fetch('http://127.0.0.1:7242/ingest/e195f0d9-c6a3-4271-b290-bc8c7ddcceed',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'App.jsx:835',message:'chord highlights for inversions',data:{targetChord,parsed,chordNotes,pitchClasses,allMidiNotesCount:allMidiNotes.length},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'C'})}).catch(()=>{});
+        // #endregion
+        return allMidiNotes;
+      }
     }
     return [];
+  };
+
+  // Helper to get shared keys between target and next chord
+  const getSharedKeysHighlights = () => {
+    // Only calculate shared keys in chord practice mode
+    if (mode !== 'chord' || progression.length === 0) return [];
+
+    const targetChord = progression[currentStepIndex % progression.length];
+    const nextChord = progression[(currentStepIndex + 1) % progression.length];
+    
+    // If there's no next chord, return empty array
+    if (!nextChord) return [];
+
+    try {
+      const targetParsed = parseChordName(targetChord.name);
+      const nextParsed = parseChordName(nextChord.name);
+      
+      if (!targetParsed || !nextParsed) return [];
+
+      // Get chord notes for both chords
+      const targetNotes = getChordNotes(targetParsed.root, targetParsed.chordType);
+      const nextNotes = getChordNotes(nextParsed.root, nextParsed.chordType);
+      
+      // Convert to pitch classes and find intersection
+      const targetPitchClasses = new Set(targetNotes.map(note => getNoteIndex(note)).filter(idx => idx !== -1));
+      const nextPitchClasses = nextNotes.map(note => getNoteIndex(note)).filter(idx => idx !== -1);
+      
+      // Find shared pitch classes
+      const sharedPitchClasses = nextPitchClasses.filter(pc => targetPitchClasses.has(pc));
+      
+      // If no shared keys, return empty array
+      if (sharedPitchClasses.length === 0) return [];
+      
+      // Generate MIDI notes for all octaves of shared pitch classes (similar to getChordHighlights)
+      const allMidiNotes = [];
+      for (let octave = 2; octave <= 7; octave++) {
+        sharedPitchClasses.forEach(pitchClass => {
+          const midiNote = (octave + 1) * 12 + pitchClass;
+          if (midiNote >= 36 && midiNote <= 96) {
+            allMidiNotes.push(midiNote);
+          }
+        });
+      }
+      
+      return allMidiNotes;
+    } catch (error) {
+      console.error('[App] Error calculating shared keys:', error);
+      return [];
+    }
   };
 
   // Helper to get highlighted notes for Right Piano (Scales)
@@ -844,10 +916,24 @@ function App() {
     // In chord practice mode, highlight all pitch classes of the target chord
     if (mode === 'chord' && progression.length > 0) {
       const targetChord = progression[currentStepIndex % progression.length];
+      // #region agent log
+      fetch('http://127.0.0.1:7242/ingest/e195f0d9-c6a3-4271-b290-bc8c7ddcceed',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'App.jsx:843',message:'getScaleHighlights chord mode',data:{targetChord,currentStepIndex},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'A'})}).catch(()=>{});
+      // #endregion
       const parsed = parseChordName(targetChord.name);
+      // #region agent log
+      fetch('http://127.0.0.1:7242/ingest/e195f0d9-c6a3-4271-b290-bc8c7ddcceed',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'App.jsx:847',message:'parsed target chord',data:{parsed,targetChordName:targetChord.name},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'A'})}).catch(()=>{});
+      // #endregion
       if (parsed) {
         const chordNotes = getChordNotes(parsed.root, parsed.chordType);
-        return chordNotes.map(note => NOTES.indexOf(note));
+        // #region agent log
+        fetch('http://127.0.0.1:7242/ingest/e195f0d9-c6a3-4271-b290-bc8c7ddcceed',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'App.jsx:849',message:'chord notes from getChordNotes',data:{chordNotes,root:parsed.root,chordType:parsed.chordType},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'A'})}).catch(()=>{});
+        // #endregion
+        // Use getNoteIndex to get pitch class indices directly (handles flats->sharps conversion)
+        const pitchClasses = chordNotes.map(note => getNoteIndex(note)).filter(idx => idx !== -1);
+        // #region agent log
+        fetch('http://127.0.0.1:7242/ingest/e195f0d9-c6a3-4271-b290-bc8c7ddcceed',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'App.jsx:852',message:'mapped pitch classes using getNoteIndex',data:{chordNotes,pitchClasses},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'A'})}).catch(()=>{});
+        // #endregion
+        return pitchClasses;
       }
     }
     
@@ -1163,6 +1249,7 @@ function App() {
                 activeNotes={activeNotes}
                 highlightedNotes={getScaleHighlights()}
                 chordMidiNotes={getChordHighlights()}
+                sharedKeysMidiNotes={getSharedKeysHighlights()}
                 lavaKeys={mode === 'lava' ? lavaKeys : []}
                 mode={mode}
                 feedbackState={feedbackState}

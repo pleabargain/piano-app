@@ -749,6 +749,28 @@ If chord detection isn't working in Chord Practice mode:
 - **UI feels cramped**: The current layout places multiple panels side-by-side - this is a known UI limitation but functionality works correctly
 - **Status message not updating**: Check that you're in the correct mode (Chord Practice) and have set a progression
 
+### Killing Vite Development Server Instances
+
+If you need to stop all running Vite instances (for example, if the dev server is stuck or you have multiple instances running):
+
+**Windows PowerShell Users:**
+
+Run this command in PowerShell to kill all Node.js processes running Vite:
+
+```powershell
+# Get all node processes and filter by command line containing "vite"
+Get-CimInstance Win32_Process -Filter "name = 'node.exe'" | 
+    Where-Object { $_.CommandLine -like "*vite*" } | 
+    ForEach-Object { Stop-Process -Id $_.ProcessId -Force }
+```
+
+This command will:
+- Find all Node.js processes
+- Filter to only those with "vite" in their command line
+- Forcefully stop those processes
+
+**Note**: This is specifically for Windows users using PowerShell. On other operating systems, use `Ctrl+C` in the terminal where Vite is running, or use platform-specific process management commands.
+
 ## Development
 
 See `agent-rules.md` for coding rules and guidelines.

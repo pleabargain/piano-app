@@ -1,6 +1,7 @@
 
 import { getChordNameFromRoman } from './music-theory';
 import { normalizeChordText } from './chord-text';
+import { cleanInputText } from './data-cleanup';
 
 const ROMAN_REGEX = /^(b|#)?(VII|III|IV|VI|II|V|I|vii|iii|iv|vi|ii|v|i)(°|\+|dim|aug|7|maj7|min7)?$/;
 
@@ -26,12 +27,24 @@ export function parseProgression(text, scaleNotes = []) {
         return { chords: [], error: null };
     }
 
+    // Clean input: remove zero-width spaces and other invisible Unicode characters
+    const cleanedText = cleanInputText(text);
+    
+    if (!cleanedText) {
+        return { chords: [], error: null };
+    }
+
     // Treat lead-sheet bars as separators
-    const normalizedText = text.replace(/\|/g, ' ');
+    const normalizedText = cleanedText.replace(/\|/g, ' ');
     const tokens = normalizedText.trim().split(/\s+/).filter(Boolean);
     const results = [];
 
     for (let rawToken of tokens) {
+        // Skip empty tokens
+        if (!rawToken || !rawToken.trim()) {
+            continue;
+        }
+
         const token = normalizeToken(rawToken);
 
         // 1. Try Roman Numeral Parsing

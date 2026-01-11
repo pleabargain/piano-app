@@ -21,3 +21,10 @@
    - **Test Fallback Mechanisms**: If a primary method fails, ensure fallback mechanisms work correctly and are tested.
    - **Component State Management**: When debugging React components, verify that state updates correctly and that errors don't leave components in inconsistent states.
    - **Async Error Handling**: Ensure async operations (promises, async/await) have proper error handling and that errors are caught and displayed to users.
+6. **Error Logging to Browser Console**: All validation errors, parsing errors, and runtime errors must be logged to the browser console using `console.error()` for bug tracking and debugging. Error messages displayed in the UI should also be logged to the console with appropriate context (component name, function name, input values, etc.).
+7. **Chrome DevTools MCP Server for Testing**: Use the Chrome DevTools MCP server to help in planning unit tests and debugging. Leverage browser automation tools to:
+   - Test user interactions and verify UI behavior
+   - Inspect DOM elements and component state
+   - Capture console logs and network requests
+   - Take snapshots of page state for debugging
+   - Verify error messages are displayed correctly

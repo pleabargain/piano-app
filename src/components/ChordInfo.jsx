@@ -1,7 +1,7 @@
 // https://github.com/pleabargain/piano-app
 import React from 'react';
 import './ChordInfo.css';
-import { parseChordName, CHORD_TYPES } from '../core/music-theory';
+import { parseChordName, CHORD_TYPES, getChordNotes } from '../core/music-theory';
 
 /**
  * ChordInfo Component
@@ -38,6 +38,30 @@ const ChordInfo = ({
     const isChordPracticeMode = mode === 'chord' && progression.length > 0;
     const currentTargetChord = isChordPracticeMode ? progression[currentStepIndex % progression.length] : null;
     const nextChord = isChordPracticeMode ? progression[(currentStepIndex + 1) % progression.length] : null;
+    
+    // Check if target and next chord share any keys
+    const chordsShareKeys = React.useMemo(() => {
+        if (!currentTargetChord || !nextChord) return false;
+        
+        try {
+            const targetParsed = parseChordName(currentTargetChord.name);
+            const nextParsed = parseChordName(nextChord.name);
+            
+            if (!targetParsed || !nextParsed) return false;
+            
+            const targetNotes = getChordNotes(targetParsed.root, targetParsed.chordType);
+            const nextNotes = getChordNotes(nextParsed.root, nextParsed.chordType);
+            
+            // Check if there's any intersection between the two note sets
+            const targetNoteSet = new Set(targetNotes);
+            const hasSharedKey = nextNotes.some(note => targetNoteSet.has(note));
+            
+            return hasSharedKey;
+        } catch (error) {
+            console.error('[ChordInfo] Error checking shared keys:', error);
+            return false;
+        }
+    }, [currentTargetChord, nextChord]);
     
     // Helper to get expected inversions for a chord type
     const getExpectedInversions = (chordType) => {
@@ -188,6 +212,7 @@ const ChordInfo = ({
                                 <div className="section-label">Target Chord</div>
                                 <div className={`target-chord-name ${chordAcknowledged ? 'chord-correct' : ''}`}>
                                     {currentTargetChord.roman} ({currentTargetChord.name})
+                                    {chordsShareKeys && <span className="shared-key-indicator" title="Chords share keys"></span>}
                                 </div>
                             </div>
                             {nextChord && (
@@ -195,6 +220,7 @@ const ChordInfo = ({
                                     <div className="section-label">Next Chord</div>
                                     <div className="next-chord-name">
                                         {nextChord.roman} ({nextChord.name})
+                                        {chordsShareKeys && <span className="shared-key-indicator" title="Chords share keys"></span>}
                                     </div>
                                 </div>
                             )}

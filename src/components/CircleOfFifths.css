@@ -124,3 +124,21 @@
   stroke-width: 2;
   pointer-events: none;
 }
+
+.enharmonic-tooltip {
+  background-color: rgba(0, 0, 0, 0.9);
+  color: white;
+  padding: 12px;
+  border-radius: 6px;
+  font-size: 13px;
+  line-height: 1.5;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  text-align: left;
+  font-family: system-ui, -apple-system, sans-serif;
+  word-wrap: break-word;
+}
+
+.enharmonic:hover {
+  fill: #3b82f6;
+  text-decoration: underline;
+}
