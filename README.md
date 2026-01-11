@@ -1017,4 +1017,12 @@ This enhancement helps users understand that the same notes can function as diff
 
 ---
 
-Last Updated: 2026-01-09
+## Development Notes
+
+**2026-01-11**: I'm very proud of this iteration. Can now load `G Am C F Dm Em` as a sample chord progression. Minors and diminished chords will be tested soon.
+
+**TODO**: Add more screenshots
+
+---
+
+Last Updated: 2026-01-11
