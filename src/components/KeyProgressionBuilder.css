@@ -227,11 +227,53 @@
     padding: 1.5rem;
     border-radius: 8px;
     width: 300px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+}
+
+.key-progression-builder .dialog-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.key-progression-builder .dialog-header h4 {
+    margin: 0;
+    color: #000;
+    font-size: 1.1rem;
+}
+
+.key-progression-builder .dialog-close-btn {
+    background: transparent;
+    border: none;
+    color: #666;
+    font-size: 1.5rem;
+    line-height: 1;
+    cursor: pointer;
+    padding: 4px 8px;
+    border-radius: 4px;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+}
+
+.key-progression-builder .dialog-close-btn:hover {
+    background: #e0e0e0;
+    color: #000;
+}
+
+.key-progression-builder .dialog-close-btn:focus {
+    outline: 2px solid #2196F3;
+    outline-offset: 2px;
 }
 
 .key-progression-builder .dialog input {
     width: 100%;
     margin-bottom: 1rem;
+    box-sizing: border-box;
 }
 
 .key-progression-builder .sample-link {

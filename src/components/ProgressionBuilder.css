@@ -139,6 +139,51 @@
     background: #3a3a3a;
 }
 
+/* Current chord highlighting (target chord being practiced) */
+.chord-preview.current-chord {
+    background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+    border: 2px solid #fbbf24;
+    box-shadow: 0 4px 12px rgba(251, 191, 36, 0.5);
+    transform: scale(1.05);
+}
+
+.chord-preview.current-chord .roman {
+    color: #1a1a1a;
+    font-weight: 900;
+}
+
+.chord-preview.current-chord .alpha {
+    color: #1a1a1a;
+    font-weight: 600;
+}
+
+/* Next chord highlighting */
+.chord-preview.next-chord {
+    background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+    border: 2px solid #60a5fa;
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
+    animation: nextChordPulse 2s ease-in-out infinite;
+}
+
+.chord-preview.next-chord .roman {
+    color: #fff;
+    font-weight: 800;
+}
+
+.chord-preview.next-chord .alpha {
+    color: #e0e7ff;
+    font-weight: 600;
+}
+
+@keyframes nextChordPulse {
+    0%, 100% {
+        box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
+    }
+    50% {
+        box-shadow: 0 4px 16px rgba(59, 130, 246, 0.6);
+    }
+}
+
 .predefined-progressions {
     margin-top: 20px;
     padding-top: 20px;
@@ -519,10 +564,44 @@
     box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
 }
 
+.save-dialog-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
 .save-dialog h4 {
-    margin: 0 0 15px 0;
+    margin: 0;
     color: #fff;
     font-size: 1.1rem;
+}
+
+.save-dialog-close-btn {
+    background: transparent;
+    border: none;
+    color: #aaa;
+    font-size: 1.5rem;
+    line-height: 1;
+    cursor: pointer;
+    padding: 4px 8px;
+    border-radius: 4px;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+}
+
+.save-dialog-close-btn:hover {
+    background: #444;
+    color: #fff;
+}
+
+.save-dialog-close-btn:focus {
+    outline: 2px solid #3b82f6;
+    outline-offset: 2px;
 }
 
 .save-dialog input {

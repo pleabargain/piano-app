@@ -37,12 +37,15 @@ function App() {
   const [currentStepIndex, setCurrentStepIndex] = useState(0);
   const [feedbackState, setFeedbackState] = useState({}); // { midiNumber: 'correct' | 'incorrect' }
   const [statusMessage, setStatusMessage] = useState('Connect MIDI keyboard to start');
+  const [chordAcknowledged, setChordAcknowledged] = useState(false); // Track when correct chord is acknowledged
+  const [isPracticeActive, setIsPracticeActive] = useState(false); // Track if practice has started
 
   // UI State
   const [isPracticeCollapsed, setIsPracticeCollapsed] = useState(false);
   const [isScaleSelectorCollapsed, setIsScaleSelectorCollapsed] = useState(false);
   const [isChordDisplayCollapsed, setIsChordDisplayCollapsed] = useState(false);
   const [isRecordingListCollapsed, setIsRecordingListCollapsed] = useState(false);
+  const [isExtensionsCollapsed, setIsExtensionsCollapsed] = useState(false);
 
   // Use custom hook for chord detection
   const { detectedChord, detectedChords, chordSuggestions } = useChordDetection(activeNotes);
@@ -86,6 +89,8 @@ function App() {
 
   // Practice Settings
   const [rejectErrors, setRejectErrors] = useState(false);
+  const [requireAllInversions, setRequireAllInversions] = useState(false);
+  const [playedInversions, setPlayedInversions] = useState(new Set()); // Track inversions played for current chord
 
   // Clear clicked chord when mode changes
   useEffect(() => {
@@ -372,6 +377,10 @@ function App() {
     if (progression.length > 0) {
       const target = progression[currentStepIndex % progression.length];
       console.log('[App] handleChordPractice: target chord', target);
+      // Activate practice mode when user starts playing
+      if (activeNotes.length > 0 && !isPracticeActive) {
+        setIsPracticeActive(true);
+      }
       if (detected) {
         const message = `Target: ${target.name} (${target.roman}) | Playing: ${detected.name} ${detected.inversion ? `(${detected.inversion})` : ''}`;
         console.log('[App] handleChordPractice: status message', message);
@@ -511,6 +520,8 @@ function App() {
 
   // Ref to track previous active notes for edge detection
   const prevActiveNotesRef = useRef([]);
+  // Ref to track last detected inversion to prevent duplicate tracking
+  const lastDetectedInversionRef = useRef({ stepIndex: -1, inversion: null });
 
   useEffect(() => {
     // Edge detection logic
@@ -602,16 +613,45 @@ function App() {
     }
   };
 
+  // Ref to track previous step index for inversion reset
+  const prevStepIndexRef = useRef(currentStepIndex);
+  
+  // Reset played inversions when chord changes or rule is disabled
+  useEffect(() => {
+    if (!requireAllInversions) {
+      setPlayedInversions(new Set());
+      lastDetectedInversionRef.current = { stepIndex: -1, inversion: null };
+    } else if (mode === 'chord' && progression.length > 0) {
+      // Reset when chord changes - only reset if step index actually changed
+      if (prevStepIndexRef.current !== currentStepIndex) {
+        setPlayedInversions(new Set());
+        lastDetectedInversionRef.current = { stepIndex: currentStepIndex, inversion: null };
+        prevStepIndexRef.current = currentStepIndex;
+      }
+    }
+  }, [currentStepIndex, requireAllInversions, mode, progression.length]);
+
   // Separate effect for Chord validation (state-based, not edge-based)
   useEffect(() => {
+    // #region agent log
+    try {
+      fetch('http://127.0.0.1:7242/ingest/e195f0d9-c6a3-4271-b290-bc8c7ddcceed',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'App.jsx:630',message:'Chord validation effect started',data:{mode,progressionLength:progression.length,activeNotesLength:activeNotes.length},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'D'})}).catch(()=>{});
+      // #endregion
+    } catch (error) {
+      console.error('[App] Error in chord validation effect entry:', error);
+    }
     // Only run chord validation when we actually have enough notes to form a chord.
     // This avoids noisy logs like "conditions not met" during normal flows (e.g. setting/saving a progression).
     if (mode === 'chord' && progression.length > 0 && activeNotes.length >= 3) {
-      const targetChord = progression[currentStepIndex % progression.length];
-      console.log('[App] Chord validation: target chord', targetChord);
+      try {
+        const targetChord = progression[currentStepIndex % progression.length];
+        console.log('[App] Chord validation: target chord', targetChord);
+        // #region agent log
+        fetch('http://127.0.0.1:7242/ingest/e195f0d9-c6a3-4271-b290-bc8c7ddcceed',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'App.jsx:635',message:'Chord validation processing',data:{targetChord,currentStepIndex,activeNotes},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'D'})}).catch(()=>{});
+        // #endregion
 
-      const detected = identifyChord(activeNotes);
-      console.log('[App] Chord validation: detected chord', detected);
+        const detected = identifyChord(activeNotes);
+        console.log('[App] Chord validation: detected chord', detected);
 
       // Compare chords robustly by (root pitch class + chordType), not by display string.
       const targetParsed = parseChordName(targetChord.name);
@@ -640,26 +680,102 @@ function App() {
       });
 
       if (detected && match) {
-        console.log('[App] Chord validation: MATCH! Advancing to next chord');
-        // Correct chord held!
-        // Advance after a short delay to let them hear/see it
-        // This prevents rapid skipping if the user holds the chord
+        console.log('[App] Chord validation: MATCH!');
+        
+        // Track inversion if requireAllInversions is enabled
+        // Use a ref to prevent duplicate tracking when holding the same chord
+        let updatedInversions = new Set(playedInversions);
+        
+        if (requireAllInversions && detected.inversion) {
+          // Only track if this is a new inversion for this chord step
+          if (lastDetectedInversionRef.current.stepIndex !== currentStepIndex || 
+              lastDetectedInversionRef.current.inversion !== detected.inversion) {
+            updatedInversions.add(detected.inversion);
+            setPlayedInversions(updatedInversions);
+            lastDetectedInversionRef.current = { stepIndex: currentStepIndex, inversion: detected.inversion };
+            console.log('[App] Chord validation: tracked inversion', detected.inversion, 'played inversions:', Array.from(updatedInversions));
+          } else {
+            // Same inversion detected again, use current state
+            updatedInversions = new Set(playedInversions);
+            console.log('[App] Chord validation: same inversion detected, not tracking again');
+          }
+        }
+        
+        // Check if all inversions are required and if we have them all
+        let canAdvance = true;
+        if (requireAllInversions && targetParsed) {
+          // #region agent log
+          try {
+            fetch('http://127.0.0.1:7242/ingest/e195f0d9-c6a3-4271-b290-bc8c7ddcceed',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'App.jsx:695',message:'Checking inversions',data:{targetParsed,updatedInversionsSize:updatedInversions.size},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'D'})}).catch(()=>{});
+            // #endregion
+            const expectedInversions = getExpectedInversions(targetParsed.chordType);
+            const allInversionsPlayed = expectedInversions.every(inv => updatedInversions.has(inv));
+            canAdvance = allInversionsPlayed;
+            
+            console.log('[App] Chord validation: inversion check', {
+              expectedInversions,
+              playedInversions: Array.from(updatedInversions),
+              allInversionsPlayed,
+              canAdvance
+            });
+            
+            if (!allInversionsPlayed) {
+              const remaining = expectedInversions.filter(inv => !updatedInversions.has(inv));
+              setStatusMessage(`✅ Correct! Play remaining inversions: ${remaining.join(', ')}`);
+              setChordAcknowledged(true);
+              setIsPracticeActive(true);
+              return; // Don't advance yet
+            }
+          } catch (error) {
+            console.error('[App] Error checking inversions:', error, { targetParsed });
+            fetch('http://127.0.0.1:7242/ingest/e195f0d9-c6a3-4271-b290-bc8c7ddcceed',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'App.jsx:700',message:'Exception checking inversions',data:{error:error.message,stack:error.stack,targetParsed},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'D'})}).catch(()=>{});
+            canAdvance = true; // Fallback: allow advancement on error
+          }
+        }
+        
+        if (canAdvance) {
+          console.log('[App] Chord validation: Advancing to next chord');
+          // Correct chord held!
+          // Set acknowledgment state immediately for UI feedback
+          setChordAcknowledged(true);
+          setIsPracticeActive(true);
+          
+          // Show acknowledgment message
+          const nextIndex = (currentStepIndex + 1) % progression.length;
+          const nextChord = progression[nextIndex];
+          const message = requireAllInversions 
+            ? `✅ All inversions played! Next: ${nextChord.roman} (${nextChord.name})`
+            : `✅ Correct! Next: ${nextChord.roman} (${nextChord.name})`;
+          setStatusMessage(message);
+          
+          // Advance after a short delay to let them hear/see it
+          // This prevents rapid skipping if the user holds the chord
+          const timer = setTimeout(() => {
+            console.log('[App] Chord validation: timeout fired, advancing step index');
+            setCurrentStepIndex(prev => {
+              const next = prev + 1;
+              console.log('[App] Chord validation: step index', { prev, next });
+              // Reset acknowledgment when moving to next chord
+              setChordAcknowledged(false);
+              // Reset played inversions for next chord
+              setPlayedInversions(new Set());
+              // Reset inversion tracking ref for next chord
+              lastDetectedInversionRef.current = { stepIndex: next, inversion: null };
+              return next;
+            });
+          }, 1500); // Increased delay to show acknowledgment
 
-        // Use a ref to track if we've already advanced for this chord detection
-        const timer = setTimeout(() => {
-          console.log('[App] Chord validation: timeout fired, advancing step index');
-          setCurrentStepIndex(prev => {
-            const next = prev + 1;
-            console.log('[App] Chord validation: step index', { prev, next });
-            return next;
-          });
-        }, 500);
-
-        return () => {
-          console.log('[App] Chord validation: cleanup timeout');
-          clearTimeout(timer);
-        };
+          return () => {
+            console.log('[App] Chord validation: cleanup timeout');
+            clearTimeout(timer);
+          };
+        }
       } else {
+        // Reset acknowledgment if chord doesn't match
+        if (chordAcknowledged) {
+          setChordAcknowledged(false);
+        }
+        
         console.log('[App] Chord validation: NO MATCH', {
           detected: !!detected,
           match,
@@ -674,11 +790,41 @@ function App() {
           setStatusMessage(`Wrong chord! Restarting progression. Target: ${progression[0].roman} (${progression[0].name})`);
         }
       }
+      } catch (error) {
+        console.error('[App] Error in chord validation:', error, { mode, progression, currentStepIndex, activeNotes });
+        fetch('http://127.0.0.1:7242/ingest/e195f0d9-c6a3-4271-b290-bc8c7ddcceed',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'App.jsx:775',message:'Exception in chord validation',data:{error:error.message,stack:error.stack,mode,progressionLength:progression.length},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'D'})}).catch(()=>{});
+      }
     }
-  }, [activeNotes, mode, progression, currentStepIndex]);
+  }, [activeNotes, mode, progression, currentStepIndex, requireAllInversions, playedInversions]);
 
 
 
+
+  // Helper to get expected inversions for a chord type
+  const getExpectedInversions = (chordType) => {
+    // #region agent log
+    try {
+      fetch('http://127.0.0.1:7242/ingest/e195f0d9-c6a3-4271-b290-bc8c7ddcceed',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'App.jsx:781',message:'getExpectedInversions called',data:{chordType,hasChordType:!!CHORD_TYPES[chordType]},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'C'})}).catch(()=>{});
+      // #endregion
+      const chordTypeData = CHORD_TYPES[chordType];
+      if (!chordTypeData) {
+        console.error('[App] Invalid chord type in getExpectedInversions:', chordType);
+        return [];
+      }
+      const numInversions = chordTypeData.intervals.length + 1;
+      const expectedInversions = ['Root Position'];
+      for (let i = 1; i < numInversions; i++) {
+        if (i === 1) expectedInversions.push('1st Inversion');
+        else if (i === 2) expectedInversions.push('2nd Inversion');
+        else if (i === 3) expectedInversions.push('3rd Inversion');
+      }
+      return expectedInversions;
+    } catch (error) {
+      console.error('[App] Error in getExpectedInversions:', error, { chordType });
+      fetch('http://127.0.0.1:7242/ingest/e195f0d9-c6a3-4271-b290-bc8c7ddcceed',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'App.jsx:795',message:'Exception in getExpectedInversions',data:{error:error.message,stack:error.stack,chordType},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'C'})}).catch(()=>{});
+      return [];
+    }
+  };
 
   // Helper to get highlighted notes for Left Piano (Chords)
   const getChordHighlights = () => {
@@ -695,6 +841,16 @@ function App() {
 
   // Helper to get highlighted notes for Right Piano (Scales)
   const getScaleHighlights = () => {
+    // In chord practice mode, highlight all pitch classes of the target chord
+    if (mode === 'chord' && progression.length > 0) {
+      const targetChord = progression[currentStepIndex % progression.length];
+      const parsed = parseChordName(targetChord.name);
+      if (parsed) {
+        const chordNotes = getChordNotes(parsed.root, parsed.chordType);
+        return chordNotes.map(note => NOTES.indexOf(note));
+      }
+    }
+    
     // Only use progression if we are actually in scale practice mode
     const currentKey = (mode === 'scale' && keyProgression.length > 0)
       ? keyProgression[currentKeyIndex]
@@ -860,27 +1016,38 @@ function App() {
           {/* Middle Row: Extensions, ChordInfo, and ScaleSelector */}
           <div className="pyramid-middle">
             {/* Extensions Panel (left) */}
-            <div className="extensions-panel">
-              <h3>Extensions</h3>
-              {chordSuggestions.length > 0 ? (
+            <div className={`extensions-panel ${isExtensionsCollapsed ? 'collapsed' : ''}`}>
+              <button
+                className="section-toggle-btn"
+                onClick={() => setIsExtensionsCollapsed(!isExtensionsCollapsed)}
+                title={isExtensionsCollapsed ? "Expand Extensions" : "Collapse Extensions"}
+              >
+                {isExtensionsCollapsed ? 'Extensions →' : '← Extensions'}
+              </button>
+              {!isExtensionsCollapsed && (
                 <>
-                  <div className="section-label">
-                    {detectedChord
-                      ? `🎵 Add to ${detectedChord.name.split(' ')[0]}`
-                      : `💡 Potential Chords`
-                    }
-                  </div>
-                  {chordSuggestions.slice(0, 4).map((suggestion, index) => (
-                    <div key={index} className="suggestion-item">
-                      <span className="suggestion-name">{suggestion.name}</span>
-                      <span className="suggestion-missing">+{suggestion.missingNotes.join(', ')}</span>
+                  <h3>Extensions</h3>
+                  {chordSuggestions.length > 0 ? (
+                    <>
+                      <div className="section-label">
+                        {detectedChord
+                          ? `🎵 Add to ${detectedChord.name.split(' ')[0]}`
+                          : `💡 Potential Chords`
+                        }
+                      </div>
+                      {chordSuggestions.slice(0, 4).map((suggestion, index) => (
+                        <div key={index} className="suggestion-item">
+                          <span className="suggestion-name">{suggestion.name}</span>
+                          <span className="suggestion-missing">+{suggestion.missingNotes.join(', ')}</span>
+                        </div>
+                      ))}
+                    </>
+                  ) : (
+                    <div className="extensions-placeholder">
+                      Play 2+ notes to see chord suggestions
                     </div>
-                  ))}
+                  )}
                 </>
-              ) : (
-                <div className="extensions-placeholder">
-                  Play 2+ notes to see chord suggestions
-                </div>
               )}
             </div>
 
@@ -894,20 +1061,17 @@ function App() {
               onUnlockChord={handleUnlockChord}
               activeNotes={activeNotes}
               hideExtensions={true}
+              progression={progression}
+              currentStepIndex={currentStepIndex}
+              mode={mode}
+              chordAcknowledged={chordAcknowledged}
+              isPracticeActive={isPracticeActive}
+              requireAllInversions={requireAllInversions}
+              playedInversions={playedInversions instanceof Set ? Array.from(playedInversions) : playedInversions}
             />
 
-            {/* ScaleSelector (right) */}
-            <ScaleSelector
-              selectedRoot={lockedChord ? lockedChord.root : selectedRoot}
-              selectedScaleType={selectedScaleType}
-              onScaleTypeChange={setSelectedScaleType}
-              lockedChordRoot={lockedChord ? lockedChord.root : null}
-              isCollapsed={isScaleSelectorCollapsed}
-              onToggleCollapse={() => setIsScaleSelectorCollapsed(!isScaleSelectorCollapsed)}
-            />
-          </div>
-
-          {(mode === 'scale' || mode === 'chord') && (
+            {/* Practice Column (to the right of ChordInfo) */}
+            {(mode === 'scale' || mode === 'chord') && (
               <div className={`practice-column ${isPracticeCollapsed ? 'collapsed' : ''}`}>
                 <button
                   className="section-toggle-btn"
@@ -947,10 +1111,15 @@ function App() {
                             console.log('[App] onProgressionSet called (chord progression)', p);
                             setProgression(p);
                             setCurrentStepIndex(0);
+                            setIsPracticeActive(false);
+                            setChordAcknowledged(false);
                             setClickedChord(null);
                             setChordMidiNotes([]);
                           }}
                           onChordClick={handleChordClick}
+                          currentStepIndex={currentStepIndex}
+                          mode={mode}
+                          isPracticeActive={isPracticeActive}
                         />
 
                         {clickedChord && (
@@ -973,6 +1142,17 @@ function App() {
                 )}
               </div>
             )}
+
+            {/* ScaleSelector (right) */}
+            <ScaleSelector
+              selectedRoot={lockedChord ? lockedChord.root : selectedRoot}
+              selectedScaleType={selectedScaleType}
+              onScaleTypeChange={setSelectedScaleType}
+              lockedChordRoot={lockedChord ? lockedChord.root : null}
+              isCollapsed={isScaleSelectorCollapsed}
+              onToggleCollapse={() => setIsScaleSelectorCollapsed(!isScaleSelectorCollapsed)}
+            />
+          </div>
 
           {/* Bottom Row: Unified Piano */}
           <div className="pyramid-bottom">
@@ -1005,6 +1185,8 @@ function App() {
             onKeyboardSizeChange={setKeyboardSize}
             rejectErrors={rejectErrors}
             onRejectErrorsChange={setRejectErrors}
+            requireAllInversions={requireAllInversions}
+            onRequireAllInversionsChange={setRequireAllInversions}
           />
 
           <div className="unified-controls-row">

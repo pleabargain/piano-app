@@ -449,16 +449,22 @@ Chord Practice mode helps you practice chord progressions with real-time detecti
 
 The Chord Practice interface has several key areas:
 
-- **Detected Chord Display** (Left side): Shows what chord you're currently playing
-  - Displays chord name and inversion when detected
-  - Shows "No chord detected" when idle
-  - Shows "Playing..." when notes are pressed but no chord is detected
-  - Includes chord extension suggestions below the detected chord
+- **Chord Practice Panel** (Center): Shows chord practice information
+  - **Currently Playing**: Displays the chord you're currently playing with name and inversion
+  - **Target Chord**: Shows the current chord you need to play (highlighted when practice is active)
+  - **Next Chord**: Shows the next chord in the progression (appears when practice is active)
+  - Shows "Play a chord to detect" when idle
+  - Shows "Playing... (no chord detected)" when notes are pressed but no chord is detected
+  - Displays ✅ checkmark and green highlight when correct chord is played
 
-- **Custom Progression Panel** (Right of Detected Chord): 
+- **Custom Progression Panel** (Right side): 
   - Input field for entering Roman numeral progressions
   - Preview of the progression with clickable chord buttons
   - Each chord button shows both Roman numeral and chord name
+  - **Visual Highlighting During Practice**:
+    - Current target chord is highlighted in **yellow/gold**
+    - Next chord is highlighted in **blue** with pulsing animation
+    - Highlights update automatically as you progress through the progression
 
 - **Target Chord Display** (Below controls): 
   - Shows the current target chord you need to play
@@ -479,14 +485,32 @@ The Chord Practice interface has several key areas:
 
 2. **Automatic Detection**:
    - As soon as you play 3+ notes that form a chord, the app detects it
-   - The detected chord appears in the "Detected Chord" display
+   - The detected chord appears in the "Currently Playing" display
    - The app compares the detected chord name to the target chord name
 
-3. **Automatic Progression**:
-   - When you play the **correct target chord**, the app automatically advances to the next chord in the progression
-   - There's a 500ms delay before advancing to let you hear/see the chord
-   - The progression loops back to the first chord after completing all chords
-   - Status message updates to show: "Target: [Roman] ([Chord Name]) | Playing: [Detected Chord]"
+3. **Practice Mode Features**:
+   - **Visual Feedback**: When you begin practicing, the progression display highlights:
+     - **Current Target Chord**: Highlighted in **yellow/gold** - this is the chord you need to play next
+     - **Next Chord**: Highlighted in **blue** with a pulsing animation - shows what comes after the current chord
+   
+   - **Chord Acknowledgment**: 
+     - When you play the **correct target chord**, you'll see:
+       - ✅ Checkmark appears next to the detected chord name
+       - Status message shows: "✅ Correct! Next: [Roman] ([Chord Name])"
+       - The current chord display briefly pulses green to confirm correctness
+       - After 1.5 seconds, the app automatically advances to the next chord
+   
+   - **Automatic Progression**:
+     - When you play the correct target chord, the app automatically advances to the next chord
+     - The progression loops back to the first chord after completing all chords
+     - The highlighted chords update automatically as you progress
+     - Practice mode activates automatically when you start playing chords
+
+4. **Target and Next Chord Display**:
+   - In the **Chord Practice** panel (center), you'll see:
+     - **Target Chord**: Shows the current chord you need to play (e.g., "I (C Major)")
+     - **Next Chord**: Shows what comes next in the progression (e.g., "IV (F Major)")
+   - These displays update in real-time as you progress through the progression
 
 #### Exploring Chord Inversions
 
@@ -938,6 +962,32 @@ Run tests with `npm test` or `npm run test:ui` for interactive test interface.
 ---
 
 ## Recent Updates
+
+### 2026-01-10: Enhanced Chord Practice with Visual Feedback
+
+Added comprehensive visual feedback and progression tracking for Chord Practice mode:
+
+- **Visual Chord Highlighting**: 
+  - Current target chord highlighted in **yellow/gold** in the progression display
+  - Next chord highlighted in **blue** with pulsing animation
+  - Highlights update automatically as you progress through the progression
+
+- **Chord Acknowledgment**:
+  - ✅ Checkmark appears when correct chord is played
+  - Green highlight animation confirms correct chord detection
+  - Status message shows "✅ Correct! Next: [chord]" for clear feedback
+
+- **Target and Next Chord Display**:
+  - Chord Practice panel now shows "Target Chord" and "Next Chord" sections
+  - Displays both Roman numeral and chord name (e.g., "I (C Major)")
+  - Updates in real-time as you progress through the progression
+
+- **Automatic Practice Mode Activation**:
+  - Practice mode activates automatically when you start playing chords
+  - Visual indicators appear when a progression is set and practice begins
+  - Enhanced user experience with clear guidance on what to play next
+
+This enhancement makes chord practice more intuitive and provides clear visual feedback throughout the practice session.
 
 ### 2025-12-22: Multiple Harmonic Function Detection
 

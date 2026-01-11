@@ -27,64 +27,130 @@ class ProgressionStorage {
     /**
      * Validate progression format
      * @param {Object} progression - Progression object to validate
+     * @param {Object} options - Validation options
+     * @param {boolean} options.lenient - If true, allow missing metadata.key and metadata.scaleType (for imports)
      * @returns {Object} { valid: boolean, error?: string }
      */
-    validateProgression(progression) {
+    validateProgression(progression, options = {}) {
+        const { lenient = false } = options;
+        
+        console.log('[ProgressionStorage] validateProgression called', { 
+            lenient, 
+            hasProgression: !!progression,
+            progressionType: typeof progression,
+            metadata: progression?.metadata 
+        });
+
         if (!progression || typeof progression !== 'object') {
+            console.error('[ProgressionStorage] Validation failed: Progression must be an object', progression);
             return { valid: false, error: 'Progression must be an object' };
         }
 
-        // Required fields
-        if (!progression.version || typeof progression.version !== 'string') {
-            return { valid: false, error: 'Missing or invalid version field' };
+        // Required fields (version can be missing in lenient mode, will be set to default)
+        if (!lenient) {
+            if (!progression.version || typeof progression.version !== 'string') {
+                console.error('[ProgressionStorage] Validation failed: Missing or invalid version field', progression.version);
+                return { valid: false, error: 'Missing or invalid version field' };
+            }
+        } else {
+            if (progression.version && typeof progression.version !== 'string') {
+                console.warn('[ProgressionStorage] Lenient mode: Invalid version type, will use default', progression.version);
+            } else if (!progression.version) {
+                console.log('[ProgressionStorage] Lenient mode: Missing version, will use default');
+            }
         }
 
-        if (!progression.id || typeof progression.id !== 'string') {
-            return { valid: false, error: 'Missing or invalid id field' };
-        }
+        if (!lenient) {
+            // Strict validation: require valid UUID format
+            if (!progression.id || typeof progression.id !== 'string') {
+                console.error('[ProgressionStorage] Validation failed: Missing or invalid id field', progression.id);
+                return { valid: false, error: 'Missing or invalid id field' };
+            }
 
-        // Validate UUID format (basic check)
-        const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
-        if (!uuidRegex.test(progression.id)) {
-            return { valid: false, error: 'Invalid UUID format for id' };
+            // Validate UUID format (basic check)
+            const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+            if (!uuidRegex.test(progression.id)) {
+                console.error('[ProgressionStorage] Validation failed: Invalid UUID format for id', progression.id);
+                return { valid: false, error: 'Invalid UUID format for id' };
+            }
+        } else {
+            // Lenient validation: allow missing or invalid ID (will be regenerated)
+            if (progression.id && typeof progression.id !== 'string') {
+                console.warn('[ProgressionStorage] Lenient mode: Invalid id type, will be regenerated', progression.id);
+            } else if (!progression.id) {
+                console.log('[ProgressionStorage] Lenient mode: Missing id, will be generated');
+            }
         }
 
         if (!progression.name || typeof progression.name !== 'string') {
+            console.error('[ProgressionStorage] Validation failed: Missing or invalid name field', progression.name);
             return { valid: false, error: 'Missing or invalid name field' };
         }
 
         if (progression.name.length > 100) {
+            console.error('[ProgressionStorage] Validation failed: Name too long', progression.name.length);
             return { valid: false, error: 'Name must be 100 characters or less' };
         }
 
         if (!progression.progression || typeof progression.progression !== 'string') {
+            console.error('[ProgressionStorage] Validation failed: Missing or invalid progression field', progression.progression);
             return { valid: false, error: 'Missing or invalid progression field' };
         }
 
         if (progression.progression.trim().length === 0) {
+            console.error('[ProgressionStorage] Validation failed: Progression string is empty');
             return { valid: false, error: 'Progression string cannot be empty' };
         }
 
-        if (typeof progression.createdAt !== 'number' || progression.createdAt <= 0) {
-            return { valid: false, error: 'Missing or invalid createdAt field' };
+        // createdAt can be missing in lenient mode (will be set to current timestamp)
+        if (!lenient) {
+            if (typeof progression.createdAt !== 'number' || progression.createdAt <= 0) {
+                console.error('[ProgressionStorage] Validation failed: Missing or invalid createdAt field', progression.createdAt);
+                return { valid: false, error: 'Missing or invalid createdAt field' };
+            }
+        } else {
+            if (progression.createdAt !== undefined && (typeof progression.createdAt !== 'number' || progression.createdAt <= 0)) {
+                console.warn('[ProgressionStorage] Lenient mode: Invalid createdAt, will use current timestamp', progression.createdAt);
+            } else if (!progression.createdAt) {
+                console.log('[ProgressionStorage] Lenient mode: Missing createdAt, will use current timestamp');
+            }
         }
 
         // Validate metadata if present
         if (progression.metadata !== undefined) {
             if (typeof progression.metadata !== 'object' || progression.metadata === null) {
+                console.error('[ProgressionStorage] Validation failed: Metadata must be an object', progression.metadata);
                 return { valid: false, error: 'Metadata must be an object' };
             }
 
-            // If metadata exists, key and scaleType are required
-            if (!progression.metadata.key || typeof progression.metadata.key !== 'string') {
-                return { valid: false, error: 'Missing or invalid metadata.key field' };
-            }
+            // If metadata exists, key and scaleType are required (unless lenient mode)
+            if (!lenient) {
+                if (!progression.metadata.key || typeof progression.metadata.key !== 'string') {
+                    console.error('[ProgressionStorage] Validation failed: Missing or invalid metadata.key field', {
+                        metadata: progression.metadata,
+                        hasKey: !!progression.metadata.key,
+                        keyType: typeof progression.metadata.key
+                    });
+                    return { valid: false, error: 'Missing or invalid metadata.key field' };
+                }
 
-            if (!progression.metadata.scaleType || typeof progression.metadata.scaleType !== 'string') {
-                return { valid: false, error: 'Missing or invalid metadata.scaleType field' };
+                if (!progression.metadata.scaleType || typeof progression.metadata.scaleType !== 'string') {
+                    console.error('[ProgressionStorage] Validation failed: Missing or invalid metadata.scaleType field', {
+                        metadata: progression.metadata,
+                        hasScaleType: !!progression.metadata.scaleType,
+                        scaleTypeType: typeof progression.metadata.scaleType
+                    });
+                    return { valid: false, error: 'Missing or invalid metadata.scaleType field' };
+                }
+            } else {
+                console.log('[ProgressionStorage] Lenient mode: Allowing missing metadata.key or metadata.scaleType', {
+                    hasKey: !!progression.metadata?.key,
+                    hasScaleType: !!progression.metadata?.scaleType
+                });
             }
         }
 
+        console.log('[ProgressionStorage] Validation successful');
         return { valid: true };
     }
 
@@ -331,20 +397,47 @@ class ProgressionStorage {
     /**
      * Import progression from JSON string
      * @param {string} jsonString - JSON string
+     * @param {Object} options - Import options
+     * @param {boolean} options.lenient - If true, use lenient validation (allow missing metadata fields)
      * @returns {Object} Progression object
      */
-    importFromJSON(jsonString) {
+    importFromJSON(jsonString, options = {}) {
+        const { lenient = true } = options; // Default to lenient for imports
+        
+        console.log('[ProgressionStorage] importFromJSON called', { 
+            jsonLength: jsonString?.length,
+            lenient 
+        });
+
         let parsed;
         try {
             parsed = JSON.parse(jsonString);
+            console.log('[ProgressionStorage] JSON parsed successfully', {
+                hasName: !!parsed.name,
+                hasProgression: !!parsed.progression,
+                hasMetadata: !!parsed.metadata,
+                metadata: parsed.metadata
+            });
         } catch (error) {
+            console.error('[ProgressionStorage] JSON parse error:', error);
             throw new Error(`Invalid JSON: ${error.message}`);
         }
 
-        const validation = this.validateProgression(parsed);
+        const validation = this.validateProgression(parsed, { lenient });
         if (!validation.valid) {
+            console.error('[ProgressionStorage] Validation failed during import:', {
+                error: validation.error,
+                progression: parsed,
+                lenient
+            });
             throw new Error(`Invalid progression format: ${validation.error}`);
         }
+
+        console.log('[ProgressionStorage] Import validation successful', {
+            name: parsed.name,
+            progression: parsed.progression,
+            metadata: parsed.metadata
+        });
 
         return parsed;
     }
@@ -412,23 +505,53 @@ class ProgressionStorage {
     /**
      * Import progression from file
      * @param {File} file - File object
+     * @param {Object} options - Import options
+     * @param {boolean} options.lenient - If true, use lenient validation (allow missing metadata fields)
      * @returns {Promise<Object>} Progression object
      */
-    async importFromFile(file) {
+    async importFromFile(file, options = {}) {
+        const { lenient = true } = options; // Default to lenient for file imports
+        
+        console.log('[ProgressionStorage] importFromFile called', {
+            fileName: file.name,
+            fileSize: file.size,
+            fileType: file.type,
+            lenient
+        });
+
         return new Promise((resolve, reject) => {
             const reader = new FileReader();
 
             reader.onload = (event) => {
                 try {
-                    const progression = this.importFromJSON(event.target.result);
+                    console.log('[ProgressionStorage] File read successfully', {
+                        resultLength: event.target.result?.length,
+                        resultPreview: event.target.result?.substring(0, 200)
+                    });
+                    const progression = this.importFromJSON(event.target.result, { lenient });
+                    console.log('[ProgressionStorage] File import successful', {
+                        name: progression.name,
+                        progression: progression.progression,
+                        metadata: progression.metadata
+                    });
                     resolve(progression);
                 } catch (error) {
+                    console.error('[ProgressionStorage] File import error:', {
+                        error,
+                        errorMessage: error.message,
+                        errorStack: error.stack,
+                        fileName: file.name
+                    });
                     reject(error);
                 }
             };
 
-            reader.onerror = () => {
-                reject(new Error('Failed to read file'));
+            reader.onerror = (event) => {
+                console.error('[ProgressionStorage] FileReader error:', {
+                    error: event.target.error,
+                    fileName: file.name
+                });
+                reject(new Error(`Failed to read file: ${event.target.error?.message || 'Unknown error'}`));
             };
 
             reader.readAsText(file);

@@ -15,11 +15,31 @@ const KeyProgressionBuilder = ({ onProgressionSet, onClear, selectedScaleType })
     const [isLoading, setIsLoading] = useState(false);
 
     const storageRef = useRef(null);
+    const dialogRef = useRef(null);
 
     useEffect(() => {
         storageRef.current = new KeyProgressionStorage();
         storageRef.current.init().then(() => loadSavedProgressions());
     }, []);
+
+    // ESC key handler for closing dialogs/modals
+    useEffect(() => {
+        const handleEscape = (e) => {
+            if (e.key === 'Escape' || e.keyCode === 27) {
+                if (showSaveDialog) {
+                    setShowSaveDialog(false);
+                    setSaveName('');
+                }
+            }
+        };
+
+        if (showSaveDialog) {
+            document.addEventListener('keydown', handleEscape);
+            return () => {
+                document.removeEventListener('keydown', handleEscape);
+            };
+        }
+    }, [showSaveDialog]);
 
     const loadSavedProgressions = async () => {
         if (!storageRef.current) return;
@@ -64,7 +84,8 @@ const KeyProgressionBuilder = ({ onProgressionSet, onClear, selectedScaleType })
         // Use shared normalization for basic cleanup (unicode, etc)
         // PLUS remove chord suffixes to extract root
         let root = normalizeToken(note);
-        root = root.replace(/^(.*?)(m|min|maj|dim|aug|sus|7|9|11|13|6).*$/i, '$1');
+        // Match note letter (A-G) optionally followed by flat/sharp, then chord suffix
+        root = root.replace(/^([A-Ga-g][b#]?)(m|min|maj|dim|aug|sus|7|9|11|13|6).*$/i, '$1');
 
         // Handle flats by converting to sharps (if needed for internal logic)
         // Our existing flatToSharp logic:
@@ -225,19 +246,65 @@ const KeyProgressionBuilder = ({ onProgressionSet, onClear, selectedScaleType })
             )}
 
             {showSaveDialog && (
-                <div className="dialog-overlay">
-                    <div className="dialog">
-                        <h4>Save Progression</h4>
+                <div 
+                    className="dialog-overlay"
+                    onClick={() => {
+                        setShowSaveDialog(false);
+                        setSaveName('');
+                    }}
+                    onKeyDown={(e) => {
+                        if (e.key === 'Escape' || e.keyCode === 27) {
+                            setShowSaveDialog(false);
+                            setSaveName('');
+                        }
+                    }}
+                    tabIndex={-1}
+                >
+                    <div 
+                        ref={dialogRef}
+                        className="dialog"
+                        onClick={(e) => e.stopPropagation()}
+                        role="dialog"
+                        aria-modal="true"
+                        aria-labelledby="key-save-dialog-title"
+                    >
+                        <div className="dialog-header">
+                            <h4 id="key-save-dialog-title">Save Progression</h4>
+                            <button
+                                className="dialog-close-btn"
+                                onClick={() => {
+                                    setShowSaveDialog(false);
+                                    setSaveName('');
+                                }}
+                                aria-label="Close dialog"
+                                title="Close (ESC)"
+                            >
+                                ×
+                            </button>
+                        </div>
                         <input
                             type="text"
                             value={saveName}
                             onChange={(e) => setSaveName(e.target.value)}
                             placeholder="Name..."
+                            onKeyDown={(e) => {
+                                if (e.key === 'Enter') {
+                                    e.preventDefault();
+                                    handleSave();
+                                } else if (e.key === 'Escape' || e.keyCode === 27) {
+                                    setShowSaveDialog(false);
+                                    setSaveName('');
+                                }
+                            }}
                             autoFocus
+                            aria-label="Progression name"
                         />
                         <div className="actions">
-                            <button onClick={handleSave} disabled={!saveName.trim()}>Save</button>
-                            <button onClick={() => setShowSaveDialog(false)}>Cancel</button>
+                            <button onClick={handleSave} disabled={!saveName.trim() || isLoading}>Save</button>
+                            <button onClick={() => {
+                                setShowSaveDialog(false);
+                                setSaveName('');
+                            }} disabled={isLoading}>Cancel</button>
                         </div>
                     </div>
                 </div>

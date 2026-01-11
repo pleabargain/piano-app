@@ -21,7 +21,9 @@ const Controls = ({
     keyboardSize,
     onKeyboardSizeChange,
     rejectErrors,
-    onRejectErrorsChange
+    onRejectErrorsChange,
+    requireAllInversions,
+    onRequireAllInversionsChange
 }) => {
     return (
         <div className="controls-container">
@@ -94,20 +96,38 @@ const Controls = ({
                         <label style={{ display: 'flex', alignItems: 'center', gap: '5px', cursor: 'pointer', fontSize: '0.9rem' }}>
                             <input
                                 type="radio"
-                                name="rejectErrors"
-                                checked={!rejectErrors}
-                                onChange={() => onRejectErrorsChange(false)}
+                                name="practiceRule"
+                                checked={!rejectErrors && !requireAllInversions}
+                                onChange={() => {
+                                    onRejectErrorsChange(false);
+                                    onRequireAllInversionsChange(false);
+                                }}
                             />
                             Normal
                         </label>
                         <label style={{ display: 'flex', alignItems: 'center', gap: '5px', cursor: 'pointer', fontSize: '0.9rem' }}>
                             <input
                                 type="radio"
-                                name="rejectErrors"
-                                checked={rejectErrors}
-                                onChange={() => onRejectErrorsChange(true)}
+                                name="practiceRule"
+                                checked={rejectErrors && !requireAllInversions}
+                                onChange={() => {
+                                    onRejectErrorsChange(true);
+                                    onRequireAllInversionsChange(false);
+                                }}
                             />
                             Reject Errors
+                        </label>
+                        <label style={{ display: 'flex', alignItems: 'center', gap: '5px', cursor: 'pointer', fontSize: '0.9rem' }}>
+                            <input
+                                type="radio"
+                                name="practiceRule"
+                                checked={requireAllInversions && !rejectErrors}
+                                onChange={() => {
+                                    onRejectErrorsChange(false);
+                                    onRequireAllInversionsChange(true);
+                                }}
+                            />
+                            All Inversions
                         </label>
                     </div>
                 </div>

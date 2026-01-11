@@ -25,9 +25,13 @@ vi.mock('../core/key-progression-storage', () => ({
     }
 }));
 
-// Mock normalizeToken
+// Mock normalizeToken to actually normalize (for realistic testing)
 vi.mock('../core/progression-parser', () => ({
-    normalizeToken: vi.fn((t) => t)
+    normalizeToken: vi.fn((t) => {
+        // Simple normalization - just trim for basic tests
+        // The actual normalizeToken handles unicode, but for these tests trim is enough
+        return String(t).trim();
+    })
 }));
 
 describe('KeyProgressionBuilder Component', () => {
@@ -316,5 +320,348 @@ describe('KeyProgressionBuilder Component', () => {
                 expect(screen.getByText(/Failed to export/i)).toBeTruthy();
             });
         }
+    });
+
+    describe('Chord Parsing and Normalization', () => {
+        beforeEach(() => {
+            resetStorageMocks();
+            storageMocks.getAll.mockResolvedValueOnce([]);
+        });
+
+        it('should parse user input "G Am C F Dm Em" correctly', async () => {
+            const onProgressionSet = vi.fn();
+            
+            render(
+                <KeyProgressionBuilder
+                    selectedScaleType="major"
+                    onProgressionSet={onProgressionSet}
+                />
+            );
+
+            const input = screen.getByPlaceholderText(/e.g., F C G D/i);
+            
+            // Enter the user's exact input
+            fireEvent.change(input, { target: { value: 'G Am C F Dm Em' } });
+            
+            // Click Set Progression button
+            const setButton = screen.getByRole('button', { name: /set progression/i });
+            fireEvent.click(setButton);
+
+            // Verify onProgressionSet was called with correct root notes
+            await waitFor(() => {
+                expect(onProgressionSet).toHaveBeenCalled();
+            });
+
+            const callArgs = onProgressionSet.mock.calls[0][0];
+            expect(callArgs).toEqual(['G', 'A', 'C', 'F', 'D', 'E']);
+        });
+
+        it('should parse various chord formats correctly', async () => {
+            const onProgressionSet = vi.fn();
+            
+            render(
+                <KeyProgressionBuilder
+                    selectedScaleType="major"
+                    onProgressionSet={onProgressionSet}
+                />
+            );
+
+            const testCases = [
+                { input: 'Am', expected: ['A'] },
+                { input: 'Dm', expected: ['D'] },
+                { input: 'Em', expected: ['E'] },
+                { input: 'Bb', expected: ['A#'] }, // Bb converts to A#
+                { input: 'F#m', expected: ['F#'] },
+                { input: 'Abm', expected: ['G#'] }, // Ab converts to G#
+                { input: 'C7', expected: ['C'] },
+                { input: 'Gmaj7', expected: ['G'] },
+                { input: 'Dmin', expected: ['D'] },
+                { input: 'Eaug', expected: ['E'] },
+                { input: 'Fsus4', expected: ['F'] },
+            ];
+
+            for (const testCase of testCases) {
+                onProgressionSet.mockClear();
+                const input = screen.getByPlaceholderText(/e.g., F C G D/i);
+                
+                fireEvent.change(input, { target: { value: testCase.input } });
+                
+                const setButton = screen.getByRole('button', { name: /set progression/i });
+                fireEvent.click(setButton);
+
+                await waitFor(() => {
+                    expect(onProgressionSet).toHaveBeenCalled();
+                });
+
+                const callArgs = onProgressionSet.mock.calls[0][0];
+                expect(callArgs).toEqual(testCase.expected);
+            }
+        });
+
+        it('should parse mixed chord progression correctly', async () => {
+            const onProgressionSet = vi.fn();
+            
+            render(
+                <KeyProgressionBuilder
+                    selectedScaleType="major"
+                    onProgressionSet={onProgressionSet}
+                />
+            );
+
+            const input = screen.getByPlaceholderText(/e.g., F C G D/i);
+            
+            // Test a complex progression with various chord types
+            fireEvent.change(input, { target: { value: 'C Am F G7 Dm Bb Em' } });
+            
+            const setButton = screen.getByRole('button', { name: /set progression/i });
+            fireEvent.click(setButton);
+
+            await waitFor(() => {
+                expect(onProgressionSet).toHaveBeenCalled();
+            });
+
+            const callArgs = onProgressionSet.mock.calls[0][0];
+            // C, A (from Am), F, G (from G7), D (from Dm), A# (from Bb), E (from Em)
+            expect(callArgs).toEqual(['C', 'A', 'F', 'G', 'D', 'A#', 'E']);
+        });
+
+        it('should handle single notes correctly', async () => {
+            const onProgressionSet = vi.fn();
+            
+            render(
+                <KeyProgressionBuilder
+                    selectedScaleType="major"
+                    onProgressionSet={onProgressionSet}
+                />
+            );
+
+            const testCases = [
+                { input: 'C', expected: ['C'] },
+                { input: 'G', expected: ['G'] },
+                { input: 'F#', expected: ['F#'] },
+                { input: 'Bb', expected: ['A#'] },
+            ];
+
+            for (const testCase of testCases) {
+                onProgressionSet.mockClear();
+                const input = screen.getByPlaceholderText(/e.g., F C G D/i);
+                
+                fireEvent.change(input, { target: { value: testCase.input } });
+                
+                const setButton = screen.getByRole('button', { name: /set progression/i });
+                fireEvent.click(setButton);
+
+                await waitFor(() => {
+                    expect(onProgressionSet).toHaveBeenCalled();
+                });
+
+                const callArgs = onProgressionSet.mock.calls[0][0];
+                expect(callArgs).toEqual(testCase.expected);
+            }
+        });
+
+        it('should handle mixed case chord names', async () => {
+            const onProgressionSet = vi.fn();
+            
+            render(
+                <KeyProgressionBuilder
+                    selectedScaleType="major"
+                    onProgressionSet={onProgressionSet}
+                />
+            );
+
+            const input = screen.getByPlaceholderText(/e.g., F C G D/i);
+            
+            // Test mixed case
+            fireEvent.change(input, { target: { value: 'c AM f Dm g' } });
+            
+            const setButton = screen.getByRole('button', { name: /set progression/i });
+            fireEvent.click(setButton);
+
+            await waitFor(() => {
+                expect(onProgressionSet).toHaveBeenCalled();
+            });
+
+            const callArgs = onProgressionSet.mock.calls[0][0];
+            expect(callArgs).toEqual(['C', 'A', 'F', 'D', 'G']);
+        });
+
+        it('should handle flats and sharps correctly', async () => {
+            const onProgressionSet = vi.fn();
+            
+            render(
+                <KeyProgressionBuilder
+                    selectedScaleType="major"
+                    onProgressionSet={onProgressionSet}
+                />
+            );
+
+            const testCases = [
+                { input: 'Bb Eb Ab', expected: ['A#', 'D#', 'G#'] },
+                { input: 'F# C# G#', expected: ['F#', 'C#', 'G#'] },
+                { input: 'Db Gb', expected: ['C#', 'F#'] },
+            ];
+
+            for (const testCase of testCases) {
+                onProgressionSet.mockClear();
+                const input = screen.getByPlaceholderText(/e.g., F C G D/i);
+                
+                fireEvent.change(input, { target: { value: testCase.input } });
+                
+                const setButton = screen.getByRole('button', { name: /set progression/i });
+                fireEvent.click(setButton);
+
+                await waitFor(() => {
+                    expect(onProgressionSet).toHaveBeenCalled();
+                });
+
+                const callArgs = onProgressionSet.mock.calls[0][0];
+                expect(callArgs).toEqual(testCase.expected);
+            }
+        });
+
+        it('should show error for invalid inputs', async () => {
+            render(
+                <KeyProgressionBuilder
+                    selectedScaleType="major"
+                    onProgressionSet={() => {}}
+                />
+            );
+
+            const input = screen.getByPlaceholderText(/e.g., F C G D/i);
+            
+            // Test invalid note names
+            fireEvent.change(input, { target: { value: 'X Y Z' } });
+            
+            const setButton = screen.getByRole('button', { name: /set progression/i });
+            fireEvent.click(setButton);
+
+            // Should show error message
+            await waitFor(() => {
+                expect(screen.getByText(/Invalid keys/i)).toBeTruthy();
+            });
+        });
+
+        it('should handle empty input gracefully', async () => {
+            const onProgressionSet = vi.fn();
+            
+            render(
+                <KeyProgressionBuilder
+                    selectedScaleType="major"
+                    onProgressionSet={onProgressionSet}
+                />
+            );
+
+            const input = screen.getByPlaceholderText(/e.g., F C G D/i);
+            
+            // Clear input
+            fireEvent.change(input, { target: { value: '' } });
+            
+            // Set button should be disabled
+            const setButton = screen.getByRole('button', { name: /set progression/i });
+            expect(setButton).toBeDisabled();
+            
+            // onProgressionSet should not be called
+            expect(onProgressionSet).not.toHaveBeenCalled();
+        });
+
+        it('should extract root notes from chords with various suffixes', async () => {
+            const onProgressionSet = vi.fn();
+            
+            render(
+                <KeyProgressionBuilder
+                    selectedScaleType="major"
+                    onProgressionSet={onProgressionSet}
+                />
+            );
+
+            const testCases = [
+                { input: 'Cm', expected: ['C'] },
+                { input: 'Dmin', expected: ['D'] },
+                { input: 'Emaj', expected: ['E'] },
+                { input: 'Fdim', expected: ['F'] },
+                { input: 'Gaug', expected: ['G'] },
+                { input: 'Asus2', expected: ['A'] },
+                { input: 'Bsus4', expected: ['B'] },
+                { input: 'C7', expected: ['C'] },
+                { input: 'D9', expected: ['D'] },
+                { input: 'E11', expected: ['E'] },
+                { input: 'F13', expected: ['F'] },
+                { input: 'G6', expected: ['G'] },
+            ];
+
+            for (const testCase of testCases) {
+                onProgressionSet.mockClear();
+                const input = screen.getByPlaceholderText(/e.g., F C G D/i);
+                
+                fireEvent.change(input, { target: { value: testCase.input } });
+                
+                const setButton = screen.getByRole('button', { name: /set progression/i });
+                fireEvent.click(setButton);
+
+                await waitFor(() => {
+                    expect(onProgressionSet).toHaveBeenCalled();
+                });
+
+                const callArgs = onProgressionSet.mock.calls[0][0];
+                expect(callArgs).toEqual(testCase.expected);
+            }
+        });
+
+        it('should allow saving progression with chord names', async () => {
+            resetStorageMocks();
+            
+            storageMocks.getAll.mockResolvedValueOnce([]); // initial load
+            storageMocks.save.mockResolvedValueOnce('saved-id-123');
+            storageMocks.getAll.mockResolvedValueOnce([{
+                id: 'saved-id-123',
+                name: 'Test Chord Progression',
+                progression: 'G Am C F Dm Em',
+                createdAt: Date.now(),
+                metadata: { scaleType: 'major' }
+            }]);
+
+            render(
+                <KeyProgressionBuilder
+                    selectedScaleType="major"
+                    onProgressionSet={() => {}}
+                />
+            );
+
+            // Enter progression with chord names
+            const input = screen.getByPlaceholderText(/e.g., F C G D/i);
+            fireEvent.change(input, { target: { value: 'G Am C F Dm Em' } });
+            
+            // Set the progression first
+            const setButton = screen.getByRole('button', { name: /set progression/i });
+            fireEvent.click(setButton);
+
+            // Wait a bit for validation
+            await waitFor(() => {
+                // Check that save button is enabled (progression is valid)
+                const saveButton = screen.getByRole('button', { name: /save/i });
+                expect(saveButton).not.toBeDisabled();
+            });
+
+            // Click save button
+            const saveButton = screen.getByRole('button', { name: /save/i });
+            fireEvent.click(saveButton);
+
+            // Enter name in dialog
+            const nameInput = await screen.findByPlaceholderText(/name/i);
+            fireEvent.change(nameInput, { target: { value: 'Test Chord Progression' } });
+
+            // Confirm save
+            const confirmButton = screen.getByRole('button', { name: /^save$/i });
+            fireEvent.click(confirmButton);
+
+            // Verify save was called with the progression string (not normalized)
+            await waitFor(() => {
+                expect(storageMocks.save).toHaveBeenCalledTimes(1);
+            });
+
+            const saveCall = storageMocks.save.mock.calls[0][0];
+            expect(saveCall.progression).toBe('G Am C F Dm Em');
+        });
     });
 });

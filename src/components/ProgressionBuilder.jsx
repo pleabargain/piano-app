@@ -44,7 +44,7 @@ const PREDEFINED_PROGRESSIONS = [
     { name: 'Emotional Wave progression', progression: 'I III IV iv V vi ii V', length: 8 },
 ];
 
-const ProgressionBuilder = ({ selectedRoot, selectedScaleType, onProgressionSet, onChordClick }) => {
+const ProgressionBuilder = ({ selectedRoot, selectedScaleType, onProgressionSet, onChordClick, currentStepIndex = 0, mode = 'free', isPracticeActive = false }) => {
     const [input, setInput] = useState('I IV V I');
     const [parsedChords, setParsedChords] = useState([]);
     const [error, setError] = useState('');
@@ -59,6 +59,7 @@ const ProgressionBuilder = ({ selectedRoot, selectedScaleType, onProgressionSet,
     const storageRef = useRef(null);
     const inputRef = useRef(null);
     const tooltipRef = useRef(null);
+    const saveDialogRef = useRef(null);
 
     // Initialize storage
     useEffect(() => {
@@ -70,6 +71,26 @@ const ProgressionBuilder = ({ selectedRoot, selectedScaleType, onProgressionSet,
 
         loadSavedProgressions();
     }, []);
+
+    // ESC key handler for closing dialogs/modals
+    useEffect(() => {
+        const handleEscape = (e) => {
+            if (e.key === 'Escape' || e.keyCode === 27) {
+                if (showSaveDialog) {
+                    setShowSaveDialog(false);
+                    setSaveName('');
+                    setError('');
+                }
+            }
+        };
+
+        if (showSaveDialog) {
+            document.addEventListener('keydown', handleEscape);
+            return () => {
+                document.removeEventListener('keydown', handleEscape);
+            };
+        }
+    }, [showSaveDialog]);
 
     // Load saved progressions list
     const loadSavedProgressions = async () => {
@@ -343,7 +364,13 @@ const ProgressionBuilder = ({ selectedRoot, selectedScaleType, onProgressionSet,
             setError('');
             setStorageError(null);
         } catch (err) {
-            console.error('[ProgressionBuilder] Failed to import progression:', err);
+            console.error('[ProgressionBuilder] Failed to import progression:', {
+                error: err,
+                errorMessage: err.message,
+                errorStack: err.stack,
+                errorName: err.name,
+                fileName: file.name
+            });
             setError(`Failed to import: ${err.message}`);
         } finally {
             setIsLoading(false);
@@ -552,22 +579,62 @@ const ProgressionBuilder = ({ selectedRoot, selectedScaleType, onProgressionSet,
 
             {/* Save Dialog */}
             {showSaveDialog && (
-                <div className="save-dialog-overlay" onClick={() => setShowSaveDialog(false)}>
-                    <div className="save-dialog" onClick={(e) => e.stopPropagation()}>
-                        <h4>Save Progression</h4>
+                <div 
+                    className="save-dialog-overlay" 
+                    onClick={() => {
+                        setShowSaveDialog(false);
+                        setSaveName('');
+                        setError('');
+                    }}
+                    onKeyDown={(e) => {
+                        if (e.key === 'Escape' || e.keyCode === 27) {
+                            setShowSaveDialog(false);
+                            setSaveName('');
+                            setError('');
+                        }
+                    }}
+                    tabIndex={-1}
+                >
+                    <div 
+                        ref={saveDialogRef}
+                        className="save-dialog" 
+                        onClick={(e) => e.stopPropagation()}
+                        role="dialog"
+                        aria-modal="true"
+                        aria-labelledby="save-dialog-title"
+                    >
+                        <div className="save-dialog-header">
+                            <h4 id="save-dialog-title">Save Progression</h4>
+                            <button
+                                className="save-dialog-close-btn"
+                                onClick={() => {
+                                    setShowSaveDialog(false);
+                                    setSaveName('');
+                                    setError('');
+                                }}
+                                aria-label="Close dialog"
+                                title="Close (ESC)"
+                            >
+                                ×
+                            </button>
+                        </div>
                         <input
                             type="text"
                             value={saveName}
                             onChange={(e) => setSaveName(e.target.value)}
                             placeholder="Enter progression name"
-                            onKeyPress={(e) => {
+                            onKeyDown={(e) => {
                                 if (e.key === 'Enter') {
+                                    e.preventDefault();
                                     handleSave();
-                                } else if (e.key === 'Escape') {
+                                } else if (e.key === 'Escape' || e.keyCode === 27) {
                                     setShowSaveDialog(false);
+                                    setSaveName('');
+                                    setError('');
                                 }
                             }}
                             autoFocus
+                            aria-label="Progression name"
                         />
                         <div className="save-dialog-actions">
                             <button onClick={handleSave} disabled={!saveName.trim() || isLoading}>
@@ -576,6 +643,7 @@ const ProgressionBuilder = ({ selectedRoot, selectedScaleType, onProgressionSet,
                             <button onClick={() => {
                                 setShowSaveDialog(false);
                                 setSaveName('');
+                                setError('');
                             }} disabled={isLoading}>
                                 Cancel
                             </button>
@@ -585,17 +653,23 @@ const ProgressionBuilder = ({ selectedRoot, selectedScaleType, onProgressionSet,
             )}
 
             <div className="preview">
-                {parsedChords.map((chord, idx) => (
-                    <div
-                        key={idx}
-                        className="chord-preview clickable-chord"
-                        onClick={() => onChordClick && onChordClick(chord.name)}
-                        style={{ cursor: onChordClick ? 'pointer' : 'default' }}
-                    >
-                        <div className="roman">{chord.roman}</div>
-                        <div className="alpha">{chord.name}</div>
-                    </div>
-                ))}
+                {parsedChords.map((chord, idx) => {
+                    const isCurrentChord = mode === 'chord' && isPracticeActive && idx === (currentStepIndex % parsedChords.length);
+                    const isNextChord = mode === 'chord' && isPracticeActive && idx === ((currentStepIndex + 1) % parsedChords.length);
+                    const chordClass = `chord-preview clickable-chord ${isCurrentChord ? 'current-chord' : ''} ${isNextChord ? 'next-chord' : ''}`;
+                    
+                    return (
+                        <div
+                            key={idx}
+                            className={chordClass}
+                            onClick={() => onChordClick && onChordClick(chord.name)}
+                            style={{ cursor: onChordClick ? 'pointer' : 'default' }}
+                        >
+                            <div className="roman">{chord.roman}</div>
+                            <div className="alpha">{chord.name}</div>
+                        </div>
+                    );
+                })}
             </div>
 
             <div className="predefined-progressions">
