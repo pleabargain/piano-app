@@ -52,6 +52,11 @@ While the app doesn't include built-in backing tracks, you can enhance your prac
 - **Jazz Standards**: Practice jazz standards by matching the key and using the app to guide your scale and chord choices
 - **Blues Jam Sessions**: Use Blues scale mode with blues backing tracks to practice blues licks and improvisation
 
+## Chord Practice
+
+- **Try to use as many inversions as possible**: When practicing chord progressions, challenge yourself to play each chord in different inversions. This builds finger flexibility and helps you understand voice leading
+- **Add inversions between target chords**: If playing along with a dullish backing track, add a few chord inversions between the next target chord to create more interesting harmonic movement and keep your practice engaging
+
 ## Additional Tips
 
 - **Regular Practice**: Consistency is key - even 15-20 minutes daily is more effective than long sessions once a week
