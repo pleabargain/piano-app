@@ -119,13 +119,19 @@ const ProgressionBuilder = ({ selectedRoot, selectedScaleType, onProgressionSet,
     const validateAndParse = (text) => {
         console.log('[ProgressionBuilder] validateAndParse called', { text, selectedRoot, selectedScaleType });
 
+        // Check for commas and warn user
+        if (text && text.includes(',')) {
+            const fixedText = text.replace(/,/g, ' ').replace(/\s+/g, ' ').trim();
+            setSuggestion(`💡 Commas do not work. Use spaces instead. Try: "${fixedText}"`);
+        }
+
         // Clean input before parsing
         const cleanedText = cleanInputText(text);
         
         // If cleaning changed the text, update input and show suggestion
-        if (cleanedText !== text.trim() && text.trim()) {
+        if (cleanedText !== text.trim() && text.trim() && !text.includes(',')) {
             setSuggestion(`Cleaned input: "${cleanedText}"`);
-        } else {
+        } else if (!text.includes(',')) {
             setSuggestion('');
         }
 
@@ -148,8 +154,11 @@ const ProgressionBuilder = ({ selectedRoot, selectedScaleType, onProgressionSet,
             });
             const fixSuggestion = suggestFix(text, parseError);
             if (fixSuggestion) {
-                setSuggestion(fixSuggestion);
-            } else {
+                // If there's already a comma warning, keep it; otherwise use the fix suggestion
+                if (!text.includes(',')) {
+                    setSuggestion(fixSuggestion);
+                }
+            } else if (!text.includes(',')) {
                 setSuggestion('');
             }
             setError(parseError);
@@ -157,7 +166,12 @@ const ProgressionBuilder = ({ selectedRoot, selectedScaleType, onProgressionSet,
         } else {
             console.log('[ProgressionBuilder] Validation successful:', chords);
             setError('');
-            setSuggestion('');
+            // Clear comma warning if parsing succeeded (commas might have been ignored)
+            if (text && text.includes(',')) {
+                setSuggestion('💡 Commas do not work. Use spaces to separate chords instead.');
+            } else {
+                setSuggestion('');
+            }
             setParsedChords(chords);
         }
     };
@@ -594,7 +608,7 @@ const ProgressionBuilder = ({ selectedRoot, selectedScaleType, onProgressionSet,
                                         <div>• C7 F7 G7 (dominant 7th chords)</div>
                                     </div>
                                     <div className="tooltip-footer">
-                                        Separate chords with spaces. Roman numerals transpose to your selected key. Absolute chords use the exact notes specified.
+                                        <strong>Important:</strong> Use spaces to separate chords. Commas do not work - use spaces instead. Roman numerals transpose to your selected key. Absolute chords use the exact notes specified.
                                     </div>
                                 </div>
                             </div>

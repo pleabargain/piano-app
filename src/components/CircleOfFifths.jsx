@@ -53,7 +53,7 @@ const CircleOfFifths = ({ selectedRoot, onRootSelect, detectedChord, onChordClic
   };
 
   const handleEnharmonicHover = (enharmonic, primary, event, index) => {
-    if (enharmonic === 'G#') {
+    if (enharmonic === 'G#' || enharmonic === 'A#') {
       setHoveredEnharmonic({ enharmonic, primary });
       // Get the position of the enharmonic text in SVG coordinates
       const majorPos = getSegmentCenterPosition(index, 12, 130);
@@ -258,7 +258,7 @@ const CircleOfFifths = ({ selectedRoot, onRootSelect, detectedChord, onChordClic
                           className="enharmonic"
                           onMouseEnter={(e) => handleEnharmonicHover(key.enharmonicMajor, key.major, e, index)}
                           onMouseLeave={handleEnharmonicLeave}
-                          style={{ cursor: key.enharmonicMajor === 'G#' ? 'help' : 'pointer', pointerEvents: 'all' }}
+                          style={{ cursor: (key.enharmonicMajor === 'G#' || key.enharmonicMajor === 'A#') ? 'help' : 'pointer', pointerEvents: 'all' }}
                         >
                           {key.enharmonicMajor}
                         </tspan>
@@ -300,13 +300,13 @@ const CircleOfFifths = ({ selectedRoot, onRootSelect, detectedChord, onChordClic
           <circle cx="0" cy="0" r="50" className="center-circle" />
           
           {/* Tooltip for enharmonic equivalents */}
-          {hoveredEnharmonic && hoveredEnharmonic.enharmonic === 'G#' && (
+          {hoveredEnharmonic && (hoveredEnharmonic.enharmonic === 'G#' || hoveredEnharmonic.enharmonic === 'A#') && (
             <g>
               <foreignObject 
                 x={tooltipPosition.x - 150} 
                 y={tooltipPosition.y} 
                 width="300" 
-                height="140"
+                height={hoveredEnharmonic.enharmonic === 'A#' ? "160" : "140"}
                 style={{ pointerEvents: 'none' }}
               >
                 <div xmlns="http://www.w3.org/1999/xhtml" className="enharmonic-tooltip" style={{
@@ -320,7 +320,15 @@ const CircleOfFifths = ({ selectedRoot, onRootSelect, detectedChord, onChordClic
                   textAlign: 'left',
                   fontFamily: 'system-ui, -apple-system, sans-serif'
                 }}>
-                  <strong>G♯ (G-sharp) and A♭ (A-flat)</strong> are the same pitch in modern Western music's 12-tone equal temperament system. They are what is known as <strong>enharmonic equivalents</strong>, meaning they sound identical and are played on the same black key on a piano.
+                  {hoveredEnharmonic.enharmonic === 'G#' ? (
+                    <>
+                      <strong>G♯ (G-sharp) and A♭ (A-flat)</strong> are the same pitch in modern Western music's 12-tone equal temperament system. They are what is known as <strong>enharmonic equivalents</strong>, meaning they sound identical and are played on the same black key on a piano.
+                    </>
+                  ) : (
+                    <>
+                      <strong>B♭ (B-flat) and A♯ (A-sharp)</strong> are the same pitch. They are known as <strong>enharmonic equivalents</strong>, meaning they are the same sound with two different names.
+                    </>
+                  )}
                 </div>
               </foreignObject>
             </g>
