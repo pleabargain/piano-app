@@ -57,6 +57,41 @@ While the app doesn't include built-in backing tracks, you can enhance your prac
 - **Try to use as many inversions as possible**: When practicing chord progressions, challenge yourself to play each chord in different inversions. This builds finger flexibility and helps you understand voice leading
 - **Add inversions between target chords**: If playing along with a dullish backing track, add a few chord inversions between the next target chord to create more interesting harmonic movement and keep your practice engaging
 
+### The I-V Connection: Common Tones and Voice Leading
+
+When you play these chords in their basic form (called root position), they share a specific note that acts like glue between them. In music theory, we call this a common tone.
+
+**The "5-1" Connection**
+
+To see why this happens, look at how the chords are built from the scale. A basic chord (triad) is built by taking a starting note and stacking every other note on top of it (1−3−5).
+
+- The I chord uses the 1st, 3rd, and 5th notes of the scale.
+- The V chord starts on that 5th note and uses the 5th, 7th, and 2nd notes.
+
+Because the I chord ends on the 5th note and the V chord starts on it, they are perfectly linked.
+
+**Examples in Common Keys**
+
+Here is how that "last note" of the I chord becomes the "first note" of the V chord in different keys:
+
+| Key | I Chord Notes (1-3-5) | V Chord Notes (5-7-2) | Shared Note |
+|-----|----------------------|----------------------|-------------|
+| C Major | C — E — G | G — B — D | G |
+| G Major | G — B — D | D — F# — A | D |
+| F Major | F — A — C | C — E — G | C |
+| D Major | D — F# — A | A — C# — E | A |
+| A Major | A — C# — E | E — G# — B | E |
+
+**Why This Matters: "Voice Leading"**
+
+The reason this is so helpful to know is for smooth transitions. When a songwriter or composer moves from the I chord to the V chord, they often keep that shared note exactly where it is while the other fingers move.
+
+This creates a sense of stability. Even though the harmony is changing, that one "common tone" stays the same, acting as a bridge for the listener's ear. This is the beginning of a concept called Voice Leading, which is just the art of moving from one chord to the next with as little "jumping around" as possible.
+
+**The "Pull" of the V Chord**
+
+Because the V chord is built starting on the "top" note of your home key (the I chord), it feels like it has "leaned" away from home. This is why the V chord (the Dominant) feels like it has so much energy and wants to "resolve" back to the I chord (the Tonic).
+
 ## Additional Tips
 
 - **Regular Practice**: Consistency is key - even 15-20 minutes daily is more effective than long sessions once a week
