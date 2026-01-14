@@ -440,7 +440,7 @@ Chord Practice mode helps you practice chord progressions with real-time detecti
 1. **Select "Chord Practice" mode** from the mode buttons
 2. **Create a Progression**:
    - In the **Custom Progression** panel (positioned to the right of the Detected Chord display):
-     - Enter a chord progression using Roman numerals (e.g., "I IV V I")
+     - Enter a chord progression using Roman numerals (e.g., "I IV V I" or "I - IV - V - I") or absolute chord names (e.g., "C F G C" or "C - F - G - C")
      - Click "Set Progression" to activate it
      - The progression will be displayed below the input with both Roman numerals and chord names
      - Example: For F Major key, "I IV V I" becomes: I (F Major), IV (A# Major), V (C Major), I (F Major)

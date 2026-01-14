@@ -136,18 +136,22 @@ A pivot chord is a chord that exists in BOTH keys. It acts like a bridge - you'r
 
 3. **Practice the modulation**:
    - Play: C - F - G - **C** (hold this C chord - this is your pivot!)
+     - Roman numerals in C Major: I - IV - V - **I**
    - While holding C, mentally switch: "Now C is the IV chord in G Major"
    - Continue: **C** - D - G (this is IV-V-I in G Major)
+     - Roman numerals in G Major: **IV** - V - I
    - Full progression: C - F - G - C - D - G
+     - Complete Roman numeral analysis: I - IV - V - I (in C Major) → IV - V - I (in G Major)
    - You've modulated from C Major to G Major!
 
 4. **Use the app to verify**:
-   - After playing C - F - G - C, change the Key Center selector to G Major
-   - Now play C - D - G and notice how C feels like the IV chord in G Major
+   - After playing C - F - G - C (I - IV - V - I in C Major), change the Key Center selector to G Major
+   - Now play C - D - G (IV - V - I in G Major) and notice how C feels like the IV chord in G Major
    - The app's chord detection will show C as IV in G Major
 
 5. **Practice smooth transitions**:
    - Play the full progression: C - F - G - C - D - G
+     - Roman numerals: I - IV - V - I (in C Major) → IV - V - I (in G Major)
    - Focus on making the C chord feel like it belongs to both keys
    - Repeat 10 times slowly, then gradually increase tempo
 
@@ -423,6 +427,226 @@ A pivot chord is a chord that exists in BOTH keys. It acts like a bridge - you'r
 
 ---
 
+## Warm-Up Exercises: Fun Ways to Get Started
+
+Before diving into focused practice, warm-up exercises help get your fingers moving, your ears tuned, and your mind engaged. These exercises are designed to be enjoyable while preparing you for more serious practice. Mix and match them based on your mood and time available!
+
+### The "Circle of Fifths Tour" (5-10 minutes)
+
+**What it is**: A musical journey around the Circle of Fifths that warms up your fingers and ears.
+
+**How to do it**:
+1. Open Chord Practice mode, set Key Center to C Major
+2. Play a simple I-IV-V-I progression in C: C - F - G - C
+3. Click clockwise on the Circle of Fifths to G Major
+4. Play I-IV-V-I in G: G - C - D - G
+5. Continue clockwise: D Major, A Major, E Major... all the way around!
+6. Try to make each transition smooth - notice how each key feels different
+
+**Why it's fun**: It's like taking a musical road trip! Each key has its own character, and you'll discover favorites along the way.
+
+**Variation**: Go backwards (counter-clockwise) for a different feel, or jump randomly around the circle!
+
+---
+
+### The "Chord Inversion Dance" (5 minutes)
+
+**What it is**: A playful exercise that gets your fingers moving through chord inversions smoothly.
+
+**How to do it**:
+1. Chord Practice mode, pick any key (start with C Major)
+2. Choose a simple progression: C - F - G - C (I-IV-V-I)
+3. Play it once in root position
+4. Now play it again, but cycle through inversions:
+   - C (root) → F (1st inversion) → G (2nd inversion) → C (root)
+   - Or mix it up: C (1st inv) → F (2nd inv) → G (root) → C (1st inv)
+5. Try to make your fingers "dance" smoothly between chords
+
+**Why it's fun**: It feels like solving a puzzle with your fingers! Each inversion creates a different mood, and finding the smoothest path is satisfying.
+
+**Variation**: Time yourself - can you play through all inversions faster each day?
+
+---
+
+### The "Scale Race" (5 minutes)
+
+**What it is**: A quick, energetic scale practice that gets your fingers moving.
+
+**How to do it**:
+1. Scale Practice mode, start with C Major
+2. Play the scale ascending quickly (but accurately!)
+3. Play it descending
+4. Now try playing it in "thirds" - C-E, D-F, E-G, F-A, G-B, C-E (ascending)
+5. Switch to a different key and repeat
+
+**Why it's fun**: It's like a musical sprint! The pattern changes keep it interesting, and you'll feel your fingers getting more agile.
+
+**Variation**: Try playing scales in different patterns - fourths, fifths, or create your own pattern!
+
+---
+
+### The "Blues Warm-Up" (5-7 minutes)
+
+**What it is**: A groovy warm-up using the blues scale that feels more like playing than practicing.
+
+**How to do it**:
+1. Scale Practice mode, select Blues scale in C
+2. Play the blues scale up and down a few times
+3. Now improvise! Just play random notes from the scale in a rhythm that feels good
+4. Switch to Free Play mode, keep Blues scale selected
+5. Play around with the "blue notes" - those notes that give blues its characteristic sound
+6. Try playing a simple blues lick: C-Eb-F-Gb-G-Bb-C (descending)
+
+**Why it's fun**: Blues scales sound cool no matter what you play! It's hard to sound bad, which makes it confidence-building.
+
+**Variation**: Put on a blues backing track and just noodle around - no pressure, just fun!
+
+---
+
+### The "Lava Game Challenge" (3-5 minutes)
+
+**What it is**: A game-like warm-up that sharpens your accuracy and reflexes.
+
+**How to do it**:
+1. Open Lava Game mode
+2. Pick a key you know well (start with C Major)
+3. Try to play a simple melody or scale while avoiding the red "lava" keys
+4. See how long you can play without hitting a wrong note
+5. Challenge yourself: Can you play a full scale? A simple song?
+
+**Why it's fun**: It's literally a game! The visual feedback and challenge element make it engaging, and you'll improve your accuracy without even realizing it.
+
+**Variation**: Try different keys or scales to keep it fresh!
+
+---
+
+### The "Chord Progression Jam" (5-10 minutes)
+
+**What it is**: A creative warm-up where you explore chord progressions freely.
+
+**How to do it**:
+1. Free Play mode, set Key Center to C Major
+2. Start with a simple progression: C - Am - F - G (the classic "vi-IV-I-V" or "50s progression")
+3. Play it a few times, then experiment:
+   - Add inversions between chords
+   - Hold some chords longer
+   - Try different rhythms
+   - Add a melody note on top
+4. Switch to a different key and try the same progression
+5. Build your own progression - what sounds good to you?
+
+**Why it's fun**: It's creative freedom! You're making music, not just practicing. The chord detection feature shows you what you're actually playing, which is always interesting.
+
+**Variation**: Try to recreate a progression from a song you like, or create one that matches your current mood!
+
+---
+
+### The "Pentatonic Power-Up" (5 minutes)
+
+**What it is**: A quick warm-up using pentatonic scales that sound great and are easy to play.
+
+**How to do it**:
+1. Scale Practice mode, select Pentatonic scale in C
+2. Play the scale up and down - notice how smooth it feels (only 5 notes!)
+3. Now try playing it in different patterns:
+   - Skip notes: C-E-G-C-E (up), G-E-C-G-E (down)
+   - Play in groups: C-D-E, then G-A-C
+   - Create a simple melody using only pentatonic notes
+4. Switch to Free Play mode and improvise freely
+
+**Why it's fun**: Pentatonic scales are used in so much music (rock, pop, jazz, folk) - everything you play sounds musical!
+
+**Variation**: Try the pentatonic scale in different keys, or combine it with chord practice!
+
+---
+
+### The "I-V-I Sprint" (3 minutes)
+
+**What it is**: A super quick warm-up focusing on the most important chord relationship.
+
+**How to do it**:
+1. Chord Practice mode, any key (start with C Major)
+2. Play I-V-I: C - G - C
+3. Focus on smooth transitions - keep that common tone in place!
+4. Try it in different inversions
+5. Speed up gradually - how fast can you go while staying smooth?
+6. Switch keys and repeat
+
+**Why it's fun**: It's quick, satisfying, and you'll immediately hear improvement. The I-V relationship is the foundation of so much music!
+
+**Variation**: Add the IV chord: I-IV-V-I, or try I-V-vi-IV (another classic progression)!
+
+---
+
+### The "Random Key Adventure" (5-7 minutes)
+
+**What it is**: A fun exploration exercise that keeps you on your toes.
+
+**How to do it**:
+1. Close your eyes and click randomly on the Circle of Fifths
+2. Whatever key you land on, that's your key for this round!
+3. Play a scale in that key
+4. Play a simple I-IV-V-I progression
+5. Try to identify the key by sound before opening your eyes
+6. Repeat with a new random key!
+
+**Why it's fun**: The randomness keeps it exciting, and you'll discover keys you might not normally practice. Plus, it's a great ear training exercise!
+
+**Variation**: Have a friend pick keys for you, or use a random number generator!
+
+---
+
+### The "Melody Maker" (5-10 minutes)
+
+**What it is**: A creative warm-up where you compose simple melodies.
+
+**How to do it**:
+1. Free Play mode, pick a key (C Major is great to start)
+2. Play a simple chord progression: C - Am - F - G
+3. Now add a melody on top using only scale notes
+4. Keep it simple - just a few notes per chord
+5. Try different rhythms - what feels good?
+6. Record it if you like it!
+
+**Why it's fun**: You're creating music! Even simple melodies can sound beautiful, and it's rewarding to hear something you made.
+
+**Variation**: Try creating melodies in minor keys for a different mood, or use the pentatonic scale for an easier but still musical option!
+
+---
+
+### Quick Warm-Up Combos
+
+**The "5-Minute Express"** (when you're short on time):
+- 1 min: I-V-I sprint in 2-3 keys
+- 2 min: Quick scale race (one scale, ascending/descending)
+- 2 min: Chord inversion dance (one simple progression)
+
+**The "10-Minute Full Body"** (complete warm-up):
+- 2 min: Circle of Fifths tour (3-4 keys)
+- 2 min: Scale race with pattern variations
+- 3 min: Chord progression jam
+- 3 min: Free play improvisation
+
+**The "Fun-First Warm-Up"** (when you want to play, not practice):
+- 3 min: Blues warm-up
+- 3 min: Lava Game challenge
+- 4 min: Melody maker
+
+---
+
+### Tips for Warm-Ups
+
+- **Keep it light**: Warm-ups should feel easy and fun, not stressful
+- **Mix it up**: Don't do the same warm-up every day - variety keeps it interesting
+- **Listen**: Pay attention to how things sound, not just hitting the right notes
+- **No pressure**: If something doesn't work, just move on - it's a warm-up!
+- **Time yourself**: Some days you'll have 5 minutes, some days 15 - adjust accordingly
+- **Have fun**: The best warm-up is one you actually want to do!
+
+Remember: The goal of warm-ups is to get you ready for practice, not to perfect technique. If you're having fun and your fingers are moving, you're doing it right!
+
+---
+
 ## Sample Lesson Plan: Beginner with Experience
 
 This 6-week lesson plan is designed for someone who has basic piano knowledge (can read notes, knows basic chords) but wants to build a solid foundation in scales, chord progressions, and music theory. Each week builds on the previous one, gradually increasing in complexity.
@@ -608,4 +832,6 @@ This 6-week lesson plan is designed for someone who has basic piano knowledge (c
 ---
 
 *Last Updated: 2025-01-28*
+
+<!-- Warm-up exercises section added: 2025-01-28 -->
 

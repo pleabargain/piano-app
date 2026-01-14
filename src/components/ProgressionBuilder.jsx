@@ -559,7 +559,7 @@ const ProgressionBuilder = ({ selectedRoot, selectedScaleType, onProgressionSet,
                                 setError('');
                                 setSuggestion('');
                             }}
-                            placeholder="e.g., I IV V ii or C F G Am"
+                            placeholder="e.g., I IV V ii or C - F - G - Am"
                             aria-label="Chord progression input"
                         />
                         {showTooltip && (
@@ -608,7 +608,7 @@ const ProgressionBuilder = ({ selectedRoot, selectedScaleType, onProgressionSet,
                                         <div>• C7 F7 G7 (dominant 7th chords)</div>
                                     </div>
                                     <div className="tooltip-footer">
-                                        <strong>Important:</strong> Use spaces to separate chords. Commas do not work - use spaces instead. Roman numerals transpose to your selected key. Absolute chords use the exact notes specified.
+                                        <strong>Important:</strong> Use spaces or hyphens to separate chords (e.g., "C F G" or "C - F - G"). Commas do not work - use spaces or hyphens instead. Roman numerals transpose to your selected key. Absolute chords use the exact notes specified.
                                     </div>
                                 </div>
                             </div>

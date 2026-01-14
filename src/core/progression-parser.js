@@ -34,8 +34,8 @@ export function parseProgression(text, scaleNotes = []) {
         return { chords: [], error: null };
     }
 
-    // Treat lead-sheet bars as separators
-    const normalizedText = cleanedText.replace(/\|/g, ' ');
+    // Treat lead-sheet bars and hyphens as separators
+    const normalizedText = cleanedText.replace(/\|/g, ' ').replace(/-/g, ' ');
     const tokens = normalizedText.trim().split(/\s+/).filter(Boolean);
     const results = [];
 

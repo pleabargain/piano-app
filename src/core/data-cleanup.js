@@ -61,6 +61,8 @@ export function suggestFix(originalInput, errorMessage) {
         if (invalidSymbol && /[\u200B-\u200D\uFEFF]/.test(invalidSymbol)) {
             return 'Invisible characters detected. Try copying the text again or typing it manually.';
         }
+        // Hyphens are now supported as separators, so if someone gets an error with just "-", 
+        // it might be a different issue
     }
 
     return null;
@@ -85,7 +87,8 @@ export function getSampleInputs() {
             'A♭ E♭ Fm D♭ B♭m',
             'Ab Eb Fm Db Bbm',
             'Cm Bb Ab G',
-            'C Fm G7 Am'
+            'C Fm G7 Am',
+            'C - F - G - C - D - G'
         ],
         mixed: [
             'I IV V C',

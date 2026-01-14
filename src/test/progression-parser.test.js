@@ -123,5 +123,39 @@ describe('Progression Parser', () => {
 
             result.chords.forEach(ch => expect(ch.type).toBe('absolute'));
         });
+
+        it('should parse chord progressions with hyphens as separators', () => {
+            const result = parseProgression('C - F - G - C - D - G');
+            expect(result.error).toBeNull();
+            expect(result.chords).toHaveLength(6);
+
+            expect(result.chords[0].name).toBe('C');
+            expect(result.chords[1].name).toBe('F');
+            expect(result.chords[2].name).toBe('G');
+            expect(result.chords[3].name).toBe('C');
+            expect(result.chords[4].name).toBe('D');
+            expect(result.chords[5].name).toBe('G');
+
+            result.chords.forEach(ch => expect(ch.type).toBe('absolute'));
+        });
+
+        it('should parse Roman numerals with hyphens as separators', () => {
+            MusicTheory.getChordNameFromRoman.mockImplementation((token) => {
+                if (token === 'I') return 'C Major';
+                if (token === 'IV') return 'F Major';
+                if (token === 'V') return 'G Major';
+                return '?';
+            });
+
+            const scaleNotes = ['C', 'D', 'E', 'F', 'G', 'A', 'B'];
+            const result = parseProgression('I - IV - V - I', scaleNotes);
+
+            expect(result.error).toBeNull();
+            expect(result.chords).toHaveLength(4);
+            expect(result.chords[0].name).toBe('C Major');
+            expect(result.chords[1].name).toBe('F Major');
+            expect(result.chords[2].name).toBe('G Major');
+            expect(result.chords[3].name).toBe('C Major');
+        });
     });
 });
