@@ -1244,8 +1244,8 @@ function App() {
           <div className="pyramid-bottom">
             <div className="piano-section unified-piano">
               <Piano
-                startNote={36}
-                endNote={84}
+                startNote={21}
+                endNote={108}
                 activeNotes={activeNotes}
                 highlightedNotes={getScaleHighlights()}
                 chordMidiNotes={getChordHighlights()}

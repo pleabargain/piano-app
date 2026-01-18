@@ -4,8 +4,8 @@ import './Piano.css';
 import { NOTES } from '../core/music-theory';
 
 const Piano = ({
-    startNote = 36, // C2
-    endNote = 96,   // C7
+    startNote = 21, // A0 (full 88-key piano starts here)
+    endNote = 108,  // C8 (full 88-key piano ends here)
     activeNotes = [],
     highlightedNotes = [], // Notes to show as part of scale/chord (pitch classes)
     chordMidiNotes = [], // Specific MIDI notes to highlight for chord display
