@@ -28,3 +28,14 @@
    - Capture console logs and network requests
    - Take snapshots of page state for debugging
    - Verify error messages are displayed correctly
+8. **High Contrast UI Text**: Do NOT use low-contrast / "low definition" font colors. All UI text must be high contrast and readable against its background (including disabled states, placeholders, helper text, and secondary labels).
+9. **Binary Question Format**: When presenting binary choices or options to the user, always format them using A/B labels:
+   - Format: "A) Option 1, B) Option 2"
+   - Use clear labels (A, B, C, etc.) for each option
+   - Make options mutually exclusive and clearly distinct
+   - Example: "Should I: A) Add tests to existing file, B) Create new test file?"
+10. **Code Change Documentation**: All code changes must be dated with ISO timestamp format (YYYY-MM-DD) and tracked in README.md:
+   - Add ISO timestamp comments in code files when making significant changes (e.g., `// 2026-01-11: Enhanced scale progression UI`)
+   - Update README.md with a "Recent Updates" or "Changelog" section documenting changes
+   - Include date, feature/change description, and any relevant details
+   - Format: `### YYYY-MM-DD: Feature Name` followed by bullet points describing changes

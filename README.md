@@ -985,6 +985,46 @@ Run tests with `npm test` or `npm run test:ui` for interactive test interface.
 
 ## Recent Updates
 
+### 2026-01-11: Enhanced Scale Progression UI
+
+Enhanced the KeyProgressionBuilder component to match the rich UI features of ProgressionBuilder:
+
+- **Rich Saved Progressions Display**:
+  - Shows progression name, keys, scale type, and creation date
+  - Visual highlight (blue border) for currently loaded progression
+  - Click any saved progression to load it instantly
+  - Improved layout with better visual hierarchy
+
+- **Predefined Scale Progressions**:
+  - Circle of Fifths F→E→F (forward then backward)
+  - Full Circle F→F (complete circle with all sharps)
+  - Circle of Fifths F→E (forward only)
+  - Circle of Fifths E→F (backward from E to F)
+  - Circle of Fifths C→B (complete circle)
+  - All Major Keys progression
+  - Click any predefined progression to load it instantly
+
+- **Improved Load Functionality**:
+  - Async load pattern matching ProgressionBuilder
+  - Updates `lastUsed` timestamp when loading
+  - Better error handling with loading states
+  - Visual indicator shows which progression is currently loaded
+
+- **Better User Experience**:
+  - Loading indicators during async operations
+  - Empty state message when no saved progressions exist
+  - Sample file download link for testing imports
+  - Improved error message display
+  - Reorganized layout: saved progressions at top, input below
+
+- **Comprehensive Scale Tests**:
+  - Added tests for all implemented scale types (major, natural minor, harmonic minor, melodic minor, blues, pentatonic, lydian)
+  - Tests verify scale generation for all 12 keys
+  - Edge case tests for invalid inputs
+  - All 43 tests passing
+
+This enhancement makes scale progression practice as user-friendly as chord progression practice, allowing users to easily load and manage their scale progressions.
+
 ### 2026-01-10: Enhanced Chord Practice with Visual Feedback
 
 Added comprehensive visual feedback and progression tracking for Chord Practice mode:

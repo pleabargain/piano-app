@@ -43,6 +43,7 @@ const PREDEFINED_PROGRESSIONS = [
     { name: 'Heroic Circle progression', progression: 'I IV bVII III vi ii V I', length: 8 },
     { name: 'Storyteller progression', progression: 'I ii iii IV V vi V I', length: 8 },
     { name: 'Emotional Wave progression', progression: 'I III IV iv V vi ii V', length: 8 },
+    { name: 'Circle of Fifths progression', progression: 'C G D A E B F# Db Ab Eb Bb F', length: 12 },
 ];
 
 const ProgressionBuilder = ({ selectedRoot, selectedScaleType, onProgressionSet, onChordClick, currentStepIndex = 0, mode = 'free', isPracticeActive = false }) => {
@@ -420,33 +421,18 @@ const ProgressionBuilder = ({ selectedRoot, selectedScaleType, onProgressionSet,
     const handlePredefinedClick = (progressionText) => {
         console.log('[ProgressionBuilder] Predefined progression clicked:', progressionText);
         setInput(progressionText);
-        // Parse the progression immediately
-        const tokens = progressionText.trim().split(/\s+/);
+        // Parse the progression immediately using parseProgression which supports both Roman numerals and absolute chords
         const scaleNotes = getScaleNotes(selectedRoot, selectedScaleType);
+        const { chords, error: parseError } = parseProgression(progressionText, scaleNotes);
 
-        if (scaleNotes.length === 0) {
-            console.warn('[ProgressionBuilder] No scale notes found');
-            return;
-        }
-
-        const results = [];
-        let isValid = true;
-
-        for (let token of tokens) {
-            if (!ROMAN_REGEX.test(token)) {
-                isValid = false;
-                setError(`Invalid symbol: ${token}`);
-                break;
-            }
-            const chordName = getChordNameFromRoman(token, scaleNotes);
-            results.push({ roman: token, name: chordName });
-        }
-
-        if (isValid && results.length > 0) {
+        if (parseError) {
+            setError(parseError);
+            setParsedChords([]);
+        } else if (chords.length > 0) {
             setError('');
-            setParsedChords(results);
+            setParsedChords(chords);
             // Automatically set the progression
-            onProgressionSet(results);
+            onProgressionSet(chords);
         }
     };
 
