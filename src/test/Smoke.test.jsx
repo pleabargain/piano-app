@@ -2,6 +2,7 @@
 import React from 'react';
 import { render, screen, waitFor } from '@testing-library/react';
 import { describe, it, expect, vi } from 'vitest';
+import { BrowserRouter } from 'react-router-dom';
 import App from '../App';
 
 // Mock child components to isolate App render
@@ -14,7 +15,7 @@ window.HTMLElement.prototype.scrollIntoView = function () { };
 
 describe('App Smoke Test', () => {
     it('should render the main application without crashing', async () => {
-        render(<App />);
+        render(<BrowserRouter><App /></BrowserRouter>);
 
         // Wait for initial effects
         await waitFor(() => {

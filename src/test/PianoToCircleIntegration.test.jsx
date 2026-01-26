@@ -1,5 +1,6 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { render, screen, act, waitFor } from '@testing-library/react';
+import { BrowserRouter } from 'react-router-dom';
 import App from '../App';
 import { midiManager } from '../core/midi-manager';
 
@@ -29,7 +30,7 @@ describe('Piano to Circle of Fifths Integration', () => {
     });
 
     it('should highlight C Major in Circle of Fifths when C Major chord is played via MIDI', async () => {
-        const { container } = render(<App />);
+        const { container } = render(<BrowserRouter><App /></BrowserRouter>);
 
         // Wait for MIDI connection
         await screen.findByText(/MIDI Connected/, {}, { timeout: 3000 });
@@ -55,7 +56,7 @@ describe('Piano to Circle of Fifths Integration', () => {
     });
 
     it('should highlight E Minor in Circle of Fifths when E Minor chord is played via MIDI', async () => {
-        const { container } = render(<App />);
+        const { container } = render(<BrowserRouter><App /></BrowserRouter>);
 
         // Wait for MIDI initialization
         await screen.findByText(/MIDI Connected/, {}, { timeout: 3000 });

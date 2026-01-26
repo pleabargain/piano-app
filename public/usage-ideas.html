@@ -1,0 +1,1161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Usage Ideas for Piano Trainer</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+      line-height: 1.6;
+      color: #333;
+      background-color: #f5f5f5;
+      padding: 20px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    
+    .container {
+      background: white;
+      padding: 40px;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    
+    h1 {
+      color: #2c3e50;
+      border-bottom: 3px solid #3498db;
+      padding-bottom: 10px;
+      margin-bottom: 30px;
+    }
+    
+    h2 {
+      color: #34495e;
+      margin-top: 40px;
+      margin-bottom: 20px;
+      padding-top: 20px;
+      border-top: 2px solid #ecf0f1;
+    }
+    
+    h3 {
+      color: #34495e;
+      margin-top: 30px;
+      margin-bottom: 15px;
+    }
+    
+    h4 {
+      color: #7f8c8d;
+      margin-top: 20px;
+      margin-bottom: 10px;
+    }
+    
+    p {
+      margin-bottom: 15px;
+    }
+    
+    ul, ol {
+      margin-left: 30px;
+      margin-bottom: 20px;
+    }
+    
+    li {
+      margin-bottom: 8px;
+    }
+    
+    code {
+      background-color: #f4f4f4;
+      padding: 2px 6px;
+      border-radius: 3px;
+      font-family: 'Courier New', monospace;
+      font-size: 0.9em;
+      color: #e74c3c;
+    }
+    
+    pre {
+      background-color: #2c3e50;
+      color: #ecf0f1;
+      padding: 15px;
+      border-radius: 5px;
+      overflow-x: auto;
+      margin-bottom: 20px;
+    }
+    
+    pre code {
+      background-color: transparent;
+      color: inherit;
+      padding: 0;
+    }
+    
+    a {
+      color: #3498db;
+      text-decoration: none;
+    }
+    
+    a:hover {
+      text-decoration: underline;
+    }
+    
+    blockquote {
+      border-left: 4px solid #3498db;
+      padding-left: 20px;
+      margin-left: 0;
+      color: #7f8c8d;
+      font-style: italic;
+    }
+    
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 20px;
+    }
+    
+    table th,
+    table td {
+      padding: 12px;
+      text-align: left;
+      border-bottom: 1px solid #ddd;
+    }
+    
+    table th {
+      background-color: #3498db;
+      color: white;
+      font-weight: bold;
+    }
+    
+    table tr:hover {
+      background-color: #f5f5f5;
+    }
+    
+    hr {
+      border: none;
+      border-top: 2px solid #ecf0f1;
+      margin: 30px 0;
+    }
+    
+    strong {
+      color: #2c3e50;
+      font-weight: 600;
+    }
+    
+    .quick-links {
+      background-color: #e8f4f8;
+      padding: 20px;
+      border-radius: 5px;
+      border-left: 4px solid #3498db;
+      margin-bottom: 30px;
+    }
+    
+    .quick-links h2 {
+      margin-top: 0;
+      border-top: none;
+      padding-top: 0;
+    }
+    
+    @media (max-width: 768px) {
+      body {
+        padding: 10px;
+      }
+      
+      .container {
+        padding: 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- https://github.com/pleabargain/piano-app -->
+<h1>Usage Ideas for Piano Trainer</h1>
+<p>Here are some creative ways to get the most out of this piano training application:</p>
+<h2>Quick Links to Exercises</h2>
+<ul>
+<li><strong>I-V-I Circle Exercise</strong>: <a href="http://localhost:5173/exercise/i-v-i-circle">http://localhost:5173/exercise/i-v-i-circle</a><ul>
+<li>Automated practice through all 12 keys with continuous looping</li>
+<li>With parameters: <a href="http://localhost:5173/exercise/i-v-i-circle?startKey=C&keys=12">http://localhost:5173/exercise/i-v-i-circle?startKey=C&amp;keys=12</a></li>
+</ul>
+</li>
+</ul>
+<h2>Scale Practice</h2>
+<p>Scale practice is fundamental to developing finger dexterity, muscle memory, and understanding of music theory. Here are some effective ways to use the Scale Practice mode:</p>
+<ul>
+<li><strong>Start with Major Scales</strong>: Begin with C Major (no sharps or flats) to establish the foundation, then gradually work through all 12 major keys</li>
+<li><strong>Practice in Different Octaves</strong>: Use the keyboard size selector to practice scales across different ranges, helping you become comfortable playing scales anywhere on the keyboard</li>
+<li><strong>Triad Progression with Metronome</strong>: Set the metronome to 90 BPM and play C major triads with a rocking pattern in the left hand, moving up to the next key with each 4 beats - this builds coordination between hands and helps internalize key relationships</li>
+<li><strong>Focus on Evenness</strong>: Pay attention to making each note equal in volume and timing - the visual feedback helps you identify when you&#39;re rushing or dragging</li>
+<li><strong>Practice Scales in Both Directions</strong>: Play scales ascending and descending, focusing on smooth transitions at the top and bottom</li>
+<li><strong>Use the Circle of Fifths</strong>: Click through different keys on the Circle of Fifths to practice scales in the order of increasing sharps/flats</li>
+<li><strong>Combine with Metronome</strong>: While the app doesn&#39;t have a built-in metronome, practice with an external metronome starting slow and gradually increasing tempo</li>
+<li><strong>Scale Patterns</strong>: Once comfortable with basic scales, practice variations like thirds, fourths, or broken thirds within the scale</li>
+<li><strong>Blues Scale Practice</strong>: Use the Blues scale option to practice this essential scale used in jazz, blues, and rock music</li>
+</ul>
+<h2>Chord Discovery</h2>
+<p>The chord discovery features help you understand harmony, voice leading, and chord progressions. Here&#39;s how to maximize this functionality:</p>
+<ul>
+<li><strong>Explore Chord Inversions</strong>: Click on any chord in the Circle of Fifths multiple times to cycle through inversions. This helps you understand how the same chord can sound different depending on which note is in the bass</li>
+<li><strong>Free Play Mode for Experimentation</strong>: Use Free Play mode to experiment with different chord combinations and see what chords you&#39;re actually playing in real-time</li>
+<li><strong>Build Chord Progressions</strong>: Use the Chord Practice mode to build common progressions (like I-IV-V-I or ii-V-I) and practice transitioning smoothly between chords</li>
+<li><strong>Discover Extensions</strong>: Pay attention to the chord suggestions/extensions panel - it shows you what notes you can add to your current chord to create richer harmonies (7ths, 9ths, etc.)</li>
+<li><strong>Practice Chord Voicings</strong>: Try playing the same chord in different inversions and octaves to find voicings that sound good together</li>
+<li><strong>Use the Lock Feature</strong>: Lock a chord you want to focus on, then experiment with scales and other chords that work well with it</li>
+<li><strong>Circle of Fifths Navigation</strong>: Click around the Circle of Fifths to discover which chords naturally lead to others - this is the foundation of functional harmony</li>
+<li><strong>Minor Key Exploration</strong>: Practice both major and minor chord progressions to understand the emotional differences and when to use each</li>
+<li><strong>Blues Progressions</strong>: Practice the classic 12-bar blues progression using the Blues scale and related chords</li>
+</ul>
+<h2>Play Along with Backing Tracks</h2>
+<p>While the app doesn&#39;t include built-in backing tracks, you can enhance your practice by combining it with external backing tracks:</p>
+<ul>
+<li><p><strong>Find Backing Tracks</strong>: Use YouTube, Spotify, or dedicated backing track websites to find tracks in the key you&#39;re practicing <!-- 2025-12-08T21:14:10 --></p>
+</li>
+<li><p><strong>Simple Practice Routine</strong>: Start with a simple backing track in C. Turn on your metronome (don&#39;t forget!), play along with the backing track, then load up the pentatonic scale as visual reference. Split your Chrome browser screen so you can see both the backing track and the scale info with feedback. Don&#39;t be afraid to slow down the backing track to match your accurate speed - precision is more important than tempo!</p>
+</li>
+<li><p><strong>Use the Metronome</strong>: Always practice with a metronome to develop steady timing and rhythm - it&#39;s one of the most important tools for improvement. Start slow. Focus on accuracy first!</p>
+</li>
+<li><p><strong>Match the Key</strong>: Use the Key Center selector to match the key of your backing track - the app will highlight the correct scale notes</p>
+</li>
+<li><p><strong>Scale Practice with Backing</strong>: Play scales along with backing tracks to practice staying in key while improvising</p>
+</li>
+<li><p><strong>Chord Practice</strong>: Use Chord Practice mode to work on chord progressions that match the backing track&#39;s harmony</p>
+</li>
+<li><p><strong>Free Play Improvisation</strong>: </p>
+<ul>
+<li>Set the key to match your backing track</li>
+<li>Use Free Play mode to improvise melodies using the highlighted scale notes</li>
+<li>The chord detection helps you understand what chords you&#39;re implying with your melodies</li>
+</ul>
+</li>
+<li><p><strong>Lava Game Challenge</strong>: Use Lava Game mode with a backing track - try to stay in key (blue keys) while avoiding out-of-key notes (red lava keys) for a fun challenge</p>
+</li>
+<li><p><strong>Practice Chord Changes</strong>: Use backing tracks with clear chord progressions to practice changing chords at the right time</p>
+</li>
+<li><p><strong>Ear Training</strong>: Play along with backing tracks and use the chord detection to verify you&#39;re playing the correct chords</p>
+</li>
+<li><p><strong>Jazz Standards</strong>: Practice jazz standards by matching the key and using the app to guide your scale and chord choices</p>
+</li>
+<li><p><strong>Blues Jam Sessions</strong>: Use Blues scale mode with blues backing tracks to practice blues licks and improvisation</p>
+</li>
+</ul>
+<h2>Chord Practice</h2>
+<ul>
+<li><strong>Try to use as many inversions as possible</strong>: When practicing chord progressions, challenge yourself to play each chord in different inversions. This builds finger flexibility and helps you understand voice leading</li>
+<li><strong>Add inversions between target chords</strong>: If playing along with a dullish backing track, add a few chord inversions between the next target chord to create more interesting harmonic movement and keep your practice engaging</li>
+</ul>
+<h3>The I-V Connection: Common Tones and Voice Leading</h3>
+<p>When you play these chords in their basic form (called root position), they share a specific note that acts like glue between them. In music theory, we call this a common tone.</p>
+<p><strong>The &quot;5-1&quot; Connection</strong></p>
+<p>To see why this happens, look at how the chords are built from the scale. A basic chord (triad) is built by taking a starting note and stacking every other note on top of it (1−3−5).</p>
+<ul>
+<li>The I chord uses the 1st, 3rd, and 5th notes of the scale.</li>
+<li>The V chord starts on that 5th note and uses the 5th, 7th, and 2nd notes.</li>
+</ul>
+<p>Because the I chord ends on the 5th note and the V chord starts on it, they are perfectly linked.</p>
+<p><strong>Examples in Common Keys</strong></p>
+<p>Here is how that &quot;last note&quot; of the I chord becomes the &quot;first note&quot; of the V chord in different keys:</p>
+<table>
+<thead>
+<tr>
+<th>Key</th>
+<th>I Chord Notes (1-3-5)</th>
+<th>V Chord Notes (5-7-2)</th>
+<th>Shared Note</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>C Major</td>
+<td>C — E — G</td>
+<td>G — B — D</td>
+<td>G</td>
+</tr>
+<tr>
+<td>G Major</td>
+<td>G — B — D</td>
+<td>D — F# — A</td>
+<td>D</td>
+</tr>
+<tr>
+<td>F Major</td>
+<td>F — A — C</td>
+<td>C — E — G</td>
+<td>C</td>
+</tr>
+<tr>
+<td>D Major</td>
+<td>D — F# — A</td>
+<td>A — C# — E</td>
+<td>A</td>
+</tr>
+<tr>
+<td>A Major</td>
+<td>A — C# — E</td>
+<td>E — G# — B</td>
+<td>E</td>
+</tr>
+</tbody></table>
+<p><strong>Why This Matters: &quot;Voice Leading&quot;</strong></p>
+<p>The reason this is so helpful to know is for smooth transitions. When a songwriter or composer moves from the I chord to the V chord, they often keep that shared note exactly where it is while the other fingers move.</p>
+<p>This creates a sense of stability. Even though the harmony is changing, that one &quot;common tone&quot; stays the same, acting as a bridge for the listener&#39;s ear. This is the beginning of a concept called Voice Leading, which is just the art of moving from one chord to the next with as little &quot;jumping around&quot; as possible.</p>
+<p><strong>The &quot;Pull&quot; of the V Chord</strong></p>
+<p>Because the V chord is built starting on the &quot;top&quot; note of your home key (the I chord), it feels like it has &quot;leaned&quot; away from home. This is why the V chord (the Dominant) feels like it has so much energy and wants to &quot;resolve&quot; back to the I chord (the Tonic).</p>
+<h2>Modulation: Changing Keys</h2>
+<p><strong>What is Modulation?</strong></p>
+<p>Modulation is the process of changing from one key to another within a piece of music. It&#39;s like moving from one musical &quot;home&quot; to another. This creates contrast, builds tension, and adds interest to your playing.</p>
+<p><strong>Why Learn Modulation?</strong></p>
+<ul>
+<li><strong>Musical Interest</strong>: Keeps your playing from sounding repetitive</li>
+<li><strong>Song Understanding</strong>: Many songs modulate - understanding this helps you play along better</li>
+<li><strong>Composition Skills</strong>: Allows you to create more sophisticated chord progressions</li>
+<li><strong>Ear Training</strong>: Develops your ability to hear key changes</li>
+</ul>
+<p><strong>The Pivot Chord Method</strong> (Easiest for Beginners)</p>
+<p>A pivot chord is a chord that exists in BOTH keys. It acts like a bridge - you&#39;re in the first key, you play the pivot chord, and then you continue in the new key. The pivot chord belongs to both keys, so the transition feels smooth.</p>
+<hr>
+<h3>Exercise 1: C Major to G Major (Your First Modulation)</h3>
+<p><strong>Goal</strong>: Smoothly transition from C Major to G Major using F Major as a pivot chord</p>
+<p><strong>Understanding the Pivot:</strong></p>
+<ul>
+<li>In C Major: F Major is the <strong>IV chord</strong> (4th chord)</li>
+<li>In G Major: F Major is... wait, F Major doesn&#39;t exist in G Major! </li>
+<li>Actually, let&#39;s use a different pivot: <strong>C Major</strong> works better!<ul>
+<li>In C Major: C Major is the <strong>I chord</strong> (home)</li>
+<li>In G Major: C Major is the <strong>IV chord</strong> (4th chord)</li>
+</ul>
+</li>
+</ul>
+<p><strong>Step-by-Step Practice</strong> (30 minutes):</p>
+<ol>
+<li><p><strong>Set up the app</strong>:</p>
+<ul>
+<li>Open Chord Practice mode</li>
+<li>Set Key Center to C Major</li>
+<li>Build this progression: C - F - G - C (I-IV-V-I in C Major)</li>
+<li>Play it slowly, getting comfortable with the sound</li>
+</ul>
+</li>
+<li><p><strong>Identify the pivot chord</strong>:</p>
+<ul>
+<li>The C Major chord (I in C Major) can become the IV chord in G Major</li>
+<li>Play C Major and hold it - this is your pivot point</li>
+</ul>
+</li>
+<li><p><strong>Practice the modulation</strong>:</p>
+<ul>
+<li>Play: C - F - G - <strong>C</strong> (hold this C chord - this is your pivot!)<ul>
+<li>Roman numerals in C Major: I - IV - V - <strong>I</strong></li>
+</ul>
+</li>
+<li>While holding C, mentally switch: &quot;Now C is the IV chord in G Major&quot;</li>
+<li>Continue: <strong>C</strong> - D - G (this is IV-V-I in G Major)<ul>
+<li>Roman numerals in G Major: <strong>IV</strong> - V - I</li>
+</ul>
+</li>
+<li>Full progression: C - F - G - C - D - G<ul>
+<li>Complete Roman numeral analysis: I - IV - V - I (in C Major) → IV - V - I (in G Major)</li>
+</ul>
+</li>
+<li>You&#39;ve modulated from C Major to G Major!</li>
+</ul>
+</li>
+<li><p><strong>Use the app to verify</strong>:</p>
+<ul>
+<li>After playing C - F - G - C (I - IV - V - I in C Major), change the Key Center selector to G Major</li>
+<li>Now play C - D - G (IV - V - I in G Major) and notice how C feels like the IV chord in G Major</li>
+<li>The app&#39;s chord detection will show C as IV in G Major</li>
+</ul>
+</li>
+<li><p><strong>Practice smooth transitions</strong>:</p>
+<ul>
+<li>Play the full progression: C - F - G - C - D - G<ul>
+<li>Roman numerals: I - IV - V - I (in C Major) → IV - V - I (in G Major)</li>
+</ul>
+</li>
+<li>Focus on making the C chord feel like it belongs to both keys</li>
+<li>Repeat 10 times slowly, then gradually increase tempo</li>
+</ul>
+</li>
+</ol>
+<p><strong>What You&#39;re Learning</strong>: The C chord acts as a bridge between C Major and G Major. This is called a &quot;pivot chord modulation.&quot;</p>
+<hr>
+<h3>Exercise 2: C Major to F Major (Using G as Pivot)</h3>
+<p><strong>Goal</strong>: Modulate from C Major to F Major using G Major as the pivot chord</p>
+<p><strong>Understanding the Pivot:</strong></p>
+<ul>
+<li>In C Major: G Major is the <strong>V chord</strong> (5th chord)</li>
+<li>In F Major: G Major doesn&#39;t exist... wait, let&#39;s use <strong>C Major</strong> again!<ul>
+<li>In C Major: C Major is the <strong>I chord</strong></li>
+<li>In F Major: C Major is the <strong>V chord</strong> (5th chord)</li>
+</ul>
+</li>
+</ul>
+<p><strong>Step-by-Step Practice</strong> (30 minutes):</p>
+<ol>
+<li><p><strong>Set up in C Major</strong>:</p>
+<ul>
+<li>Chord Practice mode, Key Center: C Major</li>
+<li>Build: C - F - G - C (I-IV-V-I in C Major)</li>
+</ul>
+</li>
+<li><p><strong>Practice the modulation</strong>:</p>
+<ul>
+<li>Play: C - F - G - <strong>C</strong> (hold this C - your pivot!)</li>
+<li>Switch thinking: &quot;C is now the V chord in F Major&quot;</li>
+<li>Continue: <strong>C</strong> - Bb - F (V-IV-I in F Major)</li>
+<li>Full progression: C - F - G - C - Bb - F</li>
+<li>You&#39;ve modulated to F Major!</li>
+</ul>
+</li>
+<li><p><strong>Verify with the app</strong>:</p>
+<ul>
+<li>After the pivot C chord, change Key Center to F Major</li>
+<li>Play C - Bb - F and see how C feels like V in F Major</li>
+</ul>
+</li>
+<li><p><strong>Practice with inversions</strong>:</p>
+<ul>
+<li>Try: C (root) - F (first inv) - G (second inv) - <strong>C (first inv)</strong> - Bb (root) - F (root)</li>
+<li>Notice how inversions make the modulation even smoother</li>
+</ul>
+</li>
+</ol>
+<p><strong>What You&#39;re Learning</strong>: The same chord (C Major) can function differently in different keys - this is the foundation of modulation.</p>
+<hr>
+<h3>Exercise 3: Finding Pivot Chords (Discovery Exercise)</h3>
+<p><strong>Goal</strong>: Discover which chords work as pivots between closely related keys</p>
+<p><strong>Closely Related Keys</strong>: Keys that share many notes (like C, G, and F Major)</p>
+<p><strong>Step-by-Step Practice</strong> (45 minutes):</p>
+<ol>
+<li><p><strong>C Major to G Major - Find ALL possible pivots</strong>:</p>
+<ul>
+<li>Set app to C Major, write down all chords: C, Dm, Em, F, G, Am, Bdim</li>
+<li>Set app to G Major, write down all chords: G, Am, Bm, C, D, Em, F#dim</li>
+<li><strong>Common chords</strong> (these can be pivots!): C, Am, Em, D (Dm in C, D in G - close!)</li>
+<li>Try modulating using each pivot chord</li>
+</ul>
+</li>
+<li><p><strong>Practice each pivot</strong>:</p>
+<ul>
+<li><strong>Using C as pivot</strong>: C - F - G - <strong>C</strong> - D - G (I-IV-V-I → IV-V-I)</li>
+<li><strong>Using Am as pivot</strong>: C - F - Am - <strong>Am</strong> - D - G (I-IV-vi → vi-ii-V)</li>
+<li><strong>Using Em as pivot</strong>: C - Em - G - <strong>Em</strong> - D - G (I-iii-V → iii-ii-V)</li>
+</ul>
+</li>
+<li><p><strong>Compare the sounds</strong>:</p>
+<ul>
+<li>Each pivot creates a different emotional effect</li>
+<li>Some feel smoother, some feel more dramatic</li>
+<li>Use Free Play mode to experiment with each</li>
+</ul>
+</li>
+</ol>
+<p><strong>What You&#39;re Learning</strong>: Multiple chords can work as pivots - choosing different pivots creates different musical effects.</p>
+<hr>
+<h3>Exercise 4: Modulating Through the Circle of Fifths</h3>
+<p><strong>Goal</strong>: Modulate through multiple keys in a smooth sequence</p>
+<p><strong>The Circle of Fifths Pattern</strong>: C → G → D → A → E → B → F# → C# → G# → D# → A# → F → C</p>
+<p><strong>Step-by-Step Practice</strong> (30 minutes):</p>
+<ol>
+<li><p><strong>Start in C Major</strong>:</p>
+<ul>
+<li>Play: C - F - G - C (I-IV-V-I)</li>
+</ul>
+</li>
+<li><p><strong>Modulate to G Major</strong>:</p>
+<ul>
+<li>Use C as pivot: C - F - G - <strong>C</strong> - D - G</li>
+<li>You&#39;re now in G Major!</li>
+</ul>
+</li>
+<li><p><strong>Modulate to D Major</strong>:</p>
+<ul>
+<li>From G Major: G - C - D - <strong>G</strong> - A - D</li>
+<li>Use G as pivot (I in G Major, IV in D Major)</li>
+<li>You&#39;re now in D Major!</li>
+</ul>
+</li>
+<li><p><strong>Practice the full sequence</strong>:</p>
+<ul>
+<li>C: C - F - G - C</li>
+<li>G: C - D - G (C is pivot)</li>
+<li>D: G - A - D (G is pivot)</li>
+<li>Continue pattern: Each key&#39;s I chord becomes the next key&#39;s IV chord</li>
+</ul>
+</li>
+<li><p><strong>Use the Circle of Fifths in the app</strong>:</p>
+<ul>
+<li>Click through the Circle of Fifths as you modulate</li>
+<li>Watch how each key relates to the next</li>
+<li>Notice the pattern: moving clockwise adds sharps</li>
+</ul>
+</li>
+</ol>
+<p><strong>What You&#39;re Learning</strong>: Keys are related in predictable ways - the Circle of Fifths shows these relationships.</p>
+<hr>
+<h3>Exercise 5: Modulating to Relative Minor</h3>
+<p><strong>Goal</strong>: Modulate from a major key to its relative minor (they share the same notes!)</p>
+<p><strong>Relative Minor Relationship</strong>:</p>
+<ul>
+<li>C Major and A Minor share the same notes (no sharps/flats)</li>
+<li>G Major and E Minor share the same notes (one sharp: F#)</li>
+<li>F Major and D Minor share the same notes (one flat: Bb)</li>
+</ul>
+<p><strong>Step-by-Step Practice</strong> (30 minutes):</p>
+<ol>
+<li><p><strong>C Major to A Minor</strong>:</p>
+<ul>
+<li>Start in C Major: Play C - F - G - C</li>
+<li>The pivot is easy: <strong>Am</strong> exists in both keys!<ul>
+<li>In C Major: Am is the <strong>vi chord</strong></li>
+<li>In A Minor: Am is the <strong>i chord</strong> (home!)</li>
+</ul>
+</li>
+<li>Play: C - F - G - <strong>Am</strong> - Dm - E - Am</li>
+<li>Full progression: C - F - G - Am - Dm - E - Am</li>
+<li>You&#39;ve modulated to A Minor!</li>
+</ul>
+</li>
+<li><p><strong>Practice the sound difference</strong>:</p>
+<ul>
+<li>Play C - F - G - C (bright, happy - Major)</li>
+<li>Play Am - Dm - E - Am (darker, emotional - Minor)</li>
+<li>Notice how the same notes create different moods</li>
+</ul>
+</li>
+<li><p><strong>Use Scale Practice mode</strong>:</p>
+<ul>
+<li>Play C Major scale, then A Minor scale</li>
+<li>Notice they use the same notes, just starting on different notes</li>
+<li>This is why relative minor modulation feels so natural</li>
+</ul>
+</li>
+</ol>
+<p><strong>What You&#39;re Learning</strong>: Major and relative minor keys are closely related - modulation between them feels very smooth.</p>
+<hr>
+<h3>Exercise 6: Direct Modulation (No Pivot Chord)</h3>
+<p><strong>Goal</strong>: Learn to modulate directly without a pivot chord (more dramatic effect)</p>
+<p><strong>When to Use</strong>: When you want a sudden, dramatic key change (common in pop music)</p>
+<p><strong>Step-by-Step Practice</strong> (20 minutes):</p>
+<ol>
+<li><p><strong>C Major to D Major (Direct)</strong>:</p>
+<ul>
+<li>Play in C Major: C - F - G - C</li>
+<li><strong>Stop</strong>. Take a breath.</li>
+<li><strong>Jump directly to D Major</strong>: D - G - A - D</li>
+<li>No pivot chord - just change keys!</li>
+<li>Notice how this feels more dramatic than pivot chord modulation</li>
+</ul>
+</li>
+<li><p><strong>Practice the transition</strong>:</p>
+<ul>
+<li>Play: C - F - G - C | <strong>D</strong> - G - A - D</li>
+<li>The vertical line (|) represents the key change</li>
+<li>Make the D chord feel like a new beginning</li>
+</ul>
+</li>
+<li><p><strong>Use the app</strong>:</p>
+<ul>
+<li>Play the C Major progression</li>
+<li>Quickly change Key Center to D Major</li>
+<li>Play the D Major progression</li>
+<li>Notice how the app&#39;s visual feedback changes</li>
+</ul>
+</li>
+</ol>
+<p><strong>What You&#39;re Learning</strong>: Not all modulations need to be smooth - sometimes a direct change creates the effect you want.</p>
+<hr>
+<h3>Exercise 7: Modulating Back Home</h3>
+<p><strong>Goal</strong>: Learn to modulate away and then return to your original key</p>
+<p><strong>This is called &quot;tonic return&quot;</strong> - a common pattern in music</p>
+<p><strong>Step-by-Step Practice</strong> (30 minutes):</p>
+<ol>
+<li><p><strong>C Major → G Major → Back to C Major</strong>:</p>
+<ul>
+<li>Start: C - F - G - C (in C Major)</li>
+<li>Modulate: C - D - G (now in G Major, using C as pivot)</li>
+<li><strong>Return home</strong>: G - C - F - C (G is V in C Major, creates strong pull back)</li>
+<li>Full progression: C - F - G - C - D - G - C - F - C</li>
+</ul>
+</li>
+<li><p><strong>Why G pulls back to C</strong>:</p>
+<ul>
+<li>G is the V chord in C Major</li>
+<li>V chords always want to resolve to I (the &quot;pull&quot; we learned earlier!)</li>
+<li>This creates a satisfying return home</li>
+</ul>
+</li>
+<li><p><strong>Practice the full journey</strong>:</p>
+<ul>
+<li>Play the entire progression slowly</li>
+<li>Feel the &quot;leaving home&quot; (modulation to G)</li>
+<li>Feel the &quot;returning home&quot; (G resolving to C)</li>
+<li>This is the emotional arc of modulation!</li>
+</ul>
+</li>
+</ol>
+<p><strong>What You&#39;re Learning</strong>: Modulation creates a journey - leaving home and returning creates musical storytelling.</p>
+<hr>
+<h3>Exercise 8: Modulation with Backing Tracks</h3>
+<p><strong>Goal</strong>: Apply modulation skills to real music</p>
+<p><strong>Step-by-Step Practice</strong> (30 minutes):</p>
+<ol>
+<li><p><strong>Find a backing track that modulates</strong>:</p>
+<ul>
+<li>Many pop songs modulate up a half-step or whole step near the end</li>
+<li>Search for &quot;backing track with key change&quot; or &quot;modulation backing track&quot;</li>
+<li>Or find a song you know that has a key change</li>
+</ul>
+</li>
+<li><p><strong>Identify the modulation</strong>:</p>
+<ul>
+<li>Listen to the backing track</li>
+<li>Notice when the key changes (it will feel like a lift or shift)</li>
+<li>Try to identify: What key does it start in? What key does it change to?</li>
+</ul>
+</li>
+<li><p><strong>Play along</strong>:</p>
+<ul>
+<li>Set app to match the starting key</li>
+<li>Play along with scales or chords</li>
+<li>When you hear the modulation, quickly change the Key Center selector</li>
+<li>Continue playing in the new key</li>
+<li>Use Free Play mode to improvise through the modulation</li>
+</ul>
+</li>
+<li><p><strong>Practice the transition</strong>:</p>
+<ul>
+<li>Play the progression in the first key</li>
+<li>At the modulation point, smoothly transition to the new key</li>
+<li>Use pivot chord technique if the song allows</li>
+</ul>
+</li>
+</ol>
+<p><strong>What You&#39;re Learning</strong>: Real music uses modulation - practicing with backing tracks makes it practical.</p>
+<hr>
+<h3>Common Modulation Patterns to Practice</h3>
+<p><strong>Pattern 1: Up a Whole Step</strong> (Very common in pop music)</p>
+<ul>
+<li>C Major → D Major: C - F - G - C | D - G - A - D</li>
+<li>Practice: G → A, F → G, etc.</li>
+</ul>
+<p><strong>Pattern 2: Up a Half Step</strong> (Creates excitement)</p>
+<ul>
+<li>C Major → C# Major: C - F - G - C | C# - F# - G# - C#</li>
+<li>Practice: F → F#, G → G#, etc.</li>
+</ul>
+<p><strong>Pattern 3: Down a Whole Step</strong> (Creates relaxation)</p>
+<ul>
+<li>C Major → Bb Major: C - F - G - C | Bb - Eb - F - Bb</li>
+<li>Practice: G → F, D → C, etc.</li>
+</ul>
+<p><strong>Pattern 4: Relative Minor</strong> (Smooth and natural)</p>
+<ul>
+<li>C Major → A Minor: C - F - G - Am - Dm - E - Am</li>
+<li>Practice: G → Em, F → Dm, etc.</li>
+</ul>
+<hr>
+<h3>Tips for Practicing Modulation</h3>
+<ul>
+<li><strong>Start Slow</strong>: Modulation requires mental flexibility - take your time</li>
+<li><strong>Use the App&#39;s Key Center Selector</strong>: Quickly switch keys to hear the difference</li>
+<li><strong>Practice Pivot Chords</strong>: Master the pivot chord method before trying direct modulation</li>
+<li><strong>Listen Carefully</strong>: Train your ear to hear when a key change happens</li>
+<li><strong>Experiment</strong>: Try modulating between any two keys - see what sounds good</li>
+<li><strong>Combine with Inversions</strong>: Use chord inversions to make modulations smoother</li>
+<li><strong>Record Yourself</strong>: Record your modulations to hear how smooth they sound</li>
+<li><strong>Have Fun</strong>: Modulation is creative - experiment and find what you like!</li>
+</ul>
+<hr>
+<h2>Additional Tips</h2>
+<ul>
+<li><strong>Regular Practice</strong>: Consistency is key - even 15-20 minutes daily is more effective than long sessions once a week</li>
+<li><strong>Set Goals</strong>: Focus on one key or scale type per week to build deep understanding</li>
+<li><strong>Use Visual Feedback</strong>: Pay attention to the color-coded feedback - it helps you see patterns and relationships</li>
+<li><strong>Combine Modes</strong>: Switch between Scale Practice, Chord Practice, and Free Play to keep practice sessions varied and engaging</li>
+<li><strong>Record Yourself</strong>: Use screen recording or audio recording to track your progress over time</li>
+<li><strong>Practice Both Hands</strong>: While the app shows one keyboard, practice scales and chords with both hands on your physical keyboard</li>
+<li><strong>Theory Application</strong>: Use the app to visualize music theory concepts you&#39;re learning elsewhere</li>
+</ul>
+<hr>
+<h2>Warm-Up Exercises: Fun Ways to Get Started</h2>
+<p>Before diving into focused practice, warm-up exercises help get your fingers moving, your ears tuned, and your mind engaged. These exercises are designed to be enjoyable while preparing you for more serious practice. Mix and match them based on your mood and time available!</p>
+<h3>The &quot;Circle of Fifths Tour&quot; (5-10 minutes)</h3>
+<p><strong>What it is</strong>: A musical journey around the Circle of Fifths that warms up your fingers and ears.</p>
+<p><strong>How to do it</strong>:</p>
+<ol>
+<li>Open Chord Practice mode, set Key Center to C Major</li>
+<li>Play a simple I-IV-V-I progression in C: C - F - G - C</li>
+<li>Click clockwise on the Circle of Fifths to G Major</li>
+<li>Play I-IV-V-I in G: G - C - D - G</li>
+<li>Continue clockwise: D Major, A Major, E Major... all the way around!</li>
+<li>Try to make each transition smooth - notice how each key feels different</li>
+</ol>
+<p><strong>Why it&#39;s fun</strong>: It&#39;s like taking a musical road trip! Each key has its own character, and you&#39;ll discover favorites along the way.</p>
+<p><strong>Variation</strong>: Go backwards (counter-clockwise) for a different feel, or jump randomly around the circle!</p>
+<hr>
+<h3>The &quot;Chord Inversion Dance&quot; (5 minutes)</h3>
+<p><strong>What it is</strong>: A playful exercise that gets your fingers moving through chord inversions smoothly.</p>
+<p><strong>How to do it</strong>:</p>
+<ol>
+<li>Chord Practice mode, pick any key (start with C Major)</li>
+<li>Choose a simple progression: C - F - G - C (I-IV-V-I)</li>
+<li>Play it once in root position</li>
+<li>Now play it again, but cycle through inversions:<ul>
+<li>C (root) → F (1st inversion) → G (2nd inversion) → C (root)</li>
+<li>Or mix it up: C (1st inv) → F (2nd inv) → G (root) → C (1st inv)</li>
+</ul>
+</li>
+<li>Try to make your fingers &quot;dance&quot; smoothly between chords</li>
+</ol>
+<p><strong>Why it&#39;s fun</strong>: It feels like solving a puzzle with your fingers! Each inversion creates a different mood, and finding the smoothest path is satisfying.</p>
+<p><strong>Variation</strong>: Time yourself - can you play through all inversions faster each day?</p>
+<hr>
+<h3>The &quot;Scale Race&quot; (5 minutes)</h3>
+<p><strong>What it is</strong>: A quick, energetic scale practice that gets your fingers moving.</p>
+<p><strong>How to do it</strong>:</p>
+<ol>
+<li>Scale Practice mode, start with C Major</li>
+<li>Play the scale ascending quickly (but accurately!)</li>
+<li>Play it descending</li>
+<li>Now try playing it in &quot;thirds&quot; - C-E, D-F, E-G, F-A, G-B, C-E (ascending)</li>
+<li>Switch to a different key and repeat</li>
+</ol>
+<p><strong>Why it&#39;s fun</strong>: It&#39;s like a musical sprint! The pattern changes keep it interesting, and you&#39;ll feel your fingers getting more agile.</p>
+<p><strong>Variation</strong>: Try playing scales in different patterns - fourths, fifths, or create your own pattern!</p>
+<hr>
+<h3>The &quot;Blues Warm-Up&quot; (5-7 minutes)</h3>
+<p><strong>What it is</strong>: A groovy warm-up using the blues scale that feels more like playing than practicing.</p>
+<p><strong>How to do it</strong>:</p>
+<ol>
+<li>Scale Practice mode, select Blues scale in C</li>
+<li>Play the blues scale up and down a few times</li>
+<li>Now improvise! Just play random notes from the scale in a rhythm that feels good</li>
+<li>Switch to Free Play mode, keep Blues scale selected</li>
+<li>Play around with the &quot;blue notes&quot; - those notes that give blues its characteristic sound</li>
+<li>Try playing a simple blues lick: C-Eb-F-Gb-G-Bb-C (descending)</li>
+</ol>
+<p><strong>Why it&#39;s fun</strong>: Blues scales sound cool no matter what you play! It&#39;s hard to sound bad, which makes it confidence-building.</p>
+<p><strong>Variation</strong>: Put on a blues backing track and just noodle around - no pressure, just fun!</p>
+<hr>
+<h3>The &quot;Lava Game Challenge&quot; (3-5 minutes)</h3>
+<p><strong>What it is</strong>: A game-like warm-up that sharpens your accuracy and reflexes.</p>
+<p><strong>How to do it</strong>:</p>
+<ol>
+<li>Open Lava Game mode</li>
+<li>Pick a key you know well (start with C Major)</li>
+<li>Try to play a simple melody or scale while avoiding the red &quot;lava&quot; keys</li>
+<li>See how long you can play without hitting a wrong note</li>
+<li>Challenge yourself: Can you play a full scale? A simple song?</li>
+</ol>
+<p><strong>Why it&#39;s fun</strong>: It&#39;s literally a game! The visual feedback and challenge element make it engaging, and you&#39;ll improve your accuracy without even realizing it.</p>
+<p><strong>Variation</strong>: Try different keys or scales to keep it fresh!</p>
+<hr>
+<h3>The &quot;Chord Progression Jam&quot; (5-10 minutes)</h3>
+<p><strong>What it is</strong>: A creative warm-up where you explore chord progressions freely.</p>
+<p><strong>How to do it</strong>:</p>
+<ol>
+<li>Free Play mode, set Key Center to C Major</li>
+<li>Start with a simple progression: C - Am - F - G (the classic &quot;vi-IV-I-V&quot; or &quot;50s progression&quot;)</li>
+<li>Play it a few times, then experiment:<ul>
+<li>Add inversions between chords</li>
+<li>Hold some chords longer</li>
+<li>Try different rhythms</li>
+<li>Add a melody note on top</li>
+</ul>
+</li>
+<li>Switch to a different key and try the same progression</li>
+<li>Build your own progression - what sounds good to you?</li>
+</ol>
+<p><strong>Why it&#39;s fun</strong>: It&#39;s creative freedom! You&#39;re making music, not just practicing. The chord detection feature shows you what you&#39;re actually playing, which is always interesting.</p>
+<p><strong>Variation</strong>: Try to recreate a progression from a song you like, or create one that matches your current mood!</p>
+<hr>
+<h3>The &quot;Pentatonic Power-Up&quot; (5 minutes)</h3>
+<p><strong>What it is</strong>: A quick warm-up using pentatonic scales that sound great and are easy to play.</p>
+<p><strong>How to do it</strong>:</p>
+<ol>
+<li>Scale Practice mode, select Pentatonic scale in C</li>
+<li>Play the scale up and down - notice how smooth it feels (only 5 notes!)</li>
+<li>Now try playing it in different patterns:<ul>
+<li>Skip notes: C-E-G-C-E (up), G-E-C-G-E (down)</li>
+<li>Play in groups: C-D-E, then G-A-C</li>
+<li>Create a simple melody using only pentatonic notes</li>
+</ul>
+</li>
+<li>Switch to Free Play mode and improvise freely</li>
+</ol>
+<p><strong>Why it&#39;s fun</strong>: Pentatonic scales are used in so much music (rock, pop, jazz, folk) - everything you play sounds musical!</p>
+<p><strong>Variation</strong>: Try the pentatonic scale in different keys, or combine it with chord practice!</p>
+<hr>
+<h3>The &quot;I-V-I Sprint&quot; (3 minutes)</h3>
+<p><strong>What it is</strong>: A super quick warm-up focusing on the most important chord relationship.</p>
+<p><strong>How to do it</strong>:</p>
+<ol>
+<li>Chord Practice mode, any key (start with C Major)</li>
+<li>Play I-V-I: C - G - C</li>
+<li>Focus on smooth transitions - keep that common tone in place!</li>
+<li>Try it in different inversions</li>
+<li>Speed up gradually - how fast can you go while staying smooth?</li>
+<li>Switch keys and repeat</li>
+</ol>
+<p><strong>Why it&#39;s fun</strong>: It&#39;s quick, satisfying, and you&#39;ll immediately hear improvement. The I-V relationship is the foundation of so much music!</p>
+<p><strong>Variation</strong>: Add the IV chord: I-IV-V-I, or try I-V-vi-IV (another classic progression)!</p>
+<p><strong>Want automated practice through all keys?</strong> Try the <a href="#the-i-v-i-circle-exercise-continuous-practice">I-V-I Circle Exercise</a> at <code>http://localhost:5173/exercise/i-v-i-circle</code> - it automatically guides you through all 12 keys with continuous looping!</p>
+<hr>
+<h3>The &quot;I-V-I Circle Exercise&quot; (Continuous Practice)</h3>
+<p><strong>What it is</strong>: An automated exercise that guides you through I-V-I chord progressions in all 12 keys around the Circle of Fifths, looping continuously for endless practice.</p>
+<p><strong>How to access it</strong>:</p>
+<ol>
+<li>Navigate to: <code>http://localhost:5173/exercise/i-v-i-circle</code></li>
+<li>The exercise automatically starts with C Major and guides you through I-V-I</li>
+<li>After completing I-V-I in each key, it automatically advances to the next key in Circle of Fifths order</li>
+<li><strong>The exercise loops continuously</strong> - when you complete all 12 keys, it automatically starts over from the beginning, allowing you to practice endlessly!</li>
+</ol>
+<p><strong>How to use it</strong>:</p>
+<ol>
+<li>Connect your MIDI keyboard</li>
+<li>The app will show you the current target chord (I, V, or I)</li>
+<li>Play the correct chord - the app detects when you play it correctly</li>
+<li>After completing all three chords (I-V-I), the exercise automatically moves to the next key</li>
+<li>Continue practicing - the exercise loops through all keys indefinitely!</li>
+</ol>
+<p><strong>URL Parameters</strong> (optional customization):</p>
+<ul>
+<li><code>?startKey=C</code> - Start at a specific key (e.g., <code>?startKey=G</code> to start at G Major)</li>
+<li><code>?keys=12</code> - Practice only the first N keys (e.g., <code>?keys=6</code> for first 6 keys)</li>
+<li>Combine both: <code>?startKey=G&amp;keys=6</code> - Start at G and practice 6 keys</li>
+</ul>
+<p><strong>Examples</strong>:</p>
+<ul>
+<li>Full circle starting at C: <code>http://localhost:5173/exercise/i-v-i-circle</code></li>
+<li>Start at G Major: <code>http://localhost:5173/exercise/i-v-i-circle?startKey=G</code></li>
+<li>Practice first 6 keys only: <code>http://localhost:5173/exercise/i-v-i-circle?keys=6</code></li>
+<li>Start at D, practice 3 keys: <code>http://localhost:5173/exercise/i-v-i-circle?startKey=D&amp;keys=3</code></li>
+</ul>
+<p><strong>Why it&#39;s effective</strong>:</p>
+<ul>
+<li><strong>Continuous practice</strong>: The looping feature means you can practice for as long as you want without interruption</li>
+<li><strong>Automatic progression</strong>: No need to manually switch keys - focus entirely on playing the chords</li>
+<li><strong>Circle of Fifths order</strong>: Practices keys in the most musically logical sequence</li>
+<li><strong>Real-time feedback</strong>: See exactly which chord you need to play and get confirmation when correct</li>
+<li><strong>Builds muscle memory</strong>: Repetitive practice through all keys strengthens finger patterns</li>
+</ul>
+<p><strong>Practice tips</strong>:</p>
+<ul>
+<li>Start slow and focus on accuracy - speed will come naturally</li>
+<li>Pay attention to the common tone between I and V chords (the 5th of I is the root of V)</li>
+<li>Try different inversions for smoother voice leading</li>
+<li>Use the visual feedback to see which keys are highlighted for each chord</li>
+<li>Practice daily - even 10-15 minutes of continuous looping practice builds significant skill</li>
+</ul>
+<p><strong>Variation</strong>: Once comfortable with I-V-I, try other progressions like I-IV-V-I or I-vi-IV-V using the same URL-based exercise system!</p>
+<hr>
+<h3>The &quot;Random Key Adventure&quot; (5-7 minutes)</h3>
+<p><strong>What it is</strong>: A fun exploration exercise that keeps you on your toes.</p>
+<p><strong>How to do it</strong>:</p>
+<ol>
+<li>Close your eyes and click randomly on the Circle of Fifths</li>
+<li>Whatever key you land on, that&#39;s your key for this round!</li>
+<li>Play a scale in that key</li>
+<li>Play a simple I-IV-V-I progression</li>
+<li>Try to identify the key by sound before opening your eyes</li>
+<li>Repeat with a new random key!</li>
+</ol>
+<p><strong>Why it&#39;s fun</strong>: The randomness keeps it exciting, and you&#39;ll discover keys you might not normally practice. Plus, it&#39;s a great ear training exercise!</p>
+<p><strong>Variation</strong>: Have a friend pick keys for you, or use a random number generator!</p>
+<hr>
+<h3>The &quot;Melody Maker&quot; (5-10 minutes)</h3>
+<p><strong>What it is</strong>: A creative warm-up where you compose simple melodies.</p>
+<p><strong>How to do it</strong>:</p>
+<ol>
+<li>Free Play mode, pick a key (C Major is great to start)</li>
+<li>Play a simple chord progression: C - Am - F - G</li>
+<li>Now add a melody on top using only scale notes</li>
+<li>Keep it simple - just a few notes per chord</li>
+<li>Try different rhythms - what feels good?</li>
+<li>Record it if you like it!</li>
+</ol>
+<p><strong>Why it&#39;s fun</strong>: You&#39;re creating music! Even simple melodies can sound beautiful, and it&#39;s rewarding to hear something you made.</p>
+<p><strong>Variation</strong>: Try creating melodies in minor keys for a different mood, or use the pentatonic scale for an easier but still musical option!</p>
+<hr>
+<h3>Quick Warm-Up Combos</h3>
+<p><strong>The &quot;5-Minute Express&quot;</strong> (when you&#39;re short on time):</p>
+<ul>
+<li>1 min: I-V-I sprint in 2-3 keys</li>
+<li>2 min: Quick scale race (one scale, ascending/descending)</li>
+<li>2 min: Chord inversion dance (one simple progression)</li>
+</ul>
+<p><strong>The &quot;10-Minute Full Body&quot;</strong> (complete warm-up):</p>
+<ul>
+<li>2 min: Circle of Fifths tour (3-4 keys)</li>
+<li>2 min: Scale race with pattern variations</li>
+<li>3 min: Chord progression jam</li>
+<li>3 min: Free play improvisation</li>
+</ul>
+<p><strong>The &quot;Fun-First Warm-Up&quot;</strong> (when you want to play, not practice):</p>
+<ul>
+<li>3 min: Blues warm-up</li>
+<li>3 min: Lava Game challenge</li>
+<li>4 min: Melody maker</li>
+</ul>
+<hr>
+<h3>Tips for Warm-Ups</h3>
+<ul>
+<li><strong>Keep it light</strong>: Warm-ups should feel easy and fun, not stressful</li>
+<li><strong>Mix it up</strong>: Don&#39;t do the same warm-up every day - variety keeps it interesting</li>
+<li><strong>Listen</strong>: Pay attention to how things sound, not just hitting the right notes</li>
+<li><strong>No pressure</strong>: If something doesn&#39;t work, just move on - it&#39;s a warm-up!</li>
+<li><strong>Time yourself</strong>: Some days you&#39;ll have 5 minutes, some days 15 - adjust accordingly</li>
+<li><strong>Have fun</strong>: The best warm-up is one you actually want to do!</li>
+</ul>
+<p>Remember: The goal of warm-ups is to get you ready for practice, not to perfect technique. If you&#39;re having fun and your fingers are moving, you&#39;re doing it right!</p>
+<hr>
+<h2>Sample Lesson Plan: Beginner with Experience</h2>
+<p>This 6-week lesson plan is designed for someone who has basic piano knowledge (can read notes, knows basic chords) but wants to build a solid foundation in scales, chord progressions, and music theory. Each week builds on the previous one, gradually increasing in complexity.</p>
+<h3>Week 1: Foundation in C Major</h3>
+<p><strong>Goal</strong>: Master C Major scale and basic triads</p>
+<p><strong>Day 1-2: Scale Fundamentals</strong> (30 minutes)</p>
+<ul>
+<li>Open Scale Practice mode, select C Major</li>
+<li>Play C Major scale ascending and descending slowly (60 BPM metronome)</li>
+<li>Focus on evenness - each note should sound equal in volume and timing</li>
+<li>Practice 5 times ascending, 5 times descending</li>
+<li>Use visual feedback to identify any rushing or dragging</li>
+</ul>
+<p><strong>Day 3-4: Triad Discovery</strong> (30 minutes)</p>
+<ul>
+<li>Switch to Chord Practice mode</li>
+<li>Play C Major triad (C-E-G) in root position</li>
+<li>Click the chord in Circle of Fifths to cycle through inversions</li>
+<li>Practice each inversion: root position, first inversion (E-G-C), second inversion (G-C-E)</li>
+<li>Notice how the same chord sounds different in each inversion</li>
+</ul>
+<p><strong>Day 5-7: I-V Connection</strong> (30 minutes)</p>
+<ul>
+<li>Review the &quot;I-V Connection&quot; section above</li>
+<li>Play C Major (I) chord, then G Major (V) chord</li>
+<li>Notice the shared G note - keep that finger in place while moving others</li>
+<li>Practice smooth transitions: I → V → I</li>
+<li>Try different inversions while maintaining smooth voice leading</li>
+</ul>
+<p><strong>Weekly Goal</strong>: Play C Major scale evenly at 80 BPM, transition smoothly between I and V chords</p>
+<hr>
+<h3>Week 2: Expanding to G Major and F Major</h3>
+<p><strong>Goal</strong>: Learn two new keys and understand the Circle of Fifths</p>
+<p><strong>Day 1-2: G Major Scale</strong> (30 minutes)</p>
+<ul>
+<li>Scale Practice mode: G Major</li>
+<li>Play scale ascending/descending (start at 60 BPM, work up to 80 BPM)</li>
+<li>Notice the F# - this is your first sharp!</li>
+<li>Practice G Major triads in all inversions</li>
+</ul>
+<p><strong>Day 3-4: F Major Scale</strong> (30 minutes)</p>
+<ul>
+<li>Scale Practice mode: F Major</li>
+<li>Play scale ascending/descending</li>
+<li>Notice the Bb - this is your first flat!</li>
+<li>Practice F Major triads in all inversions</li>
+</ul>
+<p><strong>Day 5-7: Circle of Fifths Navigation</strong> (30 minutes)</p>
+<ul>
+<li>Use Circle of Fifths to visualize the relationship between C, G, and F</li>
+<li>Practice I-IV-V-I progression in C Major (C-F-G-C)</li>
+<li>Practice I-IV-V-I progression in G Major (G-C-D-G)</li>
+<li>Practice I-IV-V-I progression in F Major (F-Bb-C-F)</li>
+<li>Notice how each key feels different but follows the same pattern</li>
+</ul>
+<p><strong>Weekly Goal</strong>: Play G and F Major scales smoothly, understand I-IV-V progressions in three keys</p>
+<hr>
+<h3>Week 3: Chord Progressions and Voice Leading</h3>
+<p><strong>Goal</strong>: Master smooth chord transitions using inversions</p>
+<p><strong>Day 1-2: I-IV-V-I in C Major</strong> (30 minutes)</p>
+<ul>
+<li>Chord Practice mode: Build I-IV-V-I progression (C-F-G-C)</li>
+<li>Play each chord in root position first</li>
+<li>Now try: C (root) → F (first inversion) → G (second inversion) → C (root)</li>
+<li>Notice how inversions create smoother transitions</li>
+<li>Practice until transitions feel effortless</li>
+</ul>
+<p><strong>Day 3-4: Adding the ii Chord</strong> (30 minutes)</p>
+<ul>
+<li>Learn about the ii chord (D minor in C Major)</li>
+<li>Practice progression: I-ii-V-I (C-Dm-G-C)</li>
+<li>Experiment with different inversions</li>
+<li>Use Free Play mode to hear how these chords sound together</li>
+</ul>
+<p><strong>Day 5-7: Voice Leading Practice</strong> (30 minutes)</p>
+<ul>
+<li>Focus on keeping common tones in place</li>
+<li>Practice I-V-I: Keep the G note stationary, move other fingers</li>
+<li>Practice I-IV-I: Keep the C note stationary</li>
+<li>Try creating your own 4-chord progressions using inversions</li>
+<li>Goal: Minimize finger movement between chords</li>
+</ul>
+<p><strong>Weekly Goal</strong>: Play I-ii-V-I progression smoothly with good voice leading</p>
+<hr>
+<h3>Week 4: Backing Track Integration</h3>
+<p><strong>Goal</strong>: Apply skills to musical context</p>
+<p><strong>Day 1-2: Finding Your Backing Track</strong> (30 minutes)</p>
+<ul>
+<li>Find a simple backing track in C Major (YouTube, Spotify, or backing track site)</li>
+<li>Set up split screen: backing track on one side, piano app on the other</li>
+<li>Use Key Center selector to match C Major</li>
+<li>Just listen first - identify when chords change</li>
+</ul>
+<p><strong>Day 3-4: Scale Practice with Backing</strong> (30 minutes)</p>
+<ul>
+<li>Play C Major scale along with backing track</li>
+<li>Start slow - don&#39;t worry about matching tempo exactly</li>
+<li>Focus on staying in key (only play blue/highlighted notes)</li>
+<li>Use visual feedback to ensure you&#39;re playing correct notes</li>
+</ul>
+<p><strong>Day 5-7: Chord Practice with Backing</strong> (30 minutes)</p>
+<ul>
+<li>Identify the chord progression in your backing track</li>
+<li>Use Chord Practice mode to build that progression</li>
+<li>Play along, matching chord changes</li>
+<li>Try adding inversions between chord changes for smoother transitions</li>
+<li>Use chord detection in Free Play mode to verify you&#39;re playing correctly</li>
+</ul>
+<p><strong>Weekly Goal</strong>: Play along with a backing track, staying in key and matching chord changes</p>
+<hr>
+<h3>Week 5: Minor Keys and Emotional Expression</h3>
+<p><strong>Goal</strong>: Understand the difference between major and minor</p>
+<p><strong>Day 1-2: A Minor Scale</strong> (30 minutes)</p>
+<ul>
+<li>Scale Practice mode: A Minor (relative minor of C Major)</li>
+<li>Play scale ascending/descending</li>
+<li>Notice it uses the same notes as C Major but starts on A</li>
+<li>Compare the emotional feel: Major = bright, Minor = darker/more emotional</li>
+</ul>
+<p><strong>Day 3-4: Minor Chord Progressions</strong> (30 minutes)</p>
+<ul>
+<li>Learn i-iv-V-i progression in A Minor (Am-Dm-E-Am)</li>
+<li>Practice in Chord Practice mode</li>
+<li>Notice how minor progressions create different moods</li>
+<li>Compare: C Major (I-IV-V-I) vs A Minor (i-iv-V-i)</li>
+</ul>
+<p><strong>Day 5-7: Mixing Major and Minor</strong> (30 minutes)</p>
+<ul>
+<li>Practice progression: Am-F-C-G (common pop progression)</li>
+<li>Notice how it mixes minor and major chords</li>
+<li>Use Free Play mode to experiment with this progression</li>
+<li>Try playing scales over this progression: A Minor scale works well</li>
+</ul>
+<p><strong>Weekly Goal</strong>: Understand major vs minor, play minor progressions confidently</p>
+<hr>
+<h3>Week 6: Blues and Improvisation</h3>
+<p><strong>Goal</strong>: Apply everything learned to blues and improvisation</p>
+<p><strong>Day 1-2: Blues Scale</strong> (30 minutes)</p>
+<ul>
+<li>Scale Practice mode: Select Blues scale in C</li>
+<li>Play the blues scale ascending/descending</li>
+<li>Notice the &quot;blue notes&quot; - these create that characteristic blues sound</li>
+<li>Practice at different tempos</li>
+</ul>
+<p><strong>Day 3-4: 12-Bar Blues Progression</strong> (30 minutes)</p>
+<ul>
+<li>Learn the classic 12-bar blues: I-I-I-I-IV-IV-I-I-V-IV-I-I (in C: C-C-C-C-F-F-C-C-G-F-C-C)</li>
+<li>Build this in Chord Practice mode</li>
+<li>Practice playing through the progression smoothly</li>
+<li>Try different inversions to create movement</li>
+</ul>
+<p><strong>Day 5-7: Free Play Improvisation</strong> (30 minutes)</p>
+<ul>
+<li>Find a blues backing track in C</li>
+<li>Set app to Blues scale mode</li>
+<li>Use Free Play mode to improvise</li>
+<li>Start simple: play scale notes in different rhythms</li>
+<li>Use chord detection to see what chords you&#39;re implying</li>
+<li>Don&#39;t worry about mistakes - focus on staying in key (blue keys)</li>
+<li>Try Lava Game mode for a fun challenge: avoid red keys!</li>
+</ul>
+<p><strong>Weekly Goal</strong>: Play a 12-bar blues progression and improvise a simple melody over it</p>
+<hr>
+<h3>Practice Tips Throughout the 6 Weeks</h3>
+<ul>
+<li><strong>Always Use a Metronome</strong>: Start slow (60 BPM), gradually increase tempo as you gain confidence</li>
+<li><strong>Focus on Accuracy First</strong>: Precision is more important than speed</li>
+<li><strong>Practice Daily</strong>: Even 20-30 minutes daily is better than long sessions once a week</li>
+<li><strong>Record Your Progress</strong>: Use screen recording or audio recording to track improvement</li>
+<li><strong>Be Patient</strong>: Each week builds on the previous - don&#39;t rush ahead</li>
+<li><strong>Have Fun</strong>: Use Free Play and Lava Game modes to keep practice engaging</li>
+</ul>
+<h3>After Week 6: Next Steps</h3>
+<ul>
+<li>Continue practicing scales in all 12 keys using the Circle of Fifths</li>
+<li>Explore more complex chord progressions (ii-V-I, vi-IV-I-V)</li>
+<li>Learn about chord extensions (7ths, 9ths) using the chord detection features</li>
+<li>Practice with backing tracks in different keys</li>
+<li>Experiment with different scale types (pentatonic, modes)</li>
+<li>Build your own chord progressions and create simple compositions</li>
+</ul>
+<hr>
+<p><em>Last Updated: 2026-01-26</em></p>
+<!-- Warm-up exercises section added: 2025-01-28 -->
+<!-- I-V-I Circle Exercise added: 2026-01-26 -->
+
+<hr>
+<h2>&quot;Music Theory Beast&quot; 7-Day Chromatic Chord Challenge</h2>
+<p>Inspired by the <a href="https://www.youtube.com/watch?v=fvwtclFZ7Uc">Pur Pasteur methodology</a>, this plan focuses on mastering all 12 major chords through chromatic movement. This builds geographic familiarity with the keyboard and strengthens finger independence across all keys.</p>
+<h3>The Core Drill: Chromatic Major Triads</h3>
+<p>The goal is to play C Major, then C# Major, then D Major, and so on, all the way up to B Major and back to C.</p>
+<table>
+<thead>
+<tr>
+<th>Day</th>
+<th>Focus</th>
+<th>Exercise</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1</td>
+<td><strong>Root Position Relay</strong></td>
+<td>Play all 12 major triads in root position, moving up chromatically. Focus on &quot;locking&quot; the hand shape.</td>
+</tr>
+<tr>
+<td>2</td>
+<td><strong>1st Inversion Ascent</strong></td>
+<td>Play all 12 major triads in 1st inversion (e.g., E-G-C for C Major) chromatically.</td>
+</tr>
+<tr>
+<td>3</td>
+<td><strong>2nd Inversion Ascent</strong></td>
+<td>Play all 12 major triads in 2nd inversion (e.g., G-C-E for C Major) chromatically.</td>
+</tr>
+<tr>
+<td>4</td>
+<td><strong>The &quot;Beast&quot; Shuffle</strong></td>
+<td>Ascend chromatically but switch inversion with each step: C (Root), C# (1st), D (2nd), D# (Root)...</td>
+</tr>
+<tr>
+<td>5</td>
+<td><strong>Voice-Led Chromaticism</strong></td>
+<td>Move between major chords keeping the smallest possible movement (e.g., C (Root) to C# (2nd inversion)).</td>
+</tr>
+<tr>
+<td>6</td>
+<td><strong>Speed &amp; Stamina</strong></td>
+<td>Set metronome to 60 BPM. Play one chord per beat chromatically through all 12 keys. Increase to 80 BPM once fluent.</td>
+</tr>
+<tr>
+<td>7</td>
+<td><strong>Arpeggiated Chromaticism</strong></td>
+<td>Play each chromatic major chord as a broken arpeggio (1-3-5-3-1) before moving to the next half-step.</td>
+</tr>
+</tbody></table>
+<h3>How to use with the Piano App:</h3>
+<ol>
+<li><strong>Free Play Mode</strong>: Enable Free Play to see the chord names and note detection as you move through the chromatic scale.</li>
+<li><strong>Visual Feedback</strong>: Watch the keyboard display to confirm you&#39;re maintaining the correct triad shapes across different black and white key combinations.</li>
+<li><strong>Chromatic Navigation</strong>: Since you&#39;ll be moving through all 12 keys, it&#39;s often best to practice this in <strong>Free Play</strong> without a specific Key Center locked, or use it as an opportunity to see how &quot;out-of-key&quot; chords look relative to a home key.</li>
+</ol>
+<hr>
+<p><em>Last Updated: 2026-01-26</em></p>
+<!-- 7-Day Chromatic Challenge added: 2026-01-25 -->
+<!-- I-V-I Circle Exercise added: 2026-01-26 -->
+
+  </div>
+</body>
+</html>

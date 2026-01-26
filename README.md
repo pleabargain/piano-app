@@ -45,6 +45,30 @@ A React-based piano training application built with Vite. Practice scales, chord
 npm install
 ```
 
+### NPM Dependencies
+
+This project uses React 19 and requires compatible dependencies:
+
+**Core Dependencies:**
+- `react`: ^19.2.0
+- `react-dom`: ^19.2.0
+- `react-router-dom`: ^7.13.0
+
+**Testing Dependencies:**
+- `@testing-library/react`: ^16.0.0 (required for React 19 compatibility)
+  - **Note**: Version 14.x only supports React 18. Version 16.x is required for React 19.
+- `@testing-library/jest-dom`: ^6.1.5
+- `@testing-library/user-event`: ^14.5.1
+- `vitest`: ^1.0.4
+
+**Development Tools:**
+- `vite`: ^7.3.1
+- `baseline-browser-mapping`: ^2.9.18 (for browser compatibility testing)
+
+**Important Notes:**
+- If you encounter peer dependency conflicts when installing packages, ensure `@testing-library/react` is version 16.0.0 or higher for React 19 compatibility.
+- The project uses ES modules (`"type": "module"`), so all imports use ES6 syntax.
+
 ### Running the Application
 
 **Important**: This is a Vite project and must be run through Vite's development server. Do not open `index.html` directly in a browser.
@@ -1092,10 +1116,12 @@ This enhancement helps users understand that the same notes can function as diff
 
 ## Development Notes
 
+**2026-01-26**: Implemented URL-based routing system with React Router. Added I-V-I Circle Exercise that loops continuously through all 12 keys in Circle of Fifths order. Exercise accessible at `/exercise/i-v-i-circle` with optional URL parameters (`?startKey=C&keys=12`). Exercise automatically advances through keys and loops indefinitely for continuous practice. Added comprehensive unit tests for exercise configuration, loader, and routing functionality. Created markdown-to-HTML conversion script - `usage-ideas.md` is kept for editing, and `usage-ideas.html` is automatically generated for display at `http://localhost:5173/usage-ideas.html`. Run `npm run convert-md` to regenerate HTML from markdown.
+
 **2026-01-11**: I'm very proud of this iteration. Can now load `G Am C F Dm Em` as a sample chord progression. Minors and diminished chords will be tested soon.
 
 **TODO**: Add more screenshots
 
 ---
 
-Last Updated: 2026-01-11
+Last Updated: 2026-01-26

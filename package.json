@@ -5,31 +5,35 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
+    "build": "npm run convert-md && vite build",
     "lint": "eslint .",
     "preview": "vite preview",
     "test": "vitest",
     "test:ui": "vitest --ui",
-    "test:log": "powershell -ExecutionPolicy Bypass -File .\\scripts\\run-tests.ps1"
+    "test:log": "powershell -ExecutionPolicy Bypass -File .\\scripts\\run-tests.ps1",
+    "convert-md": "node scripts/convert-markdown-to-html.js"
   },
   "dependencies": {
     "react": "^19.2.0",
-    "react-dom": "^19.2.0"
+    "react-dom": "^19.2.0",
+    "react-router-dom": "^7.13.0"
   },
   "devDependencies": {
     "@eslint/js": "^9.39.1",
     "@testing-library/jest-dom": "^6.1.5",
-    "@testing-library/react": "^14.1.2",
+    "@testing-library/react": "^16.0.0",
     "@testing-library/user-event": "^14.5.1",
     "@types/react": "^19.2.5",
     "@types/react-dom": "^19.2.3",
     "@vitejs/plugin-react": "^5.1.1",
     "@vitest/ui": "^1.0.4",
+    "baseline-browser-mapping": "^2.9.18",
     "eslint": "^9.39.1",
     "eslint-plugin-react-hooks": "^7.0.1",
     "eslint-plugin-react-refresh": "^0.4.24",
     "globals": "^16.5.0",
     "jsdom": "^23.0.1",
+    "marked": "^17.0.1",
     "vite": "^7.3.1",
     "vitest": "^1.0.4"
   }

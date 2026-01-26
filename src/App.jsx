@@ -1,5 +1,6 @@
 // https://github.com/pleabargain/piano-app
 import React, { useState, useEffect, useRef, useCallback } from 'react';
+import { useLocation } from 'react-router-dom';
 import Piano from './components/Piano';
 import Controls from './components/Controls';
 import ProgressionBuilder from './components/ProgressionBuilder';
@@ -10,12 +11,14 @@ import ChordInfo from './components/ChordInfo';
 import ScaleSelector from './components/ScaleSelector';
 import RecordingControls from './components/RecordingControls';
 import RecordingList from './components/RecordingList';
+import Exercise from './components/Exercise';
 import { midiManager } from './core/midi-manager';
 import RecordingManager from './core/recording-manager';
 import PlaybackManager from './core/playback-manager';
 import RecordingStorage from './core/recording-storage';
 import { getScaleNotes, getChordNotes, identifyChord, getChordNotesAsMidi, parseChordName, findPotentialChords, NOTES, CHORD_TYPES, getNoteIndex } from './core/music-theory';
 import { useChordDetection } from './hooks/useChordDetection';
+import { loadExerciseFromUrl } from './core/exercise-loader';
 import './App.css';
 
 function App() {
@@ -91,6 +94,46 @@ function App() {
   const [rejectErrors, setRejectErrors] = useState(false);
   const [requireAllInversions, setRequireAllInversions] = useState(false);
   const [playedInversions, setPlayedInversions] = useState(new Set()); // Track inversions played for current chord
+
+  // Exercise State
+  const [exerciseConfig, setExerciseConfig] = useState(null);
+  const location = useLocation();
+
+  // Load exercise from URL
+  useEffect(() => {
+    const pathname = location.pathname;
+    if (!pathname.startsWith('/exercise/')) {
+      setExerciseConfig(null);
+      return;
+    }
+    
+    const exerciseId = pathname.split('/exercise/')[1];
+    const loadedConfig = loadExerciseFromUrl(exerciseId, location.search);
+    if (loadedConfig) {
+      setExerciseConfig(loadedConfig);
+      // Set mode based on exercise
+      setMode(loadedConfig.mode);
+      setSelectedScaleType(loadedConfig.config.scaleType || 'major');
+    } else {
+      setExerciseConfig(null);
+    }
+  }, [location.pathname, location.search]);
+
+  // Exercise callbacks
+  const handleExerciseProgressionUpdate = useCallback((newProgression) => {
+    setProgression(newProgression);
+    setCurrentStepIndex(0);
+    setIsPracticeActive(false);
+    setChordAcknowledged(false);
+  }, []);
+
+  const handleExerciseKeyUpdate = useCallback((newKey) => {
+    setSelectedRoot(newKey);
+  }, []);
+
+  const handleExerciseStatusUpdate = useCallback((message) => {
+    setStatusMessage(message);
+  }, []);
 
   // Clear clicked chord when mode changes
   useEffect(() => {
@@ -378,27 +421,7 @@ function App() {
     }
     console.log('[App] handleChordPractice: detected chord', detected);
 
-    if (progression.length > 0) {
-      const target = progression[currentStepIndex % progression.length];
-      console.log('[App] handleChordPractice: target chord', target);
-      // Activate practice mode when user starts playing
-      if (activeNotes.length > 0 && !isPracticeActive) {
-        setIsPracticeActive(true);
-      }
-      if (detected) {
-        const message = `Target: ${target.name} (${target.roman}) | Playing: ${detected.name} ${detected.inversion ? `(${detected.inversion})` : ''}`;
-        console.log('[App] handleChordPractice: status message', message);
-        setStatusMessage(message);
-      } else if (activeNotes.length > 0) {
-        const message = `Target: ${target.name} (${target.roman}) | Playing...`;
-        console.log('[App] handleChordPractice: status message (playing)', message);
-        setStatusMessage(message);
-      } else {
-        const message = `Target: ${target.name} (${target.roman})`;
-        console.log('[App] handleChordPractice: status message (idle)', message);
-        setStatusMessage(message);
-      }
-    } else {
+    if (progression.length === 0) {
       console.log('[App] handleChordPractice: no progression set');
       if (detected) {
         const message = `Playing: ${detected.name} ${detected.inversion ? `(${detected.inversion})` : ''}`;
@@ -411,6 +434,27 @@ function App() {
         console.log('[App] handleChordPractice: idle, no progression');
         setStatusMessage('Set a progression to start');
       }
+      return;
+    }
+    
+    const target = progression[currentStepIndex % progression.length];
+    console.log('[App] handleChordPractice: target chord', target);
+    // Activate practice mode when user starts playing
+    if (activeNotes.length > 0 && !isPracticeActive) {
+      setIsPracticeActive(true);
+    }
+    if (detected) {
+      const message = `Target: ${target.name} (${target.roman}) | Playing: ${detected.name} ${detected.inversion ? `(${detected.inversion})` : ''}`;
+      console.log('[App] handleChordPractice: status message', message);
+      setStatusMessage(message);
+    } else if (activeNotes.length > 0) {
+      const message = `Target: ${target.name} (${target.roman}) | Playing...`;
+      console.log('[App] handleChordPractice: status message (playing)', message);
+      setStatusMessage(message);
+    } else {
+      const message = `Target: ${target.name} (${target.roman})`;
+      console.log('[App] handleChordPractice: status message (idle)', message);
+      setStatusMessage(message);
     }
   };
 
@@ -580,16 +624,16 @@ function App() {
             setCurrentStepIndex(0);
             const nextKey = currentKeyProgression[nextKeyIndex];
             setStatusMessage(`Scale complete! Next key: ${nextKey} ${selectedScaleType}`);
-          } else {
-            // No progression, just wrap around
-            setCurrentStepIndex(0);
-            setStatusMessage(`Scale complete! Starting over: ${completeScalePattern[0]}`);
+            return;
           }
-        } else {
-          // Continue with current scale
-          setCurrentStepIndex(nextStepIndex);
-          setStatusMessage(`Good! Next: ${completeScalePattern[nextStepIndex]}`);
+          // No progression, just wrap around
+          setCurrentStepIndex(0);
+          setStatusMessage(`Scale complete! Starting over: ${completeScalePattern[0]}`);
+          return;
         }
+        // Continue with current scale
+        setCurrentStepIndex(nextStepIndex);
+        setStatusMessage(`Good! Next: ${completeScalePattern[nextStepIndex]}`);
       } else if (rejectErrors) {
         // WRONG NOTE and rejectErrors is on: Reset to beginning
         setCurrentStepIndex(0);
@@ -1047,13 +1091,27 @@ function App() {
     }
   };
 
+  // Render Exercise component if exercise is active
+  const exerciseComponent = exerciseConfig ? (
+    <Exercise
+      exerciseConfig={exerciseConfig}
+      currentStepIndex={currentStepIndex}
+      progression={progression}
+      onProgressionUpdate={handleExerciseProgressionUpdate}
+      onKeyUpdate={handleExerciseKeyUpdate}
+      onStatusUpdate={handleExerciseStatusUpdate}
+    />
+  ) : null;
+
   return (
-    <div className="app-container">
+    <>
+      {exerciseComponent}
+      <div className="app-container">
       <header>
         <h1>
           Piano Trainer {midiDeviceName && <span className="midi-device-name">({midiDeviceName})</span>}
           {' '}
-          <a href="/usage-ideas.md" target="_blank" rel="noopener noreferrer" className="usage-ideas-link">usage ideas</a>
+          <a href="/usage-ideas.html" target="_blank" rel="noopener noreferrer" className="usage-ideas-link">usage ideas</a>
         </h1>
         <div className="status-message">{statusMessage}</div>
       </header>
@@ -1358,7 +1416,8 @@ function App() {
           </div>
         )
       }
-    </div>
+      </div>
+    </>
   );
 }
 

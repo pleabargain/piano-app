@@ -3,6 +3,12 @@
 
 Here are some creative ways to get the most out of this piano training application:
 
+## Quick Links to Exercises
+
+- **I-V-I Circle Exercise**: [http://localhost:5173/exercise/i-v-i-circle](http://localhost:5173/exercise/i-v-i-circle)
+  - Automated practice through all 12 keys with continuous looping
+  - With parameters: [http://localhost:5173/exercise/i-v-i-circle?startKey=C&keys=12](http://localhost:5173/exercise/i-v-i-circle?startKey=C&keys=12)
+
 ## Scale Practice
 
 Scale practice is fundamental to developing finger dexterity, muscle memory, and understanding of music theory. Here are some effective ways to use the Scale Practice mode:
@@ -576,6 +582,54 @@ Before diving into focused practice, warm-up exercises help get your fingers mov
 
 **Variation**: Add the IV chord: I-IV-V-I, or try I-V-vi-IV (another classic progression)!
 
+**Want automated practice through all keys?** Try the [I-V-I Circle Exercise](#the-i-v-i-circle-exercise-continuous-practice) at `http://localhost:5173/exercise/i-v-i-circle` - it automatically guides you through all 12 keys with continuous looping!
+
+---
+
+### The "I-V-I Circle Exercise" (Continuous Practice)
+
+**What it is**: An automated exercise that guides you through I-V-I chord progressions in all 12 keys around the Circle of Fifths, looping continuously for endless practice.
+
+**How to access it**:
+1. Navigate to: `http://localhost:5173/exercise/i-v-i-circle`
+2. The exercise automatically starts with C Major and guides you through I-V-I
+3. After completing I-V-I in each key, it automatically advances to the next key in Circle of Fifths order
+4. **The exercise loops continuously** - when you complete all 12 keys, it automatically starts over from the beginning, allowing you to practice endlessly!
+
+**How to use it**:
+1. Connect your MIDI keyboard
+2. The app will show you the current target chord (I, V, or I)
+3. Play the correct chord - the app detects when you play it correctly
+4. After completing all three chords (I-V-I), the exercise automatically moves to the next key
+5. Continue practicing - the exercise loops through all keys indefinitely!
+
+**URL Parameters** (optional customization):
+- `?startKey=C` - Start at a specific key (e.g., `?startKey=G` to start at G Major)
+- `?keys=12` - Practice only the first N keys (e.g., `?keys=6` for first 6 keys)
+- Combine both: `?startKey=G&keys=6` - Start at G and practice 6 keys
+
+**Examples**:
+- Full circle starting at C: `http://localhost:5173/exercise/i-v-i-circle`
+- Start at G Major: `http://localhost:5173/exercise/i-v-i-circle?startKey=G`
+- Practice first 6 keys only: `http://localhost:5173/exercise/i-v-i-circle?keys=6`
+- Start at D, practice 3 keys: `http://localhost:5173/exercise/i-v-i-circle?startKey=D&keys=3`
+
+**Why it's effective**:
+- **Continuous practice**: The looping feature means you can practice for as long as you want without interruption
+- **Automatic progression**: No need to manually switch keys - focus entirely on playing the chords
+- **Circle of Fifths order**: Practices keys in the most musically logical sequence
+- **Real-time feedback**: See exactly which chord you need to play and get confirmation when correct
+- **Builds muscle memory**: Repetitive practice through all keys strengthens finger patterns
+
+**Practice tips**:
+- Start slow and focus on accuracy - speed will come naturally
+- Pay attention to the common tone between I and V chords (the 5th of I is the root of V)
+- Try different inversions for smoother voice leading
+- Use the visual feedback to see which keys are highlighted for each chord
+- Practice daily - even 10-15 minutes of continuous looping practice builds significant skill
+
+**Variation**: Once comfortable with I-V-I, try other progressions like I-IV-V-I or I-vi-IV-V using the same URL-based exercise system!
+
 ---
 
 ### The "Random Key Adventure" (5-7 minutes)
@@ -861,6 +915,7 @@ The goal is to play C Major, then C# Major, then D Major, and so on, all the way
 
 ---
 
-*Last Updated: 2026-01-25*
+*Last Updated: 2026-01-26*
 
 <!-- 7-Day Chromatic Challenge added: 2026-01-25 -->
+<!-- I-V-I Circle Exercise added: 2026-01-26 -->

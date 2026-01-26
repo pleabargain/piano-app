@@ -2,6 +2,7 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
+import { BrowserRouter } from 'react-router-dom'
 import App from '../App.jsx'
 import { NOTES } from '../core/music-theory'
 
@@ -22,7 +23,7 @@ describe('Lava Mode Functionality', () => {
     })
 
     it('should initialize lavaKeys correctly when entering Lava mode', async () => {
-        const { container } = render(<App />)
+        const { container } = render(<BrowserRouter><App /></BrowserRouter>)
 
         // Switch to Lava Mode
         const lavaModeButton = screen.getByText('Lava Game')
@@ -47,7 +48,7 @@ describe('Lava Mode Functionality', () => {
     })
 
     it('should update lavaKeys immediately when scale root changes via Circle of Fifths', async () => {
-        const { container } = render(<App />)
+        const { container } = render(<BrowserRouter><App /></BrowserRouter>)
 
         // Switch to Lava Mode
         const lavaModeButton = screen.getByText('Lava Game')
@@ -70,7 +71,7 @@ describe('Lava Mode Functionality', () => {
     })
 
     it('should pass mode="lava" and lavaKeys to both Piano components', async () => {
-        const { container } = render(<App />)
+        const { container } = render(<BrowserRouter><App /></BrowserRouter>)
 
         // Switch to Lava Mode
         const lavaModeButton = screen.getByText('Lava Game')

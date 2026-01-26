@@ -1,5 +1,6 @@
 import { describe, it, expect, vi } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/react';
+import { BrowserRouter } from 'react-router-dom';
 import App from '../App';
 import { NOTES } from '../core/music-theory';
 
@@ -15,7 +16,7 @@ vi.mock('../core/midi-manager', () => ({
 
 describe('Circle of Fifths Integration', () => {
     it('should show correct keys on keyboard when clicking any chord in Circle of Fifths', async () => {
-        const { container } = render(<App />);
+        const { container } = render(<BrowserRouter><App /></BrowserRouter>);
 
         // Switch to Chord Practice mode to ensure the UI is in the correct state
         const chordModeBtn = screen.getByText('Chord Practice');

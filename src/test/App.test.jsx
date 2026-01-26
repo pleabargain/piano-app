@@ -2,6 +2,7 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { render, screen, fireEvent, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
+import { BrowserRouter } from 'react-router-dom'
 import App from '../App.jsx'
 
 /**
@@ -61,7 +62,7 @@ describe('App Component', () => {
     console.log('[Test] WHY: App component is the root - must render without errors');
     console.log('[Test] IMPORTANCE: Catches critical rendering issues that would break the entire app');
 
-    render(<App />)
+    render(<BrowserRouter><App /></BrowserRouter>)
     expect(screen.getByText('Piano Trainer')).toBeInTheDocument()
 
     console.log('[Test] ✅ App component rendered successfully');
@@ -72,7 +73,7 @@ describe('App Component', () => {
     console.log('[Test] WHY: Status messages provide user feedback - must be visible');
     console.log('[Test] IMPORTANCE: Ensures users can see app state and instructions');
 
-    render(<App />)
+    render(<BrowserRouter><App /></BrowserRouter>)
     // Use findAllByText in case multiple elements match (though ideally only one status message)
     const statusElements = await screen.findAllByText(/Connect MIDI|Web MIDI|Practice|Free Play|Lava Game/i);
     expect(statusElements.length).toBeGreaterThan(0);
@@ -81,21 +82,21 @@ describe('App Component', () => {
   })
 
   it('should render the Piano component', () => {
-    const { container } = render(<App />)
+    const { container } = render(<BrowserRouter><App /></BrowserRouter>)
     // Check if piano container exists
     const pianoContainer = container.querySelector('.piano-container')
     expect(pianoContainer).toBeInTheDocument()
   })
 
   it('should render the Controls component', () => {
-    const { container } = render(<App />)
+    const { container } = render(<BrowserRouter><App /></BrowserRouter>)
     // Check if controls container exists
     const controlsContainer = container.querySelector('.controls-container')
     expect(controlsContainer).toBeInTheDocument()
   })
 
   it('should have all required mode buttons', () => {
-    render(<App />)
+    render(<BrowserRouter><App /></BrowserRouter>)
     expect(screen.getAllByText('Scale Practice').length).toBeGreaterThanOrEqual(1)
     expect(screen.getAllByText('Chord Practice').length).toBeGreaterThanOrEqual(1)
     expect(screen.getAllByText('Free Play').length).toBeGreaterThanOrEqual(1)
@@ -108,7 +109,7 @@ describe('App Component', () => {
       console.log('[Test] IMPORTANCE: Validates core functionality - clicking chord updates state');
       console.log('[Test] Chord Name: F Major (should produce MIDI notes [41, 45, 48])');
 
-      const { container } = render(<App />);
+      const { container } = render(<BrowserRouter><App /></BrowserRouter>);
 
       // Find and click F Major chord in Circle of Fifths
       const fMajorSegment = container.querySelector('path[data-key="major-F"]');
@@ -139,7 +140,7 @@ describe('App Component', () => {
       console.log('[Test] IMPORTANCE: Ensures users see correct keys to press for root position');
       console.log('[Test] Chord: F Major root position should be [41, 45, 48] (F2, A2, C3)');
 
-      const { container } = render(<App />);
+      const { container } = render(<BrowserRouter><App /></BrowserRouter>);
 
       // Click F Major chord
       const fMajorSegment = container.querySelector('path[data-key="major-F"]');
@@ -171,7 +172,7 @@ describe('App Component', () => {
       console.log('[Test] IMPORTANCE: Validates inversion cycling works correctly');
       console.log('[Test] Chord: F Major - clicking twice should show 1st inversion');
 
-      const { container } = render(<App />);
+      const { container } = render(<BrowserRouter><App /></BrowserRouter>);
 
       // Click F Major chord first time (root position)
       const fMajorSegment = container.querySelector('path[data-key="major-F"]');
@@ -209,7 +210,7 @@ describe('App Component', () => {
       console.log('[Test] WHY: getChordHighlights is used to pass notes to piano - must return correct values');
       console.log('[Test] IMPORTANCE: Validates helper function works correctly');
 
-      const { container } = render(<App />);
+      const { container } = render(<BrowserRouter><App /></BrowserRouter>);
 
       // Click a chord to set chordMidiNotes
       const fMajorSegment = container.querySelector('path[data-key="major-F"]');
@@ -231,7 +232,7 @@ describe('App Component', () => {
       console.log('[Test] WHY: Helper function should return empty array when no chord is selected');
       console.log('[Test] IMPORTANCE: Ensures piano doesn\'t show incorrect highlighting');
 
-      const { container } = render(<App />);
+      const { container } = render(<BrowserRouter><App /></BrowserRouter>);
 
       // Switch to free mode (not chord mode)
       const freePlayButton = screen.getByText('Free Play');
@@ -253,7 +254,7 @@ describe('App Component', () => {
       console.log('[Test] IMPORTANCE: Ensures user interaction produces expected visual result');
       console.log('[Test] Flow: Click F Major in Circle -> handleChordClick -> chordMidiNotes -> getChordHighlights -> Piano highlights');
 
-      const { container } = render(<App />);
+      const { container } = render(<BrowserRouter><App /></BrowserRouter>);
 
       // Click F Major chord in Circle of Fifths
       const fMajorSegment = container.querySelector('path[data-key="major-F"]');
