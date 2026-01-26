@@ -39,3 +39,9 @@
    - Update README.md with a "Recent Updates" or "Changelog" section documenting changes
    - Include date, feature/change description, and any relevant details
    - Format: `### YYYY-MM-DD: Feature Name` followed by bullet points describing changes
+11. **Multiple Choice Question Format**: When presenting multiple choice options to the user, always format them using lowercase letter labels:
+   - Format: "a) Option 1, b) Option 2, c) Option 3"
+   - Use lowercase letters (a, b, c, d, etc.) for each option
+   - Make options mutually exclusive and clearly distinct
+   - Each option should be on its own line or clearly separated
+   - Example: "Which approach should I use? a) Add tests to existing file, b) Create new test file, c) Refactor first then add tests"

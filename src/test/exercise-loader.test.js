@@ -126,5 +126,20 @@ describe('exercise-loader', () => {
       const exercise = loadExerciseFromUrl('i-v-i-circle', '?startKey=D');
       expect(exercise.startKeyIndex).toBe(2); // D is index 2
     });
+
+    it('should load i-iv-v-i-circle exercise', () => {
+      const exercise = loadExerciseFromUrl('i-iv-v-i-circle', '');
+      expect(exercise).toBeDefined();
+      expect(exercise.id).toBe('i-iv-v-i-circle');
+      expect(exercise.mode).toBe('chord');
+    });
+
+    it('should handle URL parameters for i-iv-v-i-circle', () => {
+      const exercise = loadExerciseFromUrl('i-iv-v-i-circle', '?startKey=G&keys=6');
+      expect(exercise.params.startKey).toBe('G');
+      expect(exercise.params.keys).toBe(6);
+      expect(exercise.startKeyIndex).toBe(1);
+      expect(exercise.maxKeys).toBe(6);
+    });
   });
 });

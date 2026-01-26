@@ -86,6 +86,17 @@ export const EXERCISES = {
       generateProgression: (root) => generateProgressionFromRomanPattern('I V I', root, 'major'),
       scaleType: 'major'
     }
+  },
+  'i-iv-v-i-circle': {
+    id: 'i-iv-v-i-circle',
+    name: 'I-IV-V-I Circle of Fifths',
+    description: 'Practice I-IV-V-I chord progressions through all 12 keys in Circle of Fifths order',
+    mode: 'chord',
+    config: {
+      keyProgression: CIRCLE_OF_FIFTHS_KEYS,
+      generateProgression: (root) => generateProgressionFromRomanPattern('I IV V I', root, 'major'),
+      scaleType: 'major'
+    }
   }
 };
 

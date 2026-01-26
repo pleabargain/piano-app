@@ -186,4 +186,35 @@ describe('Routing Integration', () => {
       });
     });
   });
+
+  describe('I-IV-V-I Circle Exercise Routing', () => {
+    it('should extract exercise ID from path', () => {
+      expect(getExerciseIdFromPath('/exercise/i-iv-v-i-circle')).toBe('i-iv-v-i-circle');
+    });
+
+    it('should load i-iv-v-i-circle exercise', () => {
+      const exercise = loadExerciseFromUrl('i-iv-v-i-circle', '');
+      expect(exercise).toBeDefined();
+      expect(exercise.id).toBe('i-iv-v-i-circle');
+    });
+
+    it('should handle URL parameters for i-iv-v-i-circle', () => {
+      const exercise = loadExerciseFromUrl('i-iv-v-i-circle', '?startKey=G&keys=6');
+      expect(exercise.params.startKey).toBe('G');
+      expect(exercise.params.keys).toBe(6);
+    });
+
+    it('should render app at i-iv-v-i-circle exercise path', async () => {
+      render(
+        <MemoryRouter initialEntries={['/exercise/i-iv-v-i-circle']}>
+          <App />
+        </MemoryRouter>
+      );
+
+      await waitFor(() => {
+        const header = screen.queryByText(/Piano Trainer/i);
+        expect(header).toBeTruthy();
+      });
+    });
+  });
 });
