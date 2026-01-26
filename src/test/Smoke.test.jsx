@@ -19,7 +19,7 @@ describe('App Smoke Test', () => {
         // Wait for initial effects
         await waitFor(() => {
             // Check for key elements
-            expect(screen.getByText(/Piano App/i)).toBeTruthy();
+            expect(screen.getByText(/Piano Trainer/i)).toBeTruthy();
             // Check for Controls
             expect(screen.getByText(/Key Center/i)).toBeTruthy();
             expect(screen.getByText(/Scale Type/i)).toBeTruthy();

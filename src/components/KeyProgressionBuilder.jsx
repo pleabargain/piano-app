@@ -79,9 +79,6 @@ const KeyProgressionBuilder = ({ onProgressionSet, onClear, selectedScaleType })
     };
 
     const validateAndParse = (text) => {
-        // #region agent log
-        fetch('http://127.0.0.1:7242/ingest/e195f0d9-c6a3-4271-b290-bc8c7ddcceed',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'KeyProgressionBuilder.jsx:54',message:'validateAndParse entry',data:{text,textLength:text?.length},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'A'})}).catch(()=>{});
-        // #endregion
         if (!text || !text.trim()) {
             setError('');
             return [];
@@ -99,10 +96,6 @@ const KeyProgressionBuilder = ({ onProgressionSet, onClear, selectedScaleType })
         const validKeys = [];
         const invalidKeys = [];
 
-        // #region agent log
-        fetch('http://127.0.0.1:7242/ingest/e195f0d9-c6a3-4271-b290-bc8c7ddcceed',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'KeyProgressionBuilder.jsx:60',message:'tokens split',data:{tokens,tokenCount:tokens.length,cleanedText},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'A'})}).catch(()=>{});
-        // #endregion
-
         for (let token of tokens) {
             // Skip empty tokens (shouldn't happen after filter, but double-check)
             if (!token || !token.trim()) {
@@ -111,9 +104,6 @@ const KeyProgressionBuilder = ({ onProgressionSet, onClear, selectedScaleType })
 
             // Normalize the token (handle flats, etc.)
             const normalizedToken = normalizeNote(token);
-            // #region agent log
-            fetch('http://127.0.0.1:7242/ingest/e195f0d9-c6a3-4271-b290-bc8c7ddcceed',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'KeyProgressionBuilder.jsx:66',message:'token normalization result',data:{originalToken:token,normalizedToken,isInNotes:NOTES.includes(normalizedToken),notesArray:NOTES},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'A'})}).catch(()=>{});
-            // #endregion
             if (NOTES.includes(normalizedToken)) {
                 validKeys.push(normalizedToken);
             } else {
@@ -121,15 +111,8 @@ const KeyProgressionBuilder = ({ onProgressionSet, onClear, selectedScaleType })
             }
         }
 
-        // #region agent log
-        fetch('http://127.0.0.1:7242/ingest/e195f0d9-c6a3-4271-b290-bc8c7ddcceed',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'KeyProgressionBuilder.jsx:74',message:'validation results before error check',data:{validKeys,invalidKeys,invalidKeysLength:invalidKeys.length,invalidKeysJoin:invalidKeys.join(', ')},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'B'})}).catch(()=>{});
-        // #endregion
-
         if (invalidKeys.length > 0) {
             const errorMsg = `Invalid keys: ${invalidKeys.join(', ')}`;
-            // #region agent log
-            fetch('http://127.0.0.1:7242/ingest/e195f0d9-c6a3-4271-b290-bc8c7ddcceed',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'KeyProgressionBuilder.jsx:75',message:'setting error message',data:{errorMsg,invalidKeys,invalidKeysLength:invalidKeys.length},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'C'})}).catch(()=>{});
-            // #endregion
             setError(errorMsg);
             console.error('[KeyProgressionBuilder] Validation error:', errorMsg, { input: text, cleanedText, invalidKeys, validKeys });
             return [];
@@ -140,20 +123,11 @@ const KeyProgressionBuilder = ({ onProgressionSet, onClear, selectedScaleType })
     };
 
     const normalizeNote = (note) => {
-        // #region agent log
-        fetch('http://127.0.0.1:7242/ingest/e195f0d9-c6a3-4271-b290-bc8c7ddcceed',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'KeyProgressionBuilder.jsx:83',message:'normalizeNote entry',data:{inputNote:note},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'A'})}).catch(()=>{});
-        // #endregion
         // Use shared normalization for basic cleanup (unicode, etc)
         // PLUS remove chord suffixes to extract root
         let root = normalizeToken(note);
-        // #region agent log
-        fetch('http://127.0.0.1:7242/ingest/e195f0d9-c6a3-4271-b290-bc8c7ddcceed',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'KeyProgressionBuilder.jsx:86',message:'after normalizeToken',data:{inputNote:note,afterNormalizeToken:root},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'A'})}).catch(()=>{});
-        // #endregion
         // Match note letter (A-G) optionally followed by flat/sharp, then chord suffix
         root = root.replace(/^([A-Ga-g][b#]?)(m|min|maj|dim|aug|sus|7|9|11|13|6).*$/i, '$1');
-        // #region agent log
-        fetch('http://127.0.0.1:7242/ingest/e195f0d9-c6a3-4271-b290-bc8c7ddcceed',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'KeyProgressionBuilder.jsx:88',message:'after regex removal',data:{inputNote:note,afterRegex:root},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'A'})}).catch(()=>{});
-        // #endregion
 
         // Handle flats by converting to sharps (if needed for internal logic)
         // Our existing flatToSharp logic:
@@ -163,20 +137,11 @@ const KeyProgressionBuilder = ({ onProgressionSet, onClear, selectedScaleType })
 
         const capitalized = root.charAt(0).toUpperCase() + root.slice(1);
         const result = flatToSharp[capitalized] || capitalized;
-        // #region agent log
-        fetch('http://127.0.0.1:7242/ingest/e195f0d9-c6a3-4271-b290-bc8c7ddcceed',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'KeyProgressionBuilder.jsx:97',message:'normalizeNote result',data:{inputNote:note,capitalized,result,flatToSharpMatch:flatToSharp[capitalized]},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'A'})}).catch(()=>{});
-        // #endregion
         return result;
     };
 
     const handleSet = () => {
-        // #region agent log
-        fetch('http://127.0.0.1:7242/ingest/e195f0d9-c6a3-4271-b290-bc8c7ddcceed',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'KeyProgressionBuilder.jsx:100',message:'handleSet entry',data:{input},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'D'})}).catch(()=>{});
-        // #endregion
         const keys = validateAndParse(input);
-        // #region agent log
-        fetch('http://127.0.0.1:7242/ingest/e195f0d9-c6a3-4271-b290-bc8c7ddcceed',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'KeyProgressionBuilder.jsx:101',message:'handleSet after validation',data:{input,keys,keysLength:keys.length,error},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'D'})}).catch(()=>{});
-        // #endregion
         if (keys.length > 0) {
             onProgressionSet(keys);
             setCurrentName('Custom Progression');
@@ -223,7 +188,7 @@ const KeyProgressionBuilder = ({ onProgressionSet, onClear, selectedScaleType })
                 id: savedId,
                 name: progression.name
             });
-            
+
             setCurrentName(saveName.trim());
             setShowSaveDialog(false);
             setSaveName('');
@@ -266,7 +231,7 @@ const KeyProgressionBuilder = ({ onProgressionSet, onClear, selectedScaleType })
             setInput(progression.progression);
             setCurrentLoadedProgressionId(progression.id);
             setCurrentName(progression.name);
-            
+
             // Set the progression immediately
             const keys = validateAndParse(progression.progression);
             if (keys.length > 0) {
@@ -483,7 +448,7 @@ const KeyProgressionBuilder = ({ onProgressionSet, onClear, selectedScaleType })
             </div>
 
             {showSaveDialog && (
-                <div 
+                <div
                     className="dialog-overlay"
                     onClick={() => {
                         setShowSaveDialog(false);
@@ -497,7 +462,7 @@ const KeyProgressionBuilder = ({ onProgressionSet, onClear, selectedScaleType })
                     }}
                     tabIndex={-1}
                 >
-                    <div 
+                    <div
                         ref={dialogRef}
                         className="dialog"
                         onClick={(e) => e.stopPropagation()}

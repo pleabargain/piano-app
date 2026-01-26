@@ -44,6 +44,7 @@ const PREDEFINED_PROGRESSIONS = [
     { name: 'Storyteller progression', progression: 'I ii iii IV V vi V I', length: 8 },
     { name: 'Emotional Wave progression', progression: 'I III IV iv V vi ii V', length: 8 },
     { name: 'Circle of Fifths progression', progression: 'C G D A E B F# Db Ab Eb Bb F', length: 12 },
+    { name: 'Chromatic Chords', progression: 'C Db D Eb E F Gb G Ab A Bb B C', length: 13 },
 ];
 
 const ProgressionBuilder = ({ selectedRoot, selectedScaleType, onProgressionSet, onChordClick, currentStepIndex = 0, mode = 'free', isPracticeActive = false }) => {
@@ -128,7 +129,7 @@ const ProgressionBuilder = ({ selectedRoot, selectedScaleType, onProgressionSet,
 
         // Clean input before parsing
         const cleanedText = cleanInputText(text);
-        
+
         // If cleaning changed the text, update input and show suggestion
         if (cleanedText !== text.trim() && text.trim() && !text.includes(',')) {
             setSuggestion(`Cleaned input: "${cleanedText}"`);
@@ -147,11 +148,11 @@ const ProgressionBuilder = ({ selectedRoot, selectedScaleType, onProgressionSet,
         const { chords, error: parseError } = parseProgression(cleanedText || text, scaleNotes);
 
         if (parseError) {
-            console.error('[ProgressionBuilder] Parse error:', parseError, { 
-                originalInput: text, 
+            console.error('[ProgressionBuilder] Parse error:', parseError, {
+                originalInput: text,
                 cleanedInput: cleanedText,
                 selectedRoot,
-                selectedScaleType 
+                selectedScaleType
             });
             const fixSuggestion = suggestFix(text, parseError);
             if (fixSuggestion) {
@@ -242,7 +243,7 @@ const ProgressionBuilder = ({ selectedRoot, selectedScaleType, onProgressionSet,
                 id: savedId,
                 name: progression.name
             });
-            
+
             setShowSaveDialog(false);
             setSaveName('');
             setError('');
@@ -552,7 +553,7 @@ const ProgressionBuilder = ({ selectedRoot, selectedScaleType, onProgressionSet,
                             <div ref={tooltipRef} className="input-tooltip">
                                 <div className="tooltip-content">
                                     <strong>Enter chord progressions using Roman numeral notation OR absolute chord names.</strong>
-                                    
+
                                     <div className="tooltip-section">
                                         <strong>ROMAN NUMERAL NOTATION:</strong>
                                         <div><strong>Basic Chords:</strong></div>
@@ -568,7 +569,7 @@ const ProgressionBuilder = ({ selectedRoot, selectedScaleType, onProgressionSet,
                                         <div>• I° or Idim (diminished)</div>
                                         <div>• I+ or Iaug (augmented)</div>
                                     </div>
-                                    
+
                                     <div className="tooltip-section">
                                         <strong>ABSOLUTE CHORD NAMES:</strong>
                                         <div>• Use note names: C, D, E, F, G, A, B</div>
@@ -577,7 +578,7 @@ const ProgressionBuilder = ({ selectedRoot, selectedScaleType, onProgressionSet,
                                         <div>• Chord suffixes: m, min, maj, 7, 9, dim, aug, sus, etc.</div>
                                         <div>• Examples: C, Fm, G7, B♭m, A♭, E♭, D♭</div>
                                     </div>
-                                    
+
                                     <div className="tooltip-section">
                                         <strong>EXAMPLES:</strong>
                                         <div><strong>Roman Numerals:</strong></div>
@@ -625,7 +626,7 @@ const ProgressionBuilder = ({ selectedRoot, selectedScaleType, onProgressionSet,
                         <div className="suggestion-msg" style={{ marginTop: '8px', fontSize: '0.9em', color: '#666' }}>
                             💡 {suggestion}
                             {suggestion.includes('Cleaned input') && (
-                                <button 
+                                <button
                                     onClick={() => {
                                         const cleaned = cleanInputText(input);
                                         setInput(cleaned);
@@ -641,10 +642,10 @@ const ProgressionBuilder = ({ selectedRoot, selectedScaleType, onProgressionSet,
                 </div>
             )}
             {storageError && <div className="error-msg storage-error">{storageError}</div>}
-            
+
             {/* Sample inputs */}
             <div className="sample-inputs-section" style={{ marginTop: '16px', padding: '12px', backgroundColor: '#f5f5f5', borderRadius: '4px' }}>
-                <button 
+                <button
                     onClick={() => setShowSamples(!showSamples)}
                     style={{ background: 'none', border: 'none', cursor: 'pointer', fontWeight: 'bold', marginBottom: '8px' }}
                 >
@@ -656,16 +657,16 @@ const ProgressionBuilder = ({ selectedRoot, selectedScaleType, onProgressionSet,
                             <strong>Roman Numerals:</strong>
                             <div style={{ marginTop: '4px', display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
                                 {getSampleInputs().romanNumerals.map((ex, idx) => (
-                                    <code 
+                                    <code
                                         key={idx}
                                         onClick={() => {
                                             setInput(ex);
                                             setShowSamples(false);
                                         }}
-                                        style={{ 
-                                            padding: '4px 8px', 
-                                            backgroundColor: '#fff', 
-                                            border: '1px solid #ddd', 
+                                        style={{
+                                            padding: '4px 8px',
+                                            backgroundColor: '#fff',
+                                            border: '1px solid #ddd',
                                             borderRadius: '3px',
                                             cursor: 'pointer',
                                             fontSize: '0.9em'
@@ -681,16 +682,16 @@ const ProgressionBuilder = ({ selectedRoot, selectedScaleType, onProgressionSet,
                             <strong>Absolute Chords:</strong>
                             <div style={{ marginTop: '4px', display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
                                 {getSampleInputs().absoluteChords.map((ex, idx) => (
-                                    <code 
+                                    <code
                                         key={idx}
                                         onClick={() => {
                                             setInput(ex);
                                             setShowSamples(false);
                                         }}
-                                        style={{ 
-                                            padding: '4px 8px', 
-                                            backgroundColor: '#fff', 
-                                            border: '1px solid #ddd', 
+                                        style={{
+                                            padding: '4px 8px',
+                                            backgroundColor: '#fff',
+                                            border: '1px solid #ddd',
                                             borderRadius: '3px',
                                             cursor: 'pointer',
                                             fontSize: '0.9em'
@@ -708,8 +709,8 @@ const ProgressionBuilder = ({ selectedRoot, selectedScaleType, onProgressionSet,
 
             {/* Save Dialog */}
             {showSaveDialog && (
-                <div 
-                    className="save-dialog-overlay" 
+                <div
+                    className="save-dialog-overlay"
                     onClick={() => {
                         setShowSaveDialog(false);
                         setSaveName('');
@@ -724,9 +725,9 @@ const ProgressionBuilder = ({ selectedRoot, selectedScaleType, onProgressionSet,
                     }}
                     tabIndex={-1}
                 >
-                    <div 
+                    <div
                         ref={saveDialogRef}
-                        className="save-dialog" 
+                        className="save-dialog"
                         onClick={(e) => e.stopPropagation()}
                         role="dialog"
                         aria-modal="true"
@@ -786,7 +787,7 @@ const ProgressionBuilder = ({ selectedRoot, selectedScaleType, onProgressionSet,
                     const isCurrentChord = mode === 'chord' && isPracticeActive && idx === (currentStepIndex % parsedChords.length);
                     const isNextChord = mode === 'chord' && isPracticeActive && idx === ((currentStepIndex + 1) % parsedChords.length);
                     const chordClass = `chord-preview clickable-chord ${isCurrentChord ? 'current-chord' : ''} ${isNextChord ? 'next-chord' : ''}`;
-                    
+
                     return (
                         <div
                             key={idx}

@@ -19,106 +19,106 @@ const mockIndexedDB = () => {
                 indexSet.add(idxName);
             },
             put: (value) => {
-            const request = {
-                onsuccess: null,
-                onerror: null,
-                result: value.id
-            };
-            setTimeout(() => {
-                store.set(value.id, value);
-                // Update indexes - remove old entry if exists, then add new
-                indexes.createdAt = indexes.createdAt.filter(v => v.id !== value.id);
-                indexes.createdAt.push(value);
-                indexes.name = indexes.name.filter(v => v.id !== value.id);
-                indexes.name.push(value);
-                if (request.onsuccess) {
-                    request.onsuccess({ target: request });
-                }
-            }, 0);
-            return request;
+                const request = {
+                    onsuccess: null,
+                    onerror: null,
+                    result: value.id
+                };
+                setTimeout(() => {
+                    store.set(value.id, value);
+                    // Update indexes - remove old entry if exists, then add new
+                    indexes.createdAt = indexes.createdAt.filter(v => v.id !== value.id);
+                    indexes.createdAt.push(value);
+                    indexes.name = indexes.name.filter(v => v.id !== value.id);
+                    indexes.name.push(value);
+                    if (request.onsuccess) {
+                        request.onsuccess({ target: request });
+                    }
+                }, 0);
+                return request;
             },
             get: (key) => {
-            const request = {
-                onsuccess: null,
-                onerror: null,
-                result: store.get(key) || undefined
-            };
-            setTimeout(() => {
-                if (request.onsuccess) {
-                    request.onsuccess({ target: request });
-                }
-            }, 0);
-            return request;
+                const request = {
+                    onsuccess: null,
+                    onerror: null,
+                    result: store.get(key) || undefined
+                };
+                setTimeout(() => {
+                    if (request.onsuccess) {
+                        request.onsuccess({ target: request });
+                    }
+                }, 0);
+                return request;
             },
             delete: (key) => {
-            const request = {
-                onsuccess: null,
-                onerror: null
-            };
-            setTimeout(() => {
-                const value = store.get(key);
-                if (value) {
-                    store.delete(key);
-                    indexes.createdAt = indexes.createdAt.filter(v => v.id !== key);
-                    indexes.name = indexes.name.filter(v => v.id !== key);
-                }
-                if (request.onsuccess) {
-                    request.onsuccess({ target: request });
-                }
-            }, 0);
-            return request;
+                const request = {
+                    onsuccess: null,
+                    onerror: null
+                };
+                setTimeout(() => {
+                    const value = store.get(key);
+                    if (value) {
+                        store.delete(key);
+                        indexes.createdAt = indexes.createdAt.filter(v => v.id !== key);
+                        indexes.name = indexes.name.filter(v => v.id !== key);
+                    }
+                    if (request.onsuccess) {
+                        request.onsuccess({ target: request });
+                    }
+                }, 0);
+                return request;
             },
             index: (name) => {
-            return {
-                openCursor: (direction) => {
-                    const values = [...indexes[name]];
-                    const sorted = direction === 'prev' 
-                        ? values.sort((a, b) => {
-                            if (name === 'createdAt') return b.createdAt - a.createdAt;
-                            if (name === 'name') return b.name.localeCompare(a.name);
-                            return 0;
-                        })
-                        : values.sort((a, b) => {
-                            if (name === 'createdAt') return a.createdAt - b.createdAt;
-                            if (name === 'name') return a.name.localeCompare(b.name);
-                            return 0;
-                        });
-                    
-                    let currentIndex = 0;
-                    const cursor = {
-                        onsuccess: null,
-                        result: sorted.length > 0 ? {
-                            value: sorted[currentIndex],
-                            continue: function() {
-                                currentIndex++;
-                                if (currentIndex < sorted.length) {
-                                    this.value = sorted[currentIndex];
-                                    setTimeout(() => {
-                                        if (cursor.onsuccess) {
-                                            cursor.onsuccess({ target: cursor });
-                                        }
-                                    }, 0);
-                                } else {
-                                    cursor.result = null;
-                                    setTimeout(() => {
-                                        if (cursor.onsuccess) {
-                                            cursor.onsuccess({ target: cursor });
-                                        }
-                                    }, 0);
+                return {
+                    openCursor: (direction) => {
+                        const values = [...indexes[name]];
+                        const sorted = direction === 'prev'
+                            ? values.sort((a, b) => {
+                                if (name === 'createdAt') return b.createdAt - a.createdAt;
+                                if (name === 'name') return b.name.localeCompare(a.name);
+                                return 0;
+                            })
+                            : values.sort((a, b) => {
+                                if (name === 'createdAt') return a.createdAt - b.createdAt;
+                                if (name === 'name') return a.name.localeCompare(b.name);
+                                return 0;
+                            });
+
+                        let currentIndex = 0;
+                        const cursor = {
+                            onsuccess: null,
+                            result: sorted.length > 0 ? {
+                                value: sorted[currentIndex],
+                                continue: function () {
+                                    currentIndex++;
+                                    if (currentIndex < sorted.length) {
+                                        this.value = sorted[currentIndex];
+                                        setTimeout(() => {
+                                            if (cursor.onsuccess) {
+                                                cursor.onsuccess({ target: cursor });
+                                            }
+                                        }, 0);
+                                    } else {
+                                        cursor.result = null;
+                                        setTimeout(() => {
+                                            if (cursor.onsuccess) {
+                                                cursor.onsuccess({ target: cursor });
+                                            }
+                                        }, 0);
+                                    }
                                 }
+                            } : null
+                        };
+
+                        setTimeout(() => {
+                            if (cursor.onsuccess) {
+                                cursor.onsuccess({ target: cursor });
                             }
-                        } : null
-                    };
-                    
-                    setTimeout(() => {
-                        if (cursor.onsuccess) {
-                            cursor.onsuccess({ target: cursor });
-                        }
-                    }, 0);
-                    
-                    return cursor;
-                }
-            };
+                        }, 0);
+
+                        return cursor;
+                    }
+                };
             }
         };
     };
@@ -131,7 +131,10 @@ const mockIndexedDB = () => {
             const os = stores.get(name);
             if (!os) throw new Error(`Object store not found: ${name}`);
             return os;
-        }
+        },
+        oncomplete: null,
+        onerror: null,
+        onabort: null
     };
 
     const db = {
@@ -143,7 +146,15 @@ const mockIndexedDB = () => {
             stores.set(name, os);
             return os;
         },
-        transaction: () => transaction
+        transaction: () => {
+            // Trigger oncomplete in a future tick so the caller has time to set the handler
+            setTimeout(() => {
+                if (transaction.oncomplete) {
+                    transaction.oncomplete();
+                }
+            }, 10);
+            return transaction;
+        }
     };
 
     return {
@@ -155,7 +166,7 @@ const mockIndexedDB = () => {
                 onerror: null,
                 onupgradeneeded: null
             };
-            
+
             setTimeout(() => {
                 if (request.onupgradeneeded) {
                     request.onupgradeneeded({ target: request });
@@ -164,7 +175,7 @@ const mockIndexedDB = () => {
                     request.onsuccess({ target: request });
                 }
             }, 0);
-            
+
             return request;
         }
     };
@@ -178,7 +189,7 @@ describe('ProgressionStorage', () => {
     beforeEach(() => {
         originalIndexedDB = global.indexedDB;
         global.indexedDB = mockIndexedDB();
-        
+
         // Mock URL.createObjectURL and URL.revokeObjectURL
         originalURL = global.URL;
         global.URL = {
@@ -186,7 +197,7 @@ describe('ProgressionStorage', () => {
             createObjectURL: vi.fn(() => 'blob:mock-url'),
             revokeObjectURL: vi.fn()
         };
-        
+
         // Mock document methods
         global.document.createElement = vi.fn(() => ({
             href: '',
@@ -195,7 +206,7 @@ describe('ProgressionStorage', () => {
         }));
         global.document.body.appendChild = vi.fn();
         global.document.body.removeChild = vi.fn();
-        
+
         storage = new ProgressionStorage();
     });
 
@@ -222,7 +233,7 @@ describe('ProgressionStorage', () => {
                 onsuccess: null,
                 onupgradeneeded: null
             };
-            
+
             global.indexedDB = {
                 open: () => {
                     setTimeout(() => {
@@ -233,7 +244,7 @@ describe('ProgressionStorage', () => {
                     return errorRequest;
                 }
             };
-            
+
             await expect(storage.init()).rejects.toThrow();
         });
     });
@@ -454,6 +465,28 @@ describe('ProgressionStorage', () => {
             // Normal save should work with our mock
             await expect(storage.save(progression)).resolves.toBeDefined();
         });
+
+        it('should save long chord progressions correctly', async () => {
+            const longProgression = createValidProgression();
+            // Create a long progression string (50 chords)
+            longProgression.progression = Array(50).fill('I IV V I').join(' ');
+            longProgression.name = 'Long Progression Test';
+
+            const id = await storage.save(longProgression);
+            const loaded = await storage.load(id);
+            expect(loaded.progression).toBe(longProgression.progression);
+            expect(loaded.name).toBe('Long Progression Test');
+        });
+
+        it('should save chromatic chord progression', async () => {
+            const chromaticProgression = createValidProgression();
+            chromaticProgression.progression = 'C Db D Eb E F Gb G Ab A Bb B C';
+            chromaticProgression.name = 'Chromatic Chords';
+
+            const id = await storage.save(chromaticProgression);
+            const loaded = await storage.load(id);
+            expect(loaded.progression).toBe('C Db D Eb E F Gb G Ab A Bb B C');
+        });
     });
 
     describe('Load Operations', () => {
@@ -514,14 +547,14 @@ describe('ProgressionStorage', () => {
             const prog1 = createValidProgression('First', now - 2000);
             const prog2 = createValidProgression('Second', now - 1000);
             const prog3 = createValidProgression('Third', now);
-            
+
             await storage.save(prog1);
             await storage.save(prog2);
             await storage.save(prog3);
-            
+
             // Wait a bit for all saves to complete
             await new Promise(resolve => setTimeout(resolve, 100));
-            
+
             const all = await storage.getAll('createdAt', 'desc');
             expect(all.length).toBe(3);
             // Verify we got all three progressions
@@ -533,11 +566,11 @@ describe('ProgressionStorage', () => {
             const prog1 = createValidProgression('Zebra', Date.now());
             const prog2 = createValidProgression('Alpha', Date.now());
             const prog3 = createValidProgression('Beta', Date.now());
-            
+
             await storage.save(prog1);
             await storage.save(prog2);
             await storage.save(prog3);
-            
+
             const all = await storage.getAll('name', 'asc');
             expect(all.length).toBe(3);
         });
@@ -600,7 +633,7 @@ describe('ProgressionStorage', () => {
             const progression = createValidProgression();
             const json = storage.exportToJSON(progression);
             const parsed = JSON.parse(json);
-            
+
             expect(parsed.version).toBe('1.0.0');
             expect(parsed.id).toBe(progression.id);
             expect(parsed.name).toBe(progression.name);
@@ -611,7 +644,7 @@ describe('ProgressionStorage', () => {
             const progression = createValidProgression();
             const json = JSON.stringify(progression);
             const imported = storage.importFromJSON(json);
-            
+
             expect(imported).toEqual(progression);
         });
 
@@ -639,9 +672,9 @@ describe('ProgressionStorage', () => {
 
         it('should download progression as JSON file', () => {
             const progression = createValidProgression();
-            
+
             storage.downloadProgression(progression);
-            
+
             expect(global.URL.createObjectURL).toHaveBeenCalled();
             expect(global.document.createElement).toHaveBeenCalledWith('a');
             expect(global.document.body.appendChild).toHaveBeenCalled();
@@ -651,7 +684,7 @@ describe('ProgressionStorage', () => {
         it('should save file to root directory using File System Access API with ISO timestamp filename', async () => {
             const progression = createValidProgression();
             progression.name = 'Test Progression';
-            
+
             // Mock File System Access API
             const mockWritable = {
                 write: vi.fn().mockResolvedValue(undefined),
@@ -661,14 +694,14 @@ describe('ProgressionStorage', () => {
                 createWritable: vi.fn().mockResolvedValue(mockWritable)
             };
             const mockShowSaveFilePicker = vi.fn().mockResolvedValue(mockFileHandle);
-            
+
             // Set up the mock - preserve existing window properties
             const originalWindow = global.window;
-            global.window = { 
-                ...originalWindow, 
-                showSaveFilePicker: mockShowSaveFilePicker 
+            global.window = {
+                ...originalWindow,
+                showSaveFilePicker: mockShowSaveFilePicker
             };
-            
+
             // Mock Date methods to get predictable timestamp without breaking Date constructor
             const originalDateNow = Date.now;
             const originalDateGetFullYear = Date.prototype.getFullYear;
@@ -677,7 +710,7 @@ describe('ProgressionStorage', () => {
             const originalDateGetHours = Date.prototype.getHours;
             const originalDateGetMinutes = Date.prototype.getMinutes;
             const originalDateGetSeconds = Date.prototype.getSeconds;
-            
+
             // Mock specific Date methods for predictable timestamp
             const mockDate = new Date('2026-01-09T14:30:45Z');
             Date.prototype.getFullYear = vi.fn(() => 2026);
@@ -686,33 +719,33 @@ describe('ProgressionStorage', () => {
             Date.prototype.getHours = vi.fn(() => 14);
             Date.prototype.getMinutes = vi.fn(() => 30);
             Date.prototype.getSeconds = vi.fn(() => 45);
-            
+
             await storage.downloadProgression(progression);
-            
+
             // Verify showSaveFilePicker was called (allows navigation to root directory)
             expect(mockShowSaveFilePicker).toHaveBeenCalledTimes(1);
             const callArgs = mockShowSaveFilePicker.mock.calls[0][0];
-            
+
             // Verify filename uses ISO timestamp format: YYYY-MM-DD-HH-MM-SS
             expect(callArgs.suggestedName).toMatch(/^\d{4}-\d{2}-\d{2}-\d{2}-\d{2}-\d{2}\.json$/);
             expect(callArgs.suggestedName).toBe('2026-01-09-14-30-45.json');
-            
+
             // Verify file types are correct
             expect(callArgs.types).toEqual([{
                 description: 'JSON files',
                 accept: { 'application/json': ['.json'] }
             }]);
-            
+
             // Verify file was written
             expect(mockFileHandle.createWritable).toHaveBeenCalled();
             expect(mockWritable.write).toHaveBeenCalled();
             expect(mockWritable.close).toHaveBeenCalled();
-            
+
             // Verify the written content is valid JSON
             const writtenBlob = mockWritable.write.mock.calls[0][0];
             expect(writtenBlob).toBeInstanceOf(Blob);
             expect(writtenBlob.type).toBe('application/json');
-            
+
             // Restore mocks
             Date.prototype.getFullYear = originalDateGetFullYear;
             Date.prototype.getMonth = originalDateGetMonth;
@@ -728,7 +761,7 @@ describe('ProgressionStorage', () => {
             const json = JSON.stringify(progression);
             const blob = new Blob([json], { type: 'application/json' });
             const file = new File([blob], 'test.json', { type: 'application/json' });
-            
+
             const imported = await storage.importFromFile(file);
             expect(imported).toEqual(progression);
         });
@@ -736,7 +769,7 @@ describe('ProgressionStorage', () => {
         it('should throw error when importing invalid file', async () => {
             const invalidBlob = new Blob(['invalid json'], { type: 'application/json' });
             const file = new File([invalidBlob], 'test.json', { type: 'application/json' });
-            
+
             await expect(storage.importFromFile(file)).rejects.toThrow();
         });
     });

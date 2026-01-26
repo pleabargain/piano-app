@@ -835,3 +835,32 @@ This 6-week lesson plan is designed for someone who has basic piano knowledge (c
 
 <!-- Warm-up exercises section added: 2025-01-28 -->
 
+---
+
+## "Music Theory Beast" 7-Day Chromatic Chord Challenge
+
+Inspired by the [Pur Pasteur methodology](https://www.youtube.com/watch?v=fvwtclFZ7Uc), this plan focuses on mastering all 12 major chords through chromatic movement. This builds geographic familiarity with the keyboard and strengthens finger independence across all keys.
+
+### The Core Drill: Chromatic Major Triads
+The goal is to play C Major, then C# Major, then D Major, and so on, all the way up to B Major and back to C.
+
+| Day | Focus | Exercise |
+|-----|-------|----------|
+| 1 | **Root Position Relay** | Play all 12 major triads in root position, moving up chromatically. Focus on "locking" the hand shape. |
+| 2 | **1st Inversion Ascent** | Play all 12 major triads in 1st inversion (e.g., E-G-C for C Major) chromatically. |
+| 3 | **2nd Inversion Ascent** | Play all 12 major triads in 2nd inversion (e.g., G-C-E for C Major) chromatically. |
+| 4 | **The "Beast" Shuffle** | Ascend chromatically but switch inversion with each step: C (Root), C# (1st), D (2nd), D# (Root)... |
+| 5 | **Voice-Led Chromaticism** | Move between major chords keeping the smallest possible movement (e.g., C (Root) to C# (2nd inversion)). |
+| 6 | **Speed & Stamina** | Set metronome to 60 BPM. Play one chord per beat chromatically through all 12 keys. Increase to 80 BPM once fluent. |
+| 7 | **Arpeggiated Chromaticism** | Play each chromatic major chord as a broken arpeggio (1-3-5-3-1) before moving to the next half-step. |
+
+### How to use with the Piano App:
+1. **Free Play Mode**: Enable Free Play to see the chord names and note detection as you move through the chromatic scale.
+2. **Visual Feedback**: Watch the keyboard display to confirm you're maintaining the correct triad shapes across different black and white key combinations.
+3. **Chromatic Navigation**: Since you'll be moving through all 12 keys, it's often best to practice this in **Free Play** without a specific Key Center locked, or use it as an opportunity to see how "out-of-key" chords look relative to a home key.
+
+---
+
+*Last Updated: 2026-01-25*
+
+<!-- 7-Day Chromatic Challenge added: 2026-01-25 -->

@@ -1,0 +1,17 @@
+{
+    "version": "1.0.0",
+    "id": "chromatic-0000-0000-0000-000000000001",
+    "name": "Chromatic Chords",
+    "progression": "C Db D Eb E F Gb G Ab A Bb B C",
+    "createdAt": 1706170000000,
+    "metadata": {
+        "description": "A chromatic scale of major chords",
+        "tags": [
+            "chromatic",
+            "scales",
+            "exercise"
+        ],
+        "key": "C",
+        "scaleType": "major"
+    }
+}

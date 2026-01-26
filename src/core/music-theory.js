@@ -8,7 +8,7 @@ export const SCALES = {
   harmonic_minor: { name: 'Harmonic Minor', intervals: [2, 1, 2, 2, 1, 3, 1] },
   melodic_minor: { name: 'Melodic Minor', intervals: [2, 1, 2, 2, 2, 2, 1] },
   lydian: { name: 'Lydian', intervals: [2, 2, 2, 1, 2, 2, 1] }, // Major scale with raised 4th
-  blues: { name: 'Blues', intervals: [3, 1, 2, 1, 3, 2] }, // Root, m3, P4, d5, P5, m7, octave
+  blues: { name: 'Blues', intervals: [3, 2, 1, 1, 3, 2] }, // Root, m3, P4, b5, P5, m7, octave
   major_pentatonic: { name: 'Major Pentatonic', intervals: [2, 2, 3, 2, 3] }, // W-W-m3-W-m3 (removes 4th and 7th from major)
   minor_pentatonic: { name: 'Minor Pentatonic', intervals: [3, 2, 2, 3, 2] }, // m3-W-W-m3-W (removes 2nd and 6th from natural minor)
 };
@@ -317,7 +317,7 @@ function areNotesEqual(notesA, notesB) {
 
 export function identifyChord(activeNotes) {
   console.log('[music-theory] identifyChord called', { activeNotes, length: activeNotes?.length });
-  
+
   if (!activeNotes || activeNotes.length < 3) {
     console.log('[music-theory] identifyChord: insufficient notes', { activeNotes, length: activeNotes?.length });
     return null;
@@ -377,7 +377,7 @@ export function identifyChord(activeNotes) {
 // Returns an array of all matching chords (e.g., Am7 and C6 for notes A, C, E, G)
 export function identifyAllChords(activeNotes) {
   console.log('[music-theory] identifyAllChords called', { activeNotes, length: activeNotes?.length });
-  
+
   if (!activeNotes || activeNotes.length < 3) {
     console.log('[music-theory] identifyAllChords: insufficient notes', { activeNotes, length: activeNotes?.length });
     return [];
@@ -395,7 +395,7 @@ export function identifyAllChords(activeNotes) {
       const targetNotes = getChordNotes(root, type);
       if (areNotesEqual(pitchClasses, targetNotes)) {
         console.log('[music-theory] identifyAllChords: MATCH FOUND!', { root, type, pitchClasses, targetNotes });
-        
+
         // Determine inversion
         let inversion = 'Root Position';
 

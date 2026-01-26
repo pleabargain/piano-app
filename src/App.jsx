@@ -252,10 +252,12 @@ function App() {
       const immediateChord = identifyChord(activeNotesList);
       if (immediateChord) {
         console.log('[App] 🎵 IMMEDIATE CHORD DETECTION:', immediateChord.name, immediateChord.inversion);
-      } else {
+      }
+      if (!immediateChord) {
         console.log('[App] ⚠️ No chord detected from active notes:', activeNotesList);
       }
-    } else {
+    }
+    if (!(activeNotesList && activeNotesList.length >= 3)) {
       console.log('[App] ⚠️ Insufficient notes for chord detection:', { count: activeNotesList?.length, notes: activeNotesList });
     }
 
@@ -301,11 +303,13 @@ function App() {
         setMidiDeviceName(deviceName);
         if (deviceName) {
           setStatusMessage(`MIDI Connected: ${deviceName}`);
-        } else {
+        }
+        if (!deviceName) {
           setStatusMessage('MIDI Connected. Select a mode to play.');
         }
         midiManager.addListener(handleMidiMessage);
-      } else {
+      }
+      if (!success) {
         setStatusMessage('Web MIDI API not supported or no device found.');
         setMidiDeviceName(null);
       }
@@ -615,7 +619,7 @@ function App() {
 
   // Ref to track previous step index for inversion reset
   const prevStepIndexRef = useRef(currentStepIndex);
-  
+
   // Reset played inversions when chord changes or rule is disabled
   useEffect(() => {
     if (!requireAllInversions) {
@@ -633,179 +637,164 @@ function App() {
 
   // Separate effect for Chord validation (state-based, not edge-based)
   useEffect(() => {
-    // #region agent log
-    try {
-      fetch('http://127.0.0.1:7242/ingest/e195f0d9-c6a3-4271-b290-bc8c7ddcceed',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'App.jsx:630',message:'Chord validation effect started',data:{mode,progressionLength:progression.length,activeNotesLength:activeNotes.length},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'D'})}).catch(()=>{});
-      // #endregion
-    } catch (error) {
-      console.error('[App] Error in chord validation effect entry:', error);
-    }
     // Only run chord validation when we actually have enough notes to form a chord.
     // This avoids noisy logs like "conditions not met" during normal flows (e.g. setting/saving a progression).
     if (mode === 'chord' && progression.length > 0 && activeNotes.length >= 3) {
       try {
         const targetChord = progression[currentStepIndex % progression.length];
         console.log('[App] Chord validation: target chord', targetChord);
-        // #region agent log
-        fetch('http://127.0.0.1:7242/ingest/e195f0d9-c6a3-4271-b290-bc8c7ddcceed',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'App.jsx:635',message:'Chord validation processing',data:{targetChord,currentStepIndex,activeNotes},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'D'})}).catch(()=>{});
-        // #endregion
 
         const detected = identifyChord(activeNotes);
         console.log('[App] Chord validation: detected chord', detected);
 
-      // Compare chords robustly by (root pitch class + chordType), not by display string.
-      const targetParsed = parseChordName(targetChord.name);
-      const detectedParsed = detected
-        ? (detected.root && detected.type
-          ? { root: detected.root, chordType: detected.type }
-          : parseChordName(detected.name))
-        : null;
+        // Compare chords robustly by (root pitch class + chordType), not by display string.
+        const targetParsed = parseChordName(targetChord.name);
+        const detectedParsed = detected
+          ? (detected.root && detected.type
+            ? { root: detected.root, chordType: detected.type }
+            : parseChordName(detected.name))
+          : null;
 
-      const targetRootIdx = targetParsed ? getNoteIndex(targetParsed.root) : -1;
-      const detectedRootIdx = detectedParsed ? getNoteIndex(detectedParsed.root) : -1;
-      const match = !!(targetParsed && detectedParsed
-        && targetParsed.chordType === detectedParsed.chordType
-        && targetRootIdx !== -1
-        && detectedRootIdx !== -1
-        && targetRootIdx === detectedRootIdx);
+        const targetRootIdx = targetParsed ? getNoteIndex(targetParsed.root) : -1;
+        const detectedRootIdx = detectedParsed ? getNoteIndex(detectedParsed.root) : -1;
+        const match = !!(targetParsed && detectedParsed
+          && targetParsed.chordType === detectedParsed.chordType
+          && targetRootIdx !== -1
+          && detectedRootIdx !== -1
+          && targetRootIdx === detectedRootIdx);
 
-      console.log('[App] Chord validation: comparison', {
-        targetChordName: targetChord.name,
-        detectedName: detected?.name,
-        targetParsed,
-        detectedParsed,
-        targetRootIdx,
-        detectedRootIdx,
-        match
-      });
-
-      if (detected && match) {
-        console.log('[App] Chord validation: MATCH!');
-        
-        // Track inversion if requireAllInversions is enabled
-        // Use a ref to prevent duplicate tracking when holding the same chord
-        let updatedInversions = new Set(playedInversions);
-        
-        if (requireAllInversions && detected.inversion) {
-          // Only track if this is a new inversion for this chord step
-          if (lastDetectedInversionRef.current.stepIndex !== currentStepIndex || 
-              lastDetectedInversionRef.current.inversion !== detected.inversion) {
-            updatedInversions.add(detected.inversion);
-            setPlayedInversions(updatedInversions);
-            lastDetectedInversionRef.current = { stepIndex: currentStepIndex, inversion: detected.inversion };
-            console.log('[App] Chord validation: tracked inversion', detected.inversion, 'played inversions:', Array.from(updatedInversions));
-          } else {
-            // Same inversion detected again, use current state
-            updatedInversions = new Set(playedInversions);
-            console.log('[App] Chord validation: same inversion detected, not tracking again');
-          }
-        }
-        
-        // Check if all inversions are required and if we have them all
-        let canAdvance = true;
-        if (requireAllInversions && targetParsed) {
-          // #region agent log
-          try {
-            fetch('http://127.0.0.1:7242/ingest/e195f0d9-c6a3-4271-b290-bc8c7ddcceed',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'App.jsx:695',message:'Checking inversions',data:{targetParsed,updatedInversionsSize:updatedInversions.size},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'D'})}).catch(()=>{});
-            // #endregion
-            const expectedInversions = getExpectedInversions(targetParsed.chordType);
-            const allInversionsPlayed = expectedInversions.every(inv => updatedInversions.has(inv));
-            canAdvance = allInversionsPlayed;
-            
-            console.log('[App] Chord validation: inversion check', {
-              expectedInversions,
-              playedInversions: Array.from(updatedInversions),
-              allInversionsPlayed,
-              canAdvance
-            });
-            
-            if (!allInversionsPlayed) {
-              const remaining = expectedInversions.filter(inv => !updatedInversions.has(inv));
-              setStatusMessage(`✅ Correct! Play remaining inversions: ${remaining.join(', ')}`);
-              setChordAcknowledged(true);
-              setIsPracticeActive(true);
-              return; // Don't advance yet
-            }
-          } catch (error) {
-            console.error('[App] Error checking inversions:', error, { targetParsed });
-            fetch('http://127.0.0.1:7242/ingest/e195f0d9-c6a3-4271-b290-bc8c7ddcceed',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'App.jsx:700',message:'Exception checking inversions',data:{error:error.message,stack:error.stack,targetParsed},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'D'})}).catch(()=>{});
-            canAdvance = true; // Fallback: allow advancement on error
-          }
-        }
-        
-        if (canAdvance) {
-          console.log('[App] Chord validation: Advancing to next chord');
-          // Correct chord held!
-          // Set acknowledgment state immediately for UI feedback
-          setChordAcknowledged(true);
-          setIsPracticeActive(true);
-          
-          // Show acknowledgment message
-          const nextIndex = (currentStepIndex + 1) % progression.length;
-          const nextChord = progression[nextIndex];
-          const message = requireAllInversions 
-            ? `✅ All inversions played! Next: ${nextChord.roman} (${nextChord.name})`
-            : `✅ Correct! Next: ${nextChord.roman} (${nextChord.name})`;
-          setStatusMessage(message);
-          
-          // Advance after a short delay to let them hear/see it
-          // This prevents rapid skipping if the user holds the chord
-          const timer = setTimeout(() => {
-            console.log('[App] Chord validation: timeout fired, advancing step index');
-            setCurrentStepIndex(prev => {
-              const next = prev + 1;
-              console.log('[App] Chord validation: step index', { prev, next });
-              // Reset acknowledgment when moving to next chord
-              setChordAcknowledged(false);
-              // Reset played inversions for next chord
-              setPlayedInversions(new Set());
-              // Reset inversion tracking ref for next chord
-              lastDetectedInversionRef.current = { stepIndex: next, inversion: null };
-              return next;
-            });
-          }, 1500); // Increased delay to show acknowledgment
-
-          return () => {
-            console.log('[App] Chord validation: cleanup timeout');
-            clearTimeout(timer);
-          };
-        }
-      } else {
-        // Reset acknowledgment if chord doesn't match
-        if (chordAcknowledged) {
-          setChordAcknowledged(false);
-        }
-        
-        console.log('[App] Chord validation: NO MATCH', {
-          detected: !!detected,
-          match,
+        console.log('[App] Chord validation: comparison', {
+          targetChordName: targetChord.name,
+          detectedName: detected?.name,
           targetParsed,
-          detectedParsed
+          detectedParsed,
+          targetRootIdx,
+          detectedRootIdx,
+          match
         });
 
-        if (rejectErrors && detected) {
-          // WRONG CHORD and rejectErrors is on: Reset to beginning
-          console.log('[App] Chord validation: Rejecting error, resetting progression');
-          setCurrentStepIndex(0);
-          setStatusMessage(`Wrong chord! Restarting progression. Target: ${progression[0].roman} (${progression[0].name})`);
+        if (detected && match) {
+          console.log('[App] Chord validation: MATCH!');
+
+          // Track inversion if requireAllInversions is enabled
+          // Use a ref to prevent duplicate tracking when holding the same chord
+          let updatedInversions = new Set(playedInversions);
+
+          if (requireAllInversions && detected.inversion) {
+            // Only track if this is a new inversion for this chord step
+            const isNewInversion = lastDetectedInversionRef.current.stepIndex !== currentStepIndex ||
+              lastDetectedInversionRef.current.inversion !== detected.inversion;
+
+            if (isNewInversion) {
+              updatedInversions.add(detected.inversion);
+              setPlayedInversions(updatedInversions);
+              lastDetectedInversionRef.current = { stepIndex: currentStepIndex, inversion: detected.inversion };
+              console.log('[App] Chord validation: tracked inversion', detected.inversion, 'played inversions:', Array.from(updatedInversions));
+            }
+            if (!isNewInversion) {
+              // Same inversion detected again, use current state
+              updatedInversions = new Set(playedInversions);
+              console.log('[App] Chord validation: same inversion detected, not tracking again');
+            }
+          }
+
+          // Check if all inversions are required and if we have them all
+          let canAdvance = true;
+          if (requireAllInversions && targetParsed) {
+            try {
+              const expectedInversions = getExpectedInversions(targetParsed.chordType);
+              const allInversionsPlayed = expectedInversions.every(inv => updatedInversions.has(inv));
+              canAdvance = allInversionsPlayed;
+
+              console.log('[App] Chord validation: inversion check', {
+                expectedInversions,
+                playedInversions: Array.from(updatedInversions),
+                allInversionsPlayed,
+                canAdvance
+              });
+
+              if (!allInversionsPlayed) {
+                const remaining = expectedInversions.filter(inv => !updatedInversions.has(inv));
+                setStatusMessage(`✅ Correct! Play remaining inversions: ${remaining.join(', ')}`);
+                setChordAcknowledged(true);
+                setIsPracticeActive(true);
+                return; // Don't advance yet
+              }
+            } catch (error) {
+              console.error('[App] Error checking inversions:', error, { targetParsed });
+              canAdvance = true; // Fallback: allow advancement on error
+            }
+          }
+
+          if (canAdvance) {
+            console.log('[App] Chord validation: Advancing to next chord');
+            // Correct chord held!
+            // Set acknowledgment state immediately for UI feedback
+            setChordAcknowledged(true);
+            setIsPracticeActive(true);
+
+            // Show acknowledgment message
+            const nextIndex = (currentStepIndex + 1) % progression.length;
+            const nextChord = progression[nextIndex];
+            const message = requireAllInversions
+              ? `✅ All inversions played! Next: ${nextChord.roman} (${nextChord.name})`
+              : `✅ Correct! Next: ${nextChord.roman} (${nextChord.name})`;
+            setStatusMessage(message);
+
+            // Advance after a short delay to let them hear/see it
+            // This prevents rapid skipping if the user holds the chord
+            const timer = setTimeout(() => {
+              console.log('[App] Chord validation: timeout fired, advancing step index');
+              setCurrentStepIndex(prev => {
+                const next = prev + 1;
+                console.log('[App] Chord validation: step index', { prev, next });
+                // Reset acknowledgment when moving to next chord
+                setChordAcknowledged(false);
+                // Reset played inversions for next chord
+                setPlayedInversions(new Set());
+                // Reset inversion tracking ref for next chord
+                lastDetectedInversionRef.current = { stepIndex: next, inversion: null };
+                return next;
+              });
+            }, 1500); // Increased delay to show acknowledgment
+
+            return () => {
+              console.log('[App] Chord validation: cleanup timeout');
+              clearTimeout(timer);
+            };
+          }
         }
-      }
+
+        if (!match || !detected) {
+          // Reset acknowledgment if chord doesn't match
+          if (chordAcknowledged) {
+            setChordAcknowledged(false);
+          }
+
+          console.log('[App] Chord validation: NO MATCH', {
+            detected: !!detected,
+            match,
+            targetParsed,
+            detectedParsed
+          });
+
+          if (rejectErrors && detected) {
+            // WRONG CHORD and rejectErrors is on: Reset to beginning
+            console.log('[App] Chord validation: Rejecting error, resetting progression');
+            setCurrentStepIndex(0);
+            setStatusMessage(`Wrong chord! Restarting progression. Target: ${progression[0].roman} (${progression[0].name})`);
+          }
+        }
       } catch (error) {
         console.error('[App] Error in chord validation:', error, { mode, progression, currentStepIndex, activeNotes });
-        fetch('http://127.0.0.1:7242/ingest/e195f0d9-c6a3-4271-b290-bc8c7ddcceed',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'App.jsx:775',message:'Exception in chord validation',data:{error:error.message,stack:error.stack,mode,progressionLength:progression.length},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'D'})}).catch(()=>{});
       }
     }
   }, [activeNotes, mode, progression, currentStepIndex, requireAllInversions, playedInversions]);
 
 
-
-
   // Helper to get expected inversions for a chord type
   const getExpectedInversions = (chordType) => {
-    // #region agent log
     try {
-      fetch('http://127.0.0.1:7242/ingest/e195f0d9-c6a3-4271-b290-bc8c7ddcceed',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'App.jsx:781',message:'getExpectedInversions called',data:{chordType,hasChordType:!!CHORD_TYPES[chordType]},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'C'})}).catch(()=>{});
-      // #endregion
       const chordTypeData = CHORD_TYPES[chordType];
       if (!chordTypeData) {
         console.error('[App] Invalid chord type in getExpectedInversions:', chordType);
@@ -821,7 +810,6 @@ function App() {
       return expectedInversions;
     } catch (error) {
       console.error('[App] Error in getExpectedInversions:', error, { chordType });
-      fetch('http://127.0.0.1:7242/ingest/e195f0d9-c6a3-4271-b290-bc8c7ddcceed',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'App.jsx:795',message:'Exception in getExpectedInversions',data:{error:error.message,stack:error.stack,chordType},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'C'})}).catch(()=>{});
       return [];
     }
   };
@@ -842,7 +830,7 @@ function App() {
         const chordNotes = getChordNotes(parsed.root, parsed.chordType);
         // Use getNoteIndex to get pitch class indices directly (handles flats->sharps conversion)
         const pitchClasses = chordNotes.map(note => getNoteIndex(note)).filter(idx => idx !== -1);
-        
+
         // Generate MIDI notes for all octaves in the piano range (36-96)
         const allMidiNotes = [];
         for (let octave = 2; octave <= 7; octave++) {
@@ -853,9 +841,6 @@ function App() {
             }
           });
         }
-        // #region agent log
-        fetch('http://127.0.0.1:7242/ingest/e195f0d9-c6a3-4271-b290-bc8c7ddcceed',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'App.jsx:835',message:'chord highlights for inversions',data:{targetChord,parsed,chordNotes,pitchClasses,allMidiNotesCount:allMidiNotes.length},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'C'})}).catch(()=>{});
-        // #endregion
         return allMidiNotes;
       }
     }
@@ -869,30 +854,30 @@ function App() {
 
     const targetChord = progression[currentStepIndex % progression.length];
     const nextChord = progression[(currentStepIndex + 1) % progression.length];
-    
+
     // If there's no next chord, return empty array
     if (!nextChord) return [];
 
     try {
       const targetParsed = parseChordName(targetChord.name);
       const nextParsed = parseChordName(nextChord.name);
-      
+
       if (!targetParsed || !nextParsed) return [];
 
       // Get chord notes for both chords
       const targetNotes = getChordNotes(targetParsed.root, targetParsed.chordType);
       const nextNotes = getChordNotes(nextParsed.root, nextParsed.chordType);
-      
+
       // Convert to pitch classes and find intersection
       const targetPitchClasses = new Set(targetNotes.map(note => getNoteIndex(note)).filter(idx => idx !== -1));
       const nextPitchClasses = nextNotes.map(note => getNoteIndex(note)).filter(idx => idx !== -1);
-      
+
       // Find shared pitch classes
       const sharedPitchClasses = nextPitchClasses.filter(pc => targetPitchClasses.has(pc));
-      
+
       // If no shared keys, return empty array
       if (sharedPitchClasses.length === 0) return [];
-      
+
       // Generate MIDI notes for all octaves of shared pitch classes (similar to getChordHighlights)
       const allMidiNotes = [];
       for (let octave = 2; octave <= 7; octave++) {
@@ -903,7 +888,7 @@ function App() {
           }
         });
       }
-      
+
       return allMidiNotes;
     } catch (error) {
       console.error('[App] Error calculating shared keys:', error);
@@ -916,27 +901,17 @@ function App() {
     // In chord practice mode, highlight all pitch classes of the target chord
     if (mode === 'chord' && progression.length > 0) {
       const targetChord = progression[currentStepIndex % progression.length];
-      // #region agent log
-      fetch('http://127.0.0.1:7242/ingest/e195f0d9-c6a3-4271-b290-bc8c7ddcceed',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'App.jsx:843',message:'getScaleHighlights chord mode',data:{targetChord,currentStepIndex},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'A'})}).catch(()=>{});
-      // #endregion
       const parsed = parseChordName(targetChord.name);
-      // #region agent log
-      fetch('http://127.0.0.1:7242/ingest/e195f0d9-c6a3-4271-b290-bc8c7ddcceed',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'App.jsx:847',message:'parsed target chord',data:{parsed,targetChordName:targetChord.name},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'A'})}).catch(()=>{});
-      // #endregion
       if (parsed) {
         const chordNotes = getChordNotes(parsed.root, parsed.chordType);
-        // #region agent log
-        fetch('http://127.0.0.1:7242/ingest/e195f0d9-c6a3-4271-b290-bc8c7ddcceed',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'App.jsx:849',message:'chord notes from getChordNotes',data:{chordNotes,root:parsed.root,chordType:parsed.chordType},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'A'})}).catch(()=>{});
-        // #endregion
+
         // Use getNoteIndex to get pitch class indices directly (handles flats->sharps conversion)
         const pitchClasses = chordNotes.map(note => getNoteIndex(note)).filter(idx => idx !== -1);
-        // #region agent log
-        fetch('http://127.0.0.1:7242/ingest/e195f0d9-c6a3-4271-b290-bc8c7ddcceed',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'App.jsx:852',message:'mapped pitch classes using getNoteIndex',data:{chordNotes,pitchClasses},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'A'})}).catch(()=>{});
-        // #endregion
+
         return pitchClasses;
       }
     }
-    
+
     // Only use progression if we are actually in scale practice mode
     const currentKey = (mode === 'scale' && keyProgression.length > 0)
       ? keyProgression[currentKeyIndex]

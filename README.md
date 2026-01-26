@@ -66,15 +66,26 @@ The built files will be in the `dist` directory.
 
 ### Testing
 
-Run unit tests:
+The project uses Vitest for unit and integration testing.
+
+**Interactive Watch Mode:**
+Starts the tests in interactive mode. This keeps the tests running and re-runs them every time you save a file.
 ```bash
 npm test
 ```
 
-Run tests with UI:
+**UI Dashboard:**
+Opens a fancy browser-based dashboard to visualize and interact with your tests.
 ```bash
 npm run test:ui
 ```
+
+**Automated Logging:**
+Runs all tests once and saves the full results to a date-stamped file in the `test-logs/` directory.
+```bash
+npm run test:log
+```
+*Logs are saved as `YYYY-MM-DDTHHmmss-tests[N].log` where `N` is the number of failed tests.*
 
 ## Features
 
