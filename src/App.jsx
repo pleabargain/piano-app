@@ -1121,157 +1121,152 @@ function App() {
         {/* Pyramid Layout */}
         <div className="pyramid-container">
 
-          {/* Top: Circle of Fifths */}
-          <div className="pyramid-top">
-            <CircleOfFifths
-              selectedRoot={lockedChord ? lockedChord.root : selectedRoot}
-              onRootSelect={setSelectedRoot}
-              detectedChord={detectedChord}
-              onChordClick={handleChordClick}
-              hideTitle={true}
-            />
-          </div>
+          {/* Circle of Fifths */}
+          <CircleOfFifths
+            selectedRoot={lockedChord ? lockedChord.root : selectedRoot}
+            onRootSelect={setSelectedRoot}
+            detectedChord={detectedChord}
+            onChordClick={handleChordClick}
+            hideTitle={true}
+          />
 
-          {/* Middle Row: Extensions, ChordInfo, and ScaleSelector */}
-          <div className="pyramid-middle">
-            {/* Extensions Panel (left) */}
-            <div className={`extensions-panel ${isExtensionsCollapsed ? 'collapsed' : ''}`}>
-              <button
-                className="section-toggle-btn"
-                onClick={() => setIsExtensionsCollapsed(!isExtensionsCollapsed)}
-                title={isExtensionsCollapsed ? "Expand Extensions" : "Collapse Extensions"}
-              >
-                {isExtensionsCollapsed ? 'Extensions →' : '← Extensions'}
-              </button>
-              {!isExtensionsCollapsed && (
-                <>
-                  <h3>Extensions</h3>
-                  {chordSuggestions.length > 0 ? (
-                    <>
-                      <div className="section-label">
-                        {detectedChord
-                          ? `🎵 Add to ${detectedChord.name.split(' ')[0]}`
-                          : `💡 Potential Chords`
-                        }
-                      </div>
-                      {chordSuggestions.slice(0, 4).map((suggestion, index) => (
-                        <div key={index} className="suggestion-item">
-                          <span className="suggestion-name">{suggestion.name}</span>
-                          <span className="suggestion-missing">+{suggestion.missingNotes.join(', ')}</span>
-                        </div>
-                      ))}
-                    </>
-                  ) : (
-                    <div className="extensions-placeholder">
-                      Play 2+ notes to see chord suggestions
+          {/* Extensions Panel */}
+          <div className={`extensions-panel ${isExtensionsCollapsed ? 'collapsed' : ''}`}>
+            <button
+              className="section-toggle-btn"
+              onClick={() => setIsExtensionsCollapsed(!isExtensionsCollapsed)}
+              title={isExtensionsCollapsed ? "Expand Extensions" : "Collapse Extensions"}
+            >
+              {isExtensionsCollapsed ? 'Extensions →' : '← Extensions'}
+            </button>
+            {!isExtensionsCollapsed && (
+              <>
+                <h3>Extensions</h3>
+                {chordSuggestions.length > 0 ? (
+                  <>
+                    <div className="section-label">
+                      {detectedChord
+                        ? `🎵 Add to ${detectedChord.name.split(' ')[0]}`
+                        : `💡 Potential Chords`
+                      }
                     </div>
-                  )}
-                </>
-              )}
-            </div>
-
-            {/* ChordInfo (center) */}
-            <ChordInfo
-              detectedChord={detectedChord}
-              detectedChords={detectedChords}
-              chordSuggestions={chordSuggestions}
-              lockedChord={lockedChord}
-              onLockChord={handleLockChord}
-              onUnlockChord={handleUnlockChord}
-              activeNotes={activeNotes}
-              hideExtensions={true}
-              progression={progression}
-              currentStepIndex={currentStepIndex}
-              mode={mode}
-              chordAcknowledged={chordAcknowledged}
-              isPracticeActive={isPracticeActive}
-              requireAllInversions={requireAllInversions}
-              playedInversions={playedInversions instanceof Set ? Array.from(playedInversions) : playedInversions}
-            />
-
-            {/* Practice Column (to the right of ChordInfo) */}
-            {(mode === 'scale' || mode === 'chord') && (
-              <div className={`practice-column ${isPracticeCollapsed ? 'collapsed' : ''}`}>
-                <button
-                  className="section-toggle-btn"
-                  onClick={() => setIsPracticeCollapsed(!isPracticeCollapsed)}
-                  title={isPracticeCollapsed ? "Expand Practice Tools" : "Collapse Practice Tools"}
-                >
-                  {isPracticeCollapsed ? '← Practice' : 'Practice →'}
-                </button>
-
-                {!isPracticeCollapsed && (
-                  <div className="practice-content">
-                    {mode === 'scale' && (
-                      <KeyProgressionBuilder
-                        onProgressionSet={(keys) => {
-                          setKeyProgression(keys);
-                          setCurrentKeyIndex(0);
-                          setCurrentStepIndex(0);
-                          if (keys.length > 0) {
-                            setSelectedRoot(keys[0]);
-                          }
-                        }}
-                        onClear={() => {
-                          setKeyProgression([]);
-                          setCurrentKeyIndex(0);
-                          setCurrentStepIndex(0);
-                        }}
-                        selectedScaleType={selectedScaleType}
-                      />
-                    )}
-
-                    {mode === 'chord' && (
-                      <div className="chord-practice-column">
-                        <ProgressionBuilder
-                          selectedRoot={selectedRoot}
-                          selectedScaleType={selectedScaleType}
-                          onProgressionSet={(p) => {
-                            console.log('[App] onProgressionSet called (chord progression)', p);
-                            setProgression(p);
-                            setCurrentStepIndex(0);
-                            setIsPracticeActive(false);
-                            setChordAcknowledged(false);
-                            setClickedChord(null);
-                            setChordMidiNotes([]);
-                          }}
-                          onChordClick={handleChordClick}
-                          currentStepIndex={currentStepIndex}
-                          mode={mode}
-                          isPracticeActive={isPracticeActive}
-                        />
-
-                        {clickedChord && (
-                          <div className="clicked-chord-display">
-                            <div className="clicked-chord-label">Showing on Piano:</div>
-                            <div className="clicked-chord-name">{clickedChord.name}</div>
-                            <div className="clicked-chord-inversion">
-                              {clickedChord.inversion === 0 ? 'Root Position' :
-                                clickedChord.inversion === 1 ? '1st Inversion' :
-                                  clickedChord.inversion === 2 ? '2nd Inversion' :
-                                    clickedChord.inversion === 3 ? '3rd Inversion' :
-                                      `${clickedChord.inversion}th Inversion`}
-                            </div>
-                            <div className="clicked-chord-hint">Click again to invert</div>
-                          </div>
-                        )}
+                    {chordSuggestions.slice(0, 4).map((suggestion, index) => (
+                      <div key={index} className="suggestion-item">
+                        <span className="suggestion-name">{suggestion.name}</span>
+                        <span className="suggestion-missing">+{suggestion.missingNotes.join(', ')}</span>
                       </div>
-                    )}
+                    ))}
+                  </>
+                ) : (
+                  <div className="extensions-placeholder">
+                    Play 2+ notes to see chord suggestions
                   </div>
                 )}
-              </div>
+              </>
             )}
-
-            {/* ScaleSelector (right) */}
-            <ScaleSelector
-              selectedRoot={lockedChord ? lockedChord.root : selectedRoot}
-              selectedScaleType={selectedScaleType}
-              onScaleTypeChange={setSelectedScaleType}
-              lockedChordRoot={lockedChord ? lockedChord.root : null}
-              isCollapsed={isScaleSelectorCollapsed}
-              onToggleCollapse={() => setIsScaleSelectorCollapsed(!isScaleSelectorCollapsed)}
-            />
           </div>
+
+          {/* ChordInfo */}
+          <ChordInfo
+            detectedChord={detectedChord}
+            detectedChords={detectedChords}
+            chordSuggestions={chordSuggestions}
+            lockedChord={lockedChord}
+            onLockChord={handleLockChord}
+            onUnlockChord={handleUnlockChord}
+            activeNotes={activeNotes}
+            hideExtensions={true}
+            progression={progression}
+            currentStepIndex={currentStepIndex}
+            mode={mode}
+            chordAcknowledged={chordAcknowledged}
+            isPracticeActive={isPracticeActive}
+            requireAllInversions={requireAllInversions}
+            playedInversions={playedInversions instanceof Set ? Array.from(playedInversions) : playedInversions}
+          />
+
+          {/* Practice Column */}
+          {(mode === 'scale' || mode === 'chord') && (
+            <div className={`practice-column ${isPracticeCollapsed ? 'collapsed' : ''}`}>
+              <button
+                className="section-toggle-btn"
+                onClick={() => setIsPracticeCollapsed(!isPracticeCollapsed)}
+                title={isPracticeCollapsed ? "Expand Practice Tools" : "Collapse Practice Tools"}
+              >
+                {isPracticeCollapsed ? '← Practice' : 'Practice →'}
+              </button>
+
+              {!isPracticeCollapsed && (
+                <div className="practice-content">
+                  {mode === 'scale' && (
+                    <KeyProgressionBuilder
+                      onProgressionSet={(keys) => {
+                        setKeyProgression(keys);
+                        setCurrentKeyIndex(0);
+                        setCurrentStepIndex(0);
+                        if (keys.length > 0) {
+                          setSelectedRoot(keys[0]);
+                        }
+                      }}
+                      onClear={() => {
+                        setKeyProgression([]);
+                        setCurrentKeyIndex(0);
+                        setCurrentStepIndex(0);
+                      }}
+                      selectedScaleType={selectedScaleType}
+                    />
+                  )}
+
+                  {mode === 'chord' && (
+                    <div className="chord-practice-column">
+                      <ProgressionBuilder
+                        selectedRoot={selectedRoot}
+                        selectedScaleType={selectedScaleType}
+                        onProgressionSet={(p) => {
+                          console.log('[App] onProgressionSet called (chord progression)', p);
+                          setProgression(p);
+                          setCurrentStepIndex(0);
+                          setIsPracticeActive(false);
+                          setChordAcknowledged(false);
+                          setClickedChord(null);
+                          setChordMidiNotes([]);
+                        }}
+                        onChordClick={handleChordClick}
+                        currentStepIndex={currentStepIndex}
+                        mode={mode}
+                        isPracticeActive={isPracticeActive}
+                      />
+
+                      {clickedChord && (
+                        <div className="clicked-chord-display">
+                          <div className="clicked-chord-label">Showing on Piano:</div>
+                          <div className="clicked-chord-name">{clickedChord.name}</div>
+                          <div className="clicked-chord-inversion">
+                            {clickedChord.inversion === 0 ? 'Root Position' :
+                              clickedChord.inversion === 1 ? '1st Inversion' :
+                                clickedChord.inversion === 2 ? '2nd Inversion' :
+                                  clickedChord.inversion === 3 ? '3rd Inversion' :
+                                    `${clickedChord.inversion}th Inversion`}
+                          </div>
+                          <div className="clicked-chord-hint">Click again to invert</div>
+                        </div>
+                      )}
+                    </div>
+                  )}
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* ScaleSelector */}
+          <ScaleSelector
+            selectedRoot={lockedChord ? lockedChord.root : selectedRoot}
+            selectedScaleType={selectedScaleType}
+            onScaleTypeChange={setSelectedScaleType}
+            lockedChordRoot={lockedChord ? lockedChord.root : null}
+            isCollapsed={isScaleSelectorCollapsed}
+            onToggleCollapse={() => setIsScaleSelectorCollapsed(!isScaleSelectorCollapsed)}
+          />
 
           {/* Bottom Row: Unified Piano */}
           <div className="pyramid-bottom">
@@ -1378,7 +1373,7 @@ function App() {
         </div>
       </div>
 
-      {/* Practice content moved to pyramid-top */}
+      {/* Practice content in pyramid-container */}
 
       {
         mode === 'scale' && keyProgression.length > 0 && (

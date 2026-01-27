@@ -8,7 +8,7 @@ Here are some creative ways to get the most out of this piano training applicati
 - **I-V-I Circle Exercise**: [http://localhost:5173/exercise/i-v-i-circle](http://localhost:5173/exercise/i-v-i-circle)
   - Automated practice through all 12 keys with continuous looping
   - With parameters: [http://localhost:5173/exercise/i-v-i-circle?startKey=C&keys=12](http://localhost:5173/exercise/i-v-i-circle?startKey=C&keys=12)
-- **I-IV-V-I Circle Exercise**: [http://localhost:5173/exercise/i-iv-v-i-circle](http://localhost:5173/exercise/i-iv-v-i-circle)
+- **Circle of Fifths Tour**: [http://localhost:5173/exercise/i-iv-v-i-circle](http://localhost:5173/exercise/i-iv-v-i-circle)
   - Automated practice through all 12 keys with continuous looping
   - With parameters: [http://localhost:5173/exercise/i-iv-v-i-circle?startKey=C&keys=12](http://localhost:5173/exercise/i-iv-v-i-circle?startKey=C&keys=12)
 
@@ -455,6 +455,8 @@ Before diving into focused practice, warm-up exercises help get your fingers mov
 **Why it's fun**: It's like taking a musical road trip! Each key has its own character, and you'll discover favorites along the way.
 
 **Variation**: Go backwards (counter-clockwise) for a different feel, or jump randomly around the circle!
+
+**Want automated practice through all keys?** Try the [Circle of Fifths Tour Exercise](#the-i-iv-v-i-circle-exercise-continuous-practice) at `http://localhost:5173/exercise/i-iv-v-i-circle` - it automatically guides you through all 12 keys with continuous looping!
 
 ---
 

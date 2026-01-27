@@ -711,42 +711,25 @@ header h1 {
   padding-top: 155px;
 }
 
-/* Pyramid Layout */
+/* Pyramid Layout - Flattened to horizontal */
 .pyramid-container {
   display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 15px;
-  width: 100%;
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 10px 20px;
-}
-
-/* Top: Circle of Fifths (smaller, centered) */
-.pyramid-top {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 100%;
-}
-
-.pyramid-top .circle-of-fifths-container {
-  transform: scale(1.0);
-  /* Full size circle */
-  transform-origin: center;
-}
-
-/* Middle Row: Extensions, ChordInfo, ScaleSelector (3 columns) */
-.pyramid-middle {
-  display: flex;
-  justify-content: center;
+  flex-direction: row;
   align-items: flex-start;
+  justify-content: center;
   gap: 20px;
   width: 100%;
-  max-width: 1100px;
-  flex-wrap: nowrap;
-  flex-shrink: 0;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 10px 20px;
+  flex-wrap: wrap;
+}
+
+/* Circle of Fifths container */
+.pyramid-container > .circle-of-fifths-container {
+  flex: 0 0 auto;
+  transform: scale(1.0);
+  transform-origin: center;
 }
 
 /* Extensions Panel (left column) */
@@ -899,20 +882,23 @@ header h1 {
 
 /* Responsive: Stack on smaller screens */
 @media (max-width: 1100px) {
+  .pyramid-container {
+    flex-direction: column;
+    align-items: center;
+  }
 
-  .pyramid-middle,
   .pyramid-bottom {
     flex-direction: column;
     align-items: center;
   }
 
-  .pyramid-top .circle-of-fifths-container {
+  .pyramid-container > .circle-of-fifths-container {
     transform: scale(0.9);
   }
 }
 
 @media (max-width: 768px) {
-  .pyramid-top .circle-of-fifths-container {
+  .pyramid-container > .circle-of-fifths-container {
     transform: scale(0.75);
   }
 }
@@ -972,19 +958,7 @@ header h1 {
   padding-top: 0;
 }
 
-/* Practice Column in Pyramid Top */
-.pyramid-top {
-  display: flex;
-  justify-content: center;
-  align-items: flex-start;
-  /* Align top */
-  gap: 20px;
-  width: 100%;
-  flex-wrap: wrap;
-  /* Allow wrapping on small screens */
-}
-
-/* Ensure Circle stays centered if possible, or flexes */
+/* Circle of Fifths container */
 .circle-of-fifths-container {
   flex: 0 0 auto;
 }

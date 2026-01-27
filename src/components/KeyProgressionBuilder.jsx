@@ -431,20 +431,26 @@ const KeyProgressionBuilder = ({ onProgressionSet, onClear, selectedScaleType })
             {/* Predefined Progressions */}
             <div className="predefined-progressions">
                 <h4>Predefined Progressions</h4>
-                <div className="progression-list">
-                    {PREDEFINED_SCALE_PROGRESSIONS.map((prog, idx) => (
-                        <div
-                            key={idx}
-                            className="progression-item"
-                            onClick={() => handlePredefinedClick(prog.progression)}
-                        >
-                            <span className="progression-play-icon">▶</span>
-                            <span className="progression-name">{prog.name}:</span>
-                            <span className="progression-keys">{prog.progression.replace(/\s+/g, '-')}</span>
-                            <span className="progression-length">({prog.length})</span>
-                        </div>
-                    ))}
-                </div>
+                <select 
+                    className="progression-dropdown"
+                    onChange={(e) => {
+                        const selectedProg = PREDEFINED_SCALE_PROGRESSIONS.find(p => p.name === e.target.value);
+                        if (selectedProg) {
+                            handlePredefinedClick(selectedProg.progression);
+                        }
+                        e.target.value = ''; // Reset dropdown after selection
+                    }}
+                    defaultValue=""
+                >
+                    <option value="" disabled>Select a progression...</option>
+                    {[...PREDEFINED_SCALE_PROGRESSIONS]
+                        .sort((a, b) => a.name.localeCompare(b.name))
+                        .map((prog, idx) => (
+                            <option key={idx} value={prog.name}>
+                                {prog.name} - {prog.progression} ({prog.length})
+                            </option>
+                        ))}
+                </select>
             </div>
 
             {showSaveDialog && (

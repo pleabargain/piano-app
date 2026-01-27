@@ -45,3 +45,9 @@
    - Make options mutually exclusive and clearly distinct
    - Each option should be on its own line or clearly separated
    - Example: "Which approach should I use? a) Add tests to existing file, b) Create new test file, c) Refactor first then add tests"
+12. **Exercise URL Documentation**: If an exercise has a URL (accessible at `http://localhost:5173/exercise/{exercise-id}`), that exercise MUST be documented and visible in `http://localhost:5173/usage-ideas.html`:
+   - The exercise must appear in the "Quick Links to Exercises" section with its URL
+   - The exercise must have a detailed section explaining how to use it, URL parameters, examples, and practice tips
+   - When updating `usage-ideas.md`, also update `public/usage-ideas.md` to keep them in sync
+   - After updating markdown files, run `npm run convert-md` to regenerate `public/usage-ideas.html`
+   - Verify the exercise appears correctly in the HTML version by checking the generated file

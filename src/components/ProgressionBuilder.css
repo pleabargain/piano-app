@@ -197,6 +197,39 @@
     font-weight: normal;
 }
 
+.progression-dropdown {
+    width: 100%;
+    padding: 8px 12px;
+    background: #2a2a2a;
+    border: 1px solid #444;
+    border-radius: 4px;
+    color: #fff;
+    font-size: 0.9rem;
+    cursor: pointer;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23aaa' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    padding-right: 32px;
+}
+
+.progression-dropdown:hover {
+    border-color: #666;
+    background-color: #333;
+}
+
+.progression-dropdown:focus {
+    outline: none;
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
+}
+
+.progression-dropdown option {
+    background: #2a2a2a;
+    color: #fff;
+    padding: 8px;
+}
+
 .progression-list {
     max-height: 400px;
     overflow-y: auto;

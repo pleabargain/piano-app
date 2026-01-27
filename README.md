@@ -1,7 +1,7 @@
 <!-- https://github.com/pleabargain/piano-app -->
 # Piano App
 
-Last updated: 2026-01-09
+Last updated: 2026-01-26
 
 A React-based piano training application built with Vite. Practice scales, chords, and free play with MIDI keyboard support.
 
@@ -337,6 +337,7 @@ The application features an innovative pyramid layout for integrated chord and s
 ### Usage Ideas
 
 - **Usage Ideas Link**: Click the "usage ideas" link in the header to access a comprehensive guide with creative ways to get the most out of the app
+- **Daily Piano Practice Plan**: A structured 60-70 minute practice session plan based on Pur Pasteur's "20 Drills to Become a Music Theory Beast" methodology
 - **Scale Practice Tips**: Learn effective techniques for practicing scales, including using the Circle of Fifths, practicing in different octaves, and combining with metronomes
 - **Chord Discovery**: Explore chord inversions, extensions, and progressions with detailed guidance
 - **Play Along with Backing Tracks**: Instructions on how to use the app with external backing tracks for improvisation and practice

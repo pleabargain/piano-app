@@ -390,6 +390,39 @@
     font-weight: 700;
 }
 
+.key-progression-builder .progression-dropdown {
+    width: 100%;
+    padding: 8px 12px;
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    color: #222;
+    font-size: 0.9rem;
+    cursor: pointer;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23666' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    padding-right: 32px;
+}
+
+.key-progression-builder .progression-dropdown:hover {
+    border-color: #2196F3;
+    background-color: #f9f9f9;
+}
+
+.key-progression-builder .progression-dropdown:focus {
+    outline: none;
+    border-color: #2196F3;
+    box-shadow: 0 0 0 2px rgba(33, 150, 243, 0.2);
+}
+
+.key-progression-builder .progression-dropdown option {
+    background: white;
+    color: #222;
+    padding: 8px;
+}
+
 .key-progression-builder .progression-list {
     display: flex;
     flex-direction: column;
