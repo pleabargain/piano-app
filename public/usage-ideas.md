@@ -1,16 +1,102 @@
 <!-- https://github.com/pleabargain/piano-app -->
 # Usage Ideas for Piano Trainer
 
-Here are some creative ways to get the most out of this piano training application:
+> [!IMPORTANT]
+> **Safety First: Stretch Before Playing!**
+> Piano playing involves repetitive motions that can lead to strain or injury. Always take a minute to stretch your hands, wrists, and fingers before starting a practice session (especially during repetitive exercises like scale practice).
+
+---
+
+# Daily Piano Practice Plan: "The Theory Beast" Edition
+
+Based on Pur Pasteur's "20 Drills to Become a Music Theory Beast" and your existing `usage-ideas.md`.
+
+## Session Duration: 60-70 Minutes
+
+---
+
+### 1. Warm-Up (10 Minutes)
+*Goal: Get the fingers moving and internalize the Circle of Fifths.*
+
+- **The Circle of Fifths Tour (5 mins)**: [http://localhost:5173/exercise/i-iv-v-i-circle](http://localhost:5173/exercise/i-iv-v-i-circle)
+  - Start in C Major. Play I-IV-V-I (C-F-G-C).
+  - Move clockwise through the circle (G, D, A, E...).
+  - Aim for 3-4 keys.
+- **The Scale Race (5 mins)**: [http://localhost:5173/exercise/major-scales-circle](http://localhost:5173/exercise/major-scales-circle)
+  - Focus on **C Major** and **G Major**.
+  - Play ascending and descending (80 BPM).
+  - Then play in thirds (C-E, D-F, E-G...).
+
+---
+
+### 2. Core Technique & intervals (15 Minutes)
+*Goal: Build "Theory Beast" fluency in interval and chord recognition.*
+
+- **Interval Sprints (5 mins)**: [http://localhost:5173/exercise/interval-sprints-circle](http://localhost:5173/exercise/interval-sprints-circle)
+  - Practice every interval from the root (C-D, C-E, C-F, C-G, C-A, C-B, C-C).
+  - Identify the quality (Major 2nd, Major 3rd, Perfect 4th, etc.).
+  - > [!NOTE]
+    > **Challenge Alert!** This exercise is not as easy as you might think—it requires intense focus to hit the root and varying intervals accurately in sequence!
+- **Triad Shape-Shifting (10 mins)**:
+  - Play a C Major triad.
+  - Cycle through inversions: Root -> 1st -> 2nd -> Root.
+  - Repeat for **F Major** and **G Major**.
+  - *Keep the "glue" note (common tone) held down!*
+
+---
+
+### 3. Harmonic Mastery (20 Minutes)
+*Goal: Mastering movement and modulation.*
+
+- **The I-V Connection (10 mins)**:
+  - Practice transitions between I and V in **D Major** (D to A) and **A Major** (A to E).
+  - Use inversions to minimize hand movement.
+- **Modulation Challenge (10 mins)**:
+  - Start in C Major: `C - F - G - C`.
+  - Use **C Major** as the pivot (it's the IV in G Major).
+  - Modulate to G Major: `C - D - G`.
+  - *Verify with the App's Key Center selector.*
+
+---
+
+### 4. Application & Jam Session (15 Minutes)
+*Goal: Apply theory to musical context.*
+
+- **Backing Track Integration (10 mins)**:
+  - Find a simple backing track in **C Major**.
+  - Use **Scale Practice** mode to improvise using the C Pentatonic or Blues scale.
+- **Lava Game Challenge (5 mins)**:
+  - Set to C Major or G Major.
+  - Play a simple melody (like "Twinkle Twinkle" or a simple pop hook).
+  - Avoid the red "lava" keys!
+
+---
+
+### 5. Review & Tomorrow's Goal (5 Minutes)
+- What was the hardest transition today?
+- Tomorrow's Goal: Expand modulation to **F Major**.
+
+---
+
+*Created: 2026-01-26 based on Pur Pasteur & Usage Ideas.*
+
+---
 
 ## Quick Links to Exercises
 
+- **12 Major Scales Journey**: [http://localhost:5173/exercise/major-scales-circle](http://localhost:5173/exercise/major-scales-circle)
+  - Master all 12 major scales starting from C Major with automated key progression.
 - **I-V-I Circle Exercise**: [http://localhost:5173/exercise/i-v-i-circle](http://localhost:5173/exercise/i-v-i-circle)
   - Automated practice through all 12 keys with continuous looping
   - With parameters: [http://localhost:5173/exercise/i-v-i-circle?startKey=C&keys=12](http://localhost:5173/exercise/i-v-i-circle?startKey=C&keys=12)
 - **Circle of Fifths Tour**: [http://localhost:5173/exercise/i-iv-v-i-circle](http://localhost:5173/exercise/i-iv-v-i-circle)
   - Automated practice through all 12 keys with continuous looping
   - With parameters: [http://localhost:5173/exercise/i-iv-v-i-circle?startKey=C&keys=12](http://localhost:5173/exercise/i-iv-v-i-circle?startKey=C&keys=12)
+- **Interval Sprints**: [http://localhost:5173/exercise/interval-sprints-circle](http://localhost:5173/exercise/interval-sprints-circle)
+  - Practice every interval from the root systematically through all 12 major keys.
+  - Individual keys: [C](http://localhost:5173/exercise/interval-sprints?startKey=C), [G](http://localhost:5173/exercise/interval-sprints?startKey=G), [D](http://localhost:5173/exercise/interval-sprints?startKey=D), [A](http://localhost:5173/exercise/interval-sprints?startKey=A), [E](http://localhost:5173/exercise/interval-sprints?startKey=E), [B](http://localhost:5173/exercise/interval-sprints?startKey=B), [F#](http://localhost:5173/exercise/interval-sprints?startKey=F%23), [C#](http://localhost:5173/exercise/interval-sprints?startKey=C%23), [G#](http://localhost:5173/exercise/interval-sprints?startKey=G%23), [D#](http://localhost:5173/exercise/interval-sprints?startKey=D%23), [A#](http://localhost:5173/exercise/interval-sprints?startKey=A%23), [F](http://localhost:5173/exercise/interval-sprints?startKey=F)
+  - > [!NOTE]
+    > **Note**: This is not as easy as you might think! Keeping the root as a constant anchor while sprinting to expanding intervals is a great mental workout.
 
 ## Scale Practice
 
@@ -671,17 +757,16 @@ Before diving into focused practice, warm-up exercises help get your fingers mov
 - **Circle of Fifths order**: Practices keys in the most musically logical sequence
 - **Real-time feedback**: See exactly which chord you need to play and get confirmation when correct
 - **Builds muscle memory**: Repetitive practice through all keys strengthens finger patterns
-- **Musical foundation**: I-IV-V-I is one of the most common progressions in music - mastering it in all keys is invaluable
+- **Classic progression**: I-IV-V-I is one of the most common progressions in popular music
 
 **Practice tips**:
 - Start slow and focus on accuracy - speed will come naturally
-- Pay attention to voice leading - notice how chords share common tones (C Major and F Major share C, F Major and G Major share no common tones, G Major and C Major share G)
+- Pay attention to voice leading - notice how chords share common tones
 - Try different inversions for smoother transitions between chords
 - Use the visual feedback to see which keys are highlighted for each chord
 - Practice daily - even 10-15 minutes of continuous looping practice builds significant skill
-- After mastering I-IV-V-I, try combining it with I-V-I practice for comprehensive chord progression mastery
 
-**Musical context**: The I-IV-V-I progression is found in countless songs across all genres. In C Major, this is C-F-G-C. This progression creates a strong sense of resolution and is the foundation for many variations like I-vi-IV-V (the "50s progression") and I-V-vi-IV (another very common pattern).
+**Variation**: Once comfortable with I-IV-V-I, try other progressions like I-vi-IV-V or I-V-vi-IV using the same URL-based exercise system!
 
 ---
 
@@ -938,11 +1023,9 @@ This 6-week lesson plan is designed for someone who has basic piano knowledge (c
 
 ---
 
-*Last Updated: 2026-01-26*
+*Last Updated: 2025-01-28*
 
 <!-- Warm-up exercises section added: 2025-01-28 -->
-<!-- I-V-I Circle Exercise added: 2026-01-26 -->
-<!-- I-IV-V-I Circle Exercise added: 2026-01-26 -->
 
 ---
 

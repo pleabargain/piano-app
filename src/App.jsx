@@ -106,7 +106,7 @@ function App() {
       setExerciseConfig(null);
       return;
     }
-    
+
     const exerciseId = pathname.split('/exercise/')[1];
     const loadedConfig = loadExerciseFromUrl(exerciseId, location.search);
     if (loadedConfig) {
@@ -436,7 +436,7 @@ function App() {
       }
       return;
     }
-    
+
     const target = progression[currentStepIndex % progression.length];
     console.log('[App] handleChordPractice: target chord', target);
     // Activate practice mode when user starts playing
@@ -598,13 +598,18 @@ function App() {
       const scaleNotes = getScaleNotes(currentKey, selectedScaleType);
       if (scaleNotes.length === 0) return;
 
-      // For piano scales: create full octave pattern (ascending + descending)
-      // Ascending: C D E F G A B C (8 notes)
-      // Descending: C B A G F E D C (8 notes, starting from octave C)
-      // Full cycle: 15 notes total (C D E F G A B C B A G F E D C)
-      const ascendingPattern = [...scaleNotes, currentKey]; // C D E F G A B C
-      const descendingPattern = [...scaleNotes].reverse(); // B A G F E D C
-      const completeScalePattern = [...ascendingPattern, ...descendingPattern]; // Full cycle
+      let completeScalePattern;
+      if (exerciseConfig && progression.length > 0) {
+        completeScalePattern = progression.map(p => p.name);
+      } else {
+        // For piano scales: create full octave pattern (ascending + descending)
+        // Ascending: C D E F G A B C (8 notes)
+        // Descending: C B A G F E D C (8 notes, starting from octave C)
+        // Full cycle: 15 notes total (C D E F G A B C B A G F E D C)
+        const ascendingPattern = [...scaleNotes, currentKey]; // C D E F G A B C
+        const descendingPattern = [...scaleNotes].reverse(); // B A G F E D C
+        completeScalePattern = [...ascendingPattern, ...descendingPattern]; // Full cycle
+      }
 
       const targetNoteName = completeScalePattern[currentStepIdx % completeScalePattern.length];
 
@@ -615,9 +620,15 @@ function App() {
         const nextStepIndex = currentStepIdx + 1;
         const scaleLength = completeScalePattern.length;
 
-        // Check if full scale cycle is complete
         if (nextStepIndex >= scaleLength) {
-          // Scale completed! Advance to next key in progression
+          // If an exercise is active, let Exercise.jsx handle the key advancement
+          // By incrementing past scaleLength, Exercise.jsx detects wrap-around.
+          if (exerciseConfig) {
+            setCurrentStepIndex(nextStepIndex);
+            return;
+          }
+
+          // Scale completed! Advance to next key in progression (manual mode)
           if (currentKeyProgression.length > 0) {
             const nextKeyIndex = (currentKeyIdx + 1) % currentKeyProgression.length;
             setCurrentKeyIndex(nextKeyIndex);
@@ -629,11 +640,11 @@ function App() {
           // No progression, just wrap around
           setCurrentStepIndex(0);
           setStatusMessage(`Scale complete! Starting over: ${completeScalePattern[0]}`);
-          return;
+        } else {
+          // Continue with current scale
+          setCurrentStepIndex(nextStepIndex);
+          setStatusMessage(`Good! Next: ${completeScalePattern[nextStepIndex]}`);
         }
-        // Continue with current scale
-        setCurrentStepIndex(nextStepIndex);
-        setStatusMessage(`Good! Next: ${completeScalePattern[nextStepIndex]}`);
       } else if (rejectErrors) {
         // WRONG NOTE and rejectErrors is on: Reset to beginning
         setCurrentStepIndex(0);
@@ -1107,310 +1118,330 @@ function App() {
     <>
       {exerciseComponent}
       <div className="app-container">
-      <header>
-        <h1>
-          Piano Trainer {midiDeviceName && <span className="midi-device-name">({midiDeviceName})</span>}
-          {' '}
-          <a href="/usage-ideas.html" target="_blank" rel="noopener noreferrer" className="usage-ideas-link">usage ideas</a>
-        </h1>
-        <div className="status-message">{statusMessage}</div>
-      </header>
-
-      <div className="main-content">
-
-        {/* Pyramid Layout */}
-        <div className="pyramid-container">
-
-          {/* Circle of Fifths */}
-          <CircleOfFifths
-            selectedRoot={lockedChord ? lockedChord.root : selectedRoot}
-            onRootSelect={setSelectedRoot}
-            detectedChord={detectedChord}
-            onChordClick={handleChordClick}
-            hideTitle={true}
-          />
-
-          {/* Extensions Panel */}
-          <div className={`extensions-panel ${isExtensionsCollapsed ? 'collapsed' : ''}`}>
-            <button
-              className="section-toggle-btn"
-              onClick={() => setIsExtensionsCollapsed(!isExtensionsCollapsed)}
-              title={isExtensionsCollapsed ? "Expand Extensions" : "Collapse Extensions"}
-            >
-              {isExtensionsCollapsed ? 'Extensions →' : '← Extensions'}
-            </button>
-            {!isExtensionsCollapsed && (
-              <>
-                <h3>Extensions</h3>
-                {chordSuggestions.length > 0 ? (
-                  <>
-                    <div className="section-label">
-                      {detectedChord
-                        ? `🎵 Add to ${detectedChord.name.split(' ')[0]}`
-                        : `💡 Potential Chords`
-                      }
-                    </div>
-                    {chordSuggestions.slice(0, 4).map((suggestion, index) => (
-                      <div key={index} className="suggestion-item">
-                        <span className="suggestion-name">{suggestion.name}</span>
-                        <span className="suggestion-missing">+{suggestion.missingNotes.join(', ')}</span>
-                      </div>
-                    ))}
-                  </>
-                ) : (
-                  <div className="extensions-placeholder">
-                    Play 2+ notes to see chord suggestions
+        <header>
+          <h1>
+            Piano Trainer {midiDeviceName && <span className="midi-device-name">({midiDeviceName})</span>}
+            {' '}
+            <a href="/usage-ideas.html" target="_blank" rel="noopener noreferrer" className="usage-ideas-link">usage ideas</a>
+          </h1>
+          <div className="status-message-container">
+            <div className="status-message">
+              {statusMessage}
+              {exerciseConfig && exerciseConfig.benefits && (
+                <div className="benefits-tooltip-trigger">
+                  <span className="info-icon">ⓘ</span>
+                  <div className="benefits-tooltip">
+                    <h4>Why {exerciseConfig.name} is useful:</h4>
+                    <p>{exerciseConfig.benefits}</p>
+                    <div className="tooltip-tip"></div>
                   </div>
-                )}
-              </>
-            )}
-          </div>
-
-          {/* ChordInfo */}
-          <ChordInfo
-            detectedChord={detectedChord}
-            detectedChords={detectedChords}
-            chordSuggestions={chordSuggestions}
-            lockedChord={lockedChord}
-            onLockChord={handleLockChord}
-            onUnlockChord={handleUnlockChord}
-            activeNotes={activeNotes}
-            hideExtensions={true}
-            progression={progression}
-            currentStepIndex={currentStepIndex}
-            mode={mode}
-            chordAcknowledged={chordAcknowledged}
-            isPracticeActive={isPracticeActive}
-            requireAllInversions={requireAllInversions}
-            playedInversions={playedInversions instanceof Set ? Array.from(playedInversions) : playedInversions}
-          />
-
-          {/* Practice Column */}
-          {(mode === 'scale' || mode === 'chord') && (
-            <div className={`practice-column ${isPracticeCollapsed ? 'collapsed' : ''}`}>
-              <button
-                className="section-toggle-btn"
-                onClick={() => setIsPracticeCollapsed(!isPracticeCollapsed)}
-                title={isPracticeCollapsed ? "Expand Practice Tools" : "Collapse Practice Tools"}
-              >
-                {isPracticeCollapsed ? '← Practice' : 'Practice →'}
-              </button>
-
-              {!isPracticeCollapsed && (
-                <div className="practice-content">
-                  {mode === 'scale' && (
-                    <KeyProgressionBuilder
-                      onProgressionSet={(keys) => {
-                        setKeyProgression(keys);
-                        setCurrentKeyIndex(0);
-                        setCurrentStepIndex(0);
-                        if (keys.length > 0) {
-                          setSelectedRoot(keys[0]);
-                        }
-                      }}
-                      onClear={() => {
-                        setKeyProgression([]);
-                        setCurrentKeyIndex(0);
-                        setCurrentStepIndex(0);
-                      }}
-                      selectedScaleType={selectedScaleType}
-                    />
-                  )}
-
-                  {mode === 'chord' && (
-                    <div className="chord-practice-column">
-                      <ProgressionBuilder
-                        selectedRoot={selectedRoot}
-                        selectedScaleType={selectedScaleType}
-                        onProgressionSet={(p) => {
-                          console.log('[App] onProgressionSet called (chord progression)', p);
-                          setProgression(p);
-                          setCurrentStepIndex(0);
-                          setIsPracticeActive(false);
-                          setChordAcknowledged(false);
-                          setClickedChord(null);
-                          setChordMidiNotes([]);
-                        }}
-                        onChordClick={handleChordClick}
-                        currentStepIndex={currentStepIndex}
-                        mode={mode}
-                        isPracticeActive={isPracticeActive}
-                      />
-
-                      {clickedChord && (
-                        <div className="clicked-chord-display">
-                          <div className="clicked-chord-label">Showing on Piano:</div>
-                          <div className="clicked-chord-name">{clickedChord.name}</div>
-                          <div className="clicked-chord-inversion">
-                            {clickedChord.inversion === 0 ? 'Root Position' :
-                              clickedChord.inversion === 1 ? '1st Inversion' :
-                                clickedChord.inversion === 2 ? '2nd Inversion' :
-                                  clickedChord.inversion === 3 ? '3rd Inversion' :
-                                    `${clickedChord.inversion}th Inversion`}
-                          </div>
-                          <div className="clicked-chord-hint">Click again to invert</div>
-                        </div>
-                      )}
-                    </div>
-                  )}
                 </div>
               )}
             </div>
-          )}
-
-          {/* ScaleSelector */}
-          <ScaleSelector
-            selectedRoot={lockedChord ? lockedChord.root : selectedRoot}
-            selectedScaleType={selectedScaleType}
-            onScaleTypeChange={setSelectedScaleType}
-            lockedChordRoot={lockedChord ? lockedChord.root : null}
-            isCollapsed={isScaleSelectorCollapsed}
-            onToggleCollapse={() => setIsScaleSelectorCollapsed(!isScaleSelectorCollapsed)}
-          />
-
-          {/* Bottom Row: Unified Piano */}
-          <div className="pyramid-bottom">
-            <div className="piano-section unified-piano">
-              <Piano
-                startNote={21}
-                endNote={108}
-                activeNotes={activeNotes}
-                highlightedNotes={getScaleHighlights()}
-                chordMidiNotes={getChordHighlights()}
-                sharedKeysMidiNotes={getSharedKeysHighlights()}
-                lavaKeys={mode === 'lava' ? lavaKeys : []}
-                mode={mode}
-                feedbackState={feedbackState}
-                expectedNotes={isPlayAlongMode ? expectedNotes : []}
-              />
-            </div>
           </div>
+          {exerciseConfig && exerciseConfig.description && exerciseConfig.description.includes('stretch') && (
+            <div className="reminder-banner">
+              <span role="img" aria-label="warning">⚠️</span>
+              {exerciseConfig.description.split('.').find(s => s.toLowerCase().includes('stretch'))}.
+            </div>
+          )}
+        </header>
 
-        </div>
+        <div className="main-content">
 
-        <div className="controls-section">
-          <Controls
-            selectedRoot={selectedRoot}
-            onRootChange={setSelectedRoot}
-            selectedScaleType={selectedScaleType}
-            onScaleTypeChange={setSelectedScaleType}
-            mode={mode}
-            onModeChange={setMode}
-            keyboardSize={keyboardSize}
-            onKeyboardSizeChange={setKeyboardSize}
-            rejectErrors={rejectErrors}
-            onRejectErrorsChange={setRejectErrors}
-            requireAllInversions={requireAllInversions}
-            onRequireAllInversionsChange={setRequireAllInversions}
-          />
+          {/* Pyramid Layout */}
+          <div className="pyramid-container">
 
-          <div className="unified-controls-row">
-            {/* Left Panel: Chord Display */}
-            <div className="controls-left-panel">
-              <KeyDisplay
-                selectedRoot={selectedRoot}
-                selectedScaleType={selectedScaleType}
-                onRootSelect={setSelectedRoot}
-                onScaleTypeSelect={setSelectedScaleType}
-              />
-              {(mode === 'free' || mode === 'chord') && (
-                <div className="chord-detection-wrapper">
-                  <div className="chord-display-in-controls">
-                    <div className="chord-label">Detected Chord:</div>
-                    {detectedChord ? (
-                      <>
-                        <div className="chord-name-in-controls">
-                          {detectedChord.name}
+            {/* Circle of Fifths */}
+            <CircleOfFifths
+              selectedRoot={lockedChord ? lockedChord.root : selectedRoot}
+              onRootSelect={setSelectedRoot}
+              detectedChord={detectedChord}
+              onChordClick={handleChordClick}
+              hideTitle={true}
+            />
+
+            {/* Extensions Panel */}
+            <div className={`extensions-panel ${isExtensionsCollapsed ? 'collapsed' : ''}`}>
+              <button
+                className="section-toggle-btn"
+                onClick={() => setIsExtensionsCollapsed(!isExtensionsCollapsed)}
+                title={isExtensionsCollapsed ? "Expand Extensions" : "Collapse Extensions"}
+              >
+                {isExtensionsCollapsed ? 'Extensions →' : '← Extensions'}
+              </button>
+              {!isExtensionsCollapsed && (
+                <>
+                  <h3>Extensions</h3>
+                  {chordSuggestions.length > 0 ? (
+                    <>
+                      <div className="section-label">
+                        {detectedChord
+                          ? `🎵 Add to ${detectedChord.name.split(' ')[0]}`
+                          : `💡 Potential Chords`
+                        }
+                      </div>
+                      {chordSuggestions.slice(0, 4).map((suggestion, index) => (
+                        <div key={index} className="suggestion-item">
+                          <span className="suggestion-name">{suggestion.name}</span>
+                          <span className="suggestion-missing">+{suggestion.missingNotes.join(', ')}</span>
                         </div>
-                        {detectedChord.inversion && (
-                          <div className="chord-inversion-in-controls">{detectedChord.inversion}</div>
+                      ))}
+                    </>
+                  ) : (
+                    <div className="extensions-placeholder">
+                      Play 2+ notes to see chord suggestions
+                    </div>
+                  )}
+                </>
+              )}
+            </div>
+
+            {/* ChordInfo */}
+            <ChordInfo
+              detectedChord={detectedChord}
+              detectedChords={detectedChords}
+              chordSuggestions={chordSuggestions}
+              lockedChord={lockedChord}
+              onLockChord={handleLockChord}
+              onUnlockChord={handleUnlockChord}
+              activeNotes={activeNotes}
+              hideExtensions={true}
+              progression={progression}
+              currentStepIndex={currentStepIndex}
+              mode={mode}
+              chordAcknowledged={chordAcknowledged}
+              isPracticeActive={isPracticeActive}
+              requireAllInversions={requireAllInversions}
+              playedInversions={playedInversions instanceof Set ? Array.from(playedInversions) : playedInversions}
+            />
+
+            {/* Practice Column */}
+            {(mode === 'scale' || mode === 'chord') && (
+              <div className={`practice-column ${isPracticeCollapsed ? 'collapsed' : ''}`}>
+                <button
+                  className="section-toggle-btn"
+                  onClick={() => setIsPracticeCollapsed(!isPracticeCollapsed)}
+                  title={isPracticeCollapsed ? "Expand Practice Tools" : "Collapse Practice Tools"}
+                >
+                  {isPracticeCollapsed ? '← Practice' : 'Practice →'}
+                </button>
+
+                {!isPracticeCollapsed && (
+                  <div className="practice-content">
+                    {mode === 'scale' && (
+                      <KeyProgressionBuilder
+                        onProgressionSet={(keys) => {
+                          setKeyProgression(keys);
+                          setCurrentKeyIndex(0);
+                          setCurrentStepIndex(0);
+                          if (keys.length > 0) {
+                            setSelectedRoot(keys[0]);
+                          }
+                        }}
+                        onClear={() => {
+                          setKeyProgression([]);
+                          setCurrentKeyIndex(0);
+                          setCurrentStepIndex(0);
+                        }}
+                        selectedScaleType={selectedScaleType}
+                      />
+                    )}
+
+                    {mode === 'chord' && (
+                      <div className="chord-practice-column">
+                        <ProgressionBuilder
+                          selectedRoot={selectedRoot}
+                          selectedScaleType={selectedScaleType}
+                          onProgressionSet={(p) => {
+                            console.log('[App] onProgressionSet called (chord progression)', p);
+                            setProgression(p);
+                            setCurrentStepIndex(0);
+                            setIsPracticeActive(false);
+                            setChordAcknowledged(false);
+                            setClickedChord(null);
+                            setChordMidiNotes([]);
+                          }}
+                          onChordClick={handleChordClick}
+                          currentStepIndex={currentStepIndex}
+                          mode={mode}
+                          isPracticeActive={isPracticeActive}
+                        />
+
+                        {clickedChord && (
+                          <div className="clicked-chord-display">
+                            <div className="clicked-chord-label">Showing on Piano:</div>
+                            <div className="clicked-chord-name">{clickedChord.name}</div>
+                            <div className="clicked-chord-inversion">
+                              {clickedChord.inversion === 0 ? 'Root Position' :
+                                clickedChord.inversion === 1 ? '1st Inversion' :
+                                  clickedChord.inversion === 2 ? '2nd Inversion' :
+                                    clickedChord.inversion === 3 ? '3rd Inversion' :
+                                      `${clickedChord.inversion}th Inversion`}
+                            </div>
+                            <div className="clicked-chord-hint">Click again to invert</div>
+                          </div>
                         )}
-                      </>
-                    ) : (
-                      <div className="chord-placeholder">
-                        {activeNotes.length > 0 ? 'Playing...' : 'No chord detected'}
                       </div>
                     )}
                   </div>
+                )}
+              </div>
+            )}
 
-                  {chordSuggestions.length > 0 && (
-                    <div className="chord-suggestions">
-                      <div className="suggestions-label">Suggestions:</div>
-                      <div className="suggestions-list">
-                        {chordSuggestions.map((s, i) => (
-                          <div key={i} className="suggestion-item">
-                            <span className="suggestion-name">{s.name}</span>
-                            <span className="suggestion-missing"> (add {s.missingNotes.join(', ')})</span>
+            {/* ScaleSelector */}
+            <ScaleSelector
+              selectedRoot={lockedChord ? lockedChord.root : selectedRoot}
+              selectedScaleType={selectedScaleType}
+              onScaleTypeChange={setSelectedScaleType}
+              lockedChordRoot={lockedChord ? lockedChord.root : null}
+              isCollapsed={isScaleSelectorCollapsed}
+              onToggleCollapse={() => setIsScaleSelectorCollapsed(!isScaleSelectorCollapsed)}
+            />
+
+            {/* Bottom Row: Unified Piano */}
+            <div className="pyramid-bottom">
+              <div className="piano-section unified-piano">
+                <Piano
+                  startNote={21}
+                  endNote={108}
+                  activeNotes={activeNotes}
+                  highlightedNotes={getScaleHighlights()}
+                  chordMidiNotes={getChordHighlights()}
+                  sharedKeysMidiNotes={getSharedKeysHighlights()}
+                  lavaKeys={mode === 'lava' ? lavaKeys : []}
+                  mode={mode}
+                  feedbackState={feedbackState}
+                  expectedNotes={isPlayAlongMode ? expectedNotes : []}
+                />
+              </div>
+            </div>
+
+          </div>
+
+          <div className="controls-section">
+            <Controls
+              selectedRoot={selectedRoot}
+              onRootChange={setSelectedRoot}
+              selectedScaleType={selectedScaleType}
+              onScaleTypeChange={setSelectedScaleType}
+              mode={mode}
+              onModeChange={setMode}
+              keyboardSize={keyboardSize}
+              onKeyboardSizeChange={setKeyboardSize}
+              rejectErrors={rejectErrors}
+              onRejectErrorsChange={setRejectErrors}
+              requireAllInversions={requireAllInversions}
+              onRequireAllInversionsChange={setRequireAllInversions}
+            />
+
+            <div className="unified-controls-row">
+              {/* Left Panel: Chord Display */}
+              <div className="controls-left-panel">
+                <KeyDisplay
+                  selectedRoot={selectedRoot}
+                  selectedScaleType={selectedScaleType}
+                  onRootSelect={setSelectedRoot}
+                  onScaleTypeSelect={setSelectedScaleType}
+                />
+                {(mode === 'free' || mode === 'chord') && (
+                  <div className="chord-detection-wrapper">
+                    <div className="chord-display-in-controls">
+                      <div className="chord-label">Detected Chord:</div>
+                      {detectedChord ? (
+                        <>
+                          <div className="chord-name-in-controls">
+                            {detectedChord.name}
                           </div>
-                        ))}
-                      </div>
+                          {detectedChord.inversion && (
+                            <div className="chord-inversion-in-controls">{detectedChord.inversion}</div>
+                          )}
+                        </>
+                      ) : (
+                        <div className="chord-placeholder">
+                          {activeNotes.length > 0 ? 'Playing...' : 'No chord detected'}
+                        </div>
+                      )}
                     </div>
-                  )}
-                </div>
-              )}
+
+                    {chordSuggestions.length > 0 && (
+                      <div className="chord-suggestions">
+                        <div className="suggestions-label">Suggestions:</div>
+                        <div className="suggestions-list">
+                          {chordSuggestions.map((s, i) => (
+                            <div key={i} className="suggestion-item">
+                              <span className="suggestion-name">{s.name}</span>
+                              <span className="suggestion-missing"> (add {s.missingNotes.join(', ')})</span>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                )}
+              </div>
             </div>
+            {mode === 'lava' && (
+              <div className="lava-game-score">
+                <h3>🔥 Lava Game Score 🔥</h3>
+                <div className="score-display">
+                  <div className="score-item good-keys">
+                    <span className="score-label">Good Keys:</span>
+                    <span className="score-value">{lavaScore.good}</span>
+                  </div>
+                  <div className="score-item bad-keys">
+                    <span className="score-label">Lava Keys Hit:</span>
+                    <span className="score-value">{lavaScore.bad}</span>
+                  </div>
+                </div>
+                <div className="lava-instructions">
+                  <p>🎹 Ice Blue keys = Good (in {selectedRoot} {selectedScaleType})</p>
+                  <p>🔥 Red keys = Lava (avoid these!)</p>
+                  <p>Play continuously - no time limit!</p>
+                </div>
+              </div>
+            )}
           </div>
-          {mode === 'lava' && (
-            <div className="lava-game-score">
-              <h3>🔥 Lava Game Score 🔥</h3>
-              <div className="score-display">
-                <div className="score-item good-keys">
-                  <span className="score-label">Good Keys:</span>
-                  <span className="score-value">{lavaScore.good}</span>
-                </div>
-                <div className="score-item bad-keys">
-                  <span className="score-label">Lava Keys Hit:</span>
-                  <span className="score-value">{lavaScore.bad}</span>
-                </div>
-              </div>
-              <div className="lava-instructions">
-                <p>🎹 Ice Blue keys = Good (in {selectedRoot} {selectedScaleType})</p>
-                <p>🔥 Red keys = Lava (avoid these!)</p>
-                <p>Play continuously - no time limit!</p>
-              </div>
-            </div>
-          )}
         </div>
-      </div>
 
-      {/* Practice content in pyramid-container */}
+        {/* Practice content in pyramid-container */}
 
-      {
-        mode === 'scale' && keyProgression.length > 0 && (
-          <div className="current-target">
-            <h2>Key Progression Practice</h2>
-            <h3>Current Key: {keyProgression[currentKeyIndex]} {selectedScaleType}</h3>
-            <div className="progression-display">
-              {keyProgression.map((key, idx) => (
-                <span
-                  key={idx}
-                  className={idx === currentKeyIndex ? 'current-key' : 'upcoming-key'}
-                >
-                  {key}
-                </span>
-              ))}
+        {
+          mode === 'scale' && keyProgression.length > 0 && (
+            <div className="current-target">
+              <h2>Key Progression Practice</h2>
+              <h3>Current Key: {keyProgression[currentKeyIndex]} {selectedScaleType}</h3>
+              <div className="progression-display">
+                {keyProgression.map((key, idx) => (
+                  <span
+                    key={idx}
+                    className={idx === currentKeyIndex ? 'current-key' : 'upcoming-key'}
+                  >
+                    {key}
+                  </span>
+                ))}
+              </div>
             </div>
-          </div>
-        )
-      }
+          )
+        }
 
-      {
-        mode === 'chord' && progression.length > 0 && (
-          <div className="current-target">
-            <h2>Target: {progression[currentStepIndex % progression.length].roman}</h2>
-            <h3>{progression[currentStepIndex % progression.length].name}</h3>
-          </div>
-        )
-      }
+        {
+          mode === 'chord' && progression.length > 0 && (
+            <div className="current-target">
+              <h2>Target: {progression[currentStepIndex % progression.length].roman}</h2>
+              <h3>{progression[currentStepIndex % progression.length].name}</h3>
+            </div>
+          )
+        }
 
-      {
-        (mode === 'free' || mode === 'chord') && detectedChord && (
-          <div className="current-target detected-chord-card">
-            <h2 className="chord-name-display">{detectedChord.name}</h2>
-            <h3 className="chord-inversion-display">{detectedChord.inversion}</h3>
-          </div>
-        )
-      }
+        {
+          (mode === 'free' || mode === 'chord') && detectedChord && (
+            <div className="current-target detected-chord-card">
+              <h2 className="chord-name-display">{detectedChord.name}</h2>
+              <h3 className="chord-inversion-display">{detectedChord.inversion}</h3>
+            </div>
+          )
+        }
       </div>
     </>
   );

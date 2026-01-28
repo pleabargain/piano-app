@@ -1,7 +1,9 @@
 <!-- https://github.com/pleabargain/piano-app -->
 # Usage Ideas for Piano Trainer
 
-Here are some creative ways to get the most out of this piano training application:
+> [!IMPORTANT]
+> **Safety First: Stretch Before Playing!**
+> Piano playing involves repetitive motions that can lead to strain or injury. Always take a minute to stretch your hands, wrists, and fingers before starting a practice session (especially during repetitive exercises like scale practice).
 
 ---
 
@@ -16,11 +18,11 @@ Based on Pur Pasteur's "20 Drills to Become a Music Theory Beast" and your exist
 ### 1. Warm-Up (10 Minutes)
 *Goal: Get the fingers moving and internalize the Circle of Fifths.*
 
-- **The Circle of Fifths Tour (5 mins)**:
+- **The Circle of Fifths Tour (5 mins)**: [http://localhost:5173/exercise/i-iv-v-i-circle](http://localhost:5173/exercise/i-iv-v-i-circle)
   - Start in C Major. Play I-IV-V-I (C-F-G-C).
   - Move clockwise through the circle (G, D, A, E...).
   - Aim for 3-4 keys.
-- **The Scale Race (5 mins)**:
+- **The Scale Race (5 mins)**: [http://localhost:5173/exercise/major-scales-circle](http://localhost:5173/exercise/major-scales-circle)
   - Focus on **C Major** and **G Major**.
   - Play ascending and descending (80 BPM).
   - Then play in thirds (C-E, D-F, E-G...).
@@ -30,9 +32,11 @@ Based on Pur Pasteur's "20 Drills to Become a Music Theory Beast" and your exist
 ### 2. Core Technique & intervals (15 Minutes)
 *Goal: Build "Theory Beast" fluency in interval and chord recognition.*
 
-- **Interval Sprints (5 mins)**:
-  - In C Major, play every interval from the root (C-D, C-E, C-F, C-G, C-A, C-B, C-C).
+- **Interval Sprints (5 mins)**: [http://localhost:5173/exercise/interval-sprints-circle](http://localhost:5173/exercise/interval-sprints-circle)
+  - Practice every interval from the root (C-D, C-E, C-F, C-G, C-A, C-B, C-C).
   - Identify the quality (Major 2nd, Major 3rd, Perfect 4th, etc.).
+  - > [!NOTE]
+    > **Challenge Alert!** This exercise is not as easy as you might think—it requires intense focus to hit the root and varying intervals accurately in sequence!
 - **Triad Shape-Shifting (10 mins)**:
   - Play a C Major triad.
   - Cycle through inversions: Root -> 1st -> 2nd -> Root.
@@ -80,12 +84,19 @@ Based on Pur Pasteur's "20 Drills to Become a Music Theory Beast" and your exist
 
 ## Quick Links to Exercises
 
+- **12 Major Scales Journey**: [http://localhost:5173/exercise/major-scales-circle](http://localhost:5173/exercise/major-scales-circle)
+  - Master all 12 major scales starting from C Major with automated key progression.
 - **I-V-I Circle Exercise**: [http://localhost:5173/exercise/i-v-i-circle](http://localhost:5173/exercise/i-v-i-circle)
   - Automated practice through all 12 keys with continuous looping
   - With parameters: [http://localhost:5173/exercise/i-v-i-circle?startKey=C&keys=12](http://localhost:5173/exercise/i-v-i-circle?startKey=C&keys=12)
 - **Circle of Fifths Tour**: [http://localhost:5173/exercise/i-iv-v-i-circle](http://localhost:5173/exercise/i-iv-v-i-circle)
   - Automated practice through all 12 keys with continuous looping
   - With parameters: [http://localhost:5173/exercise/i-iv-v-i-circle?startKey=C&keys=12](http://localhost:5173/exercise/i-iv-v-i-circle?startKey=C&keys=12)
+- **Interval Sprints**: [http://localhost:5173/exercise/interval-sprints-circle](http://localhost:5173/exercise/interval-sprints-circle)
+  - Practice every interval from the root systematically through all 12 major keys.
+  - Individual keys: [C](http://localhost:5173/exercise/interval-sprints?startKey=C), [G](http://localhost:5173/exercise/interval-sprints?startKey=G), [D](http://localhost:5173/exercise/interval-sprints?startKey=D), [A](http://localhost:5173/exercise/interval-sprints?startKey=A), [E](http://localhost:5173/exercise/interval-sprints?startKey=E), [B](http://localhost:5173/exercise/interval-sprints?startKey=B), [F#](http://localhost:5173/exercise/interval-sprints?startKey=F%23), [C#](http://localhost:5173/exercise/interval-sprints?startKey=C%23), [G#](http://localhost:5173/exercise/interval-sprints?startKey=G%23), [D#](http://localhost:5173/exercise/interval-sprints?startKey=D%23), [A#](http://localhost:5173/exercise/interval-sprints?startKey=A%23), [F](http://localhost:5173/exercise/interval-sprints?startKey=F)
+  - > [!NOTE]
+    > **Note**: This is not as easy as you might think! Keeping the root as a constant anchor while sprinting to expanding intervals is a great mental workout.
 
 ## Scale Practice
 

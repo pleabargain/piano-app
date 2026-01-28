@@ -13,7 +13,7 @@ export const CIRCLE_OF_FIFTHS_KEYS = ['C', 'G', 'D', 'A', 'E', 'B', 'F#', 'C#', 
 export function getVChordRoot(root) {
   const rootIndex = getNoteIndex(root);
   if (rootIndex === -1) return null;
-  
+
   // Perfect fifth = 7 semitones
   const vIndex = (rootIndex + 7) % 12;
   return NOTES[vIndex];
@@ -26,7 +26,7 @@ export function getVChordRoot(root) {
 export function generateIVIProgression(root) {
   const vRoot = getVChordRoot(root);
   if (!vRoot) return [];
-  
+
   return [
     { name: `${root} Major`, roman: 'I' },
     { name: `${vRoot} Major`, roman: 'V' },
@@ -43,22 +43,64 @@ export function generateIVIProgression(root) {
  */
 export function generateProgressionFromRomanPattern(romanPattern, root, scaleType = 'major') {
   if (!romanPattern || !root) return [];
-  
+
   // Get scale notes for the key
   const scaleNotes = getScaleNotes(root, scaleType);
   if (!scaleNotes || scaleNotes.length === 0) return [];
-  
+
   // Parse the Roman numeral progression
   const parseResult = parseProgression(romanPattern, scaleNotes);
   if (parseResult.error || !parseResult.chords || parseResult.chords.length === 0) {
     return [];
   }
-  
+
   // Convert parsed chords to the format expected by Exercise component
   return parseResult.chords.map(chord => ({
     name: chord.name,
     roman: chord.roman
   }));
+}
+
+/**
+ * Generate a scale progression (ascending + descending) for a given key
+ * @param {string} root - Root note of the key
+ * @param {string} scaleType - Scale type ('major', etc.)
+ * @returns {Array} Array of note objects: [{name: 'C'}, ...]
+ */
+export function generateScaleProgression(root, scaleType = 'major') {
+  const scaleNotes = getScaleNotes(root, scaleType);
+  if (!scaleNotes || scaleNotes.length === 0) return [];
+
+  // Full cycle: ascending + descending
+  const ascendingPattern = [...scaleNotes, root];
+  const descendingPattern = [...scaleNotes].reverse();
+  const completeScalePattern = [...ascendingPattern, ...descendingPattern];
+
+  return completeScalePattern.map(note => ({ name: note }));
+}
+
+/**
+ * Generate interval sprints (root-2nd, root-3rd, etc.) for a given key
+ * @param {string} root - Root note of the key
+ * @param {string} scaleType - Scale type ('major', etc.)
+ * @returns {Array} Array of note objects: [{name: 'C'}, ...]
+ */
+export function generateIntervalSprints(root, scaleType = 'major') {
+  const scaleNotes = getScaleNotes(root, scaleType);
+  if (!scaleNotes || scaleNotes.length === 0) return [];
+
+  // root-2nd, root-3rd, ..., root-octave
+  const octave = root;
+  const allNotes = [...scaleNotes, octave];
+
+  const progression = [];
+  // Start from index 1 (the 2nd)
+  for (let i = 1; i < allNotes.length; i++) {
+    progression.push({ name: root });
+    progression.push({ name: allNotes[i] });
+  }
+
+  return progression.map(item => ({ name: item.name }));
 }
 
 /**
@@ -70,6 +112,7 @@ export const EXERCISES = {
     name: 'I-V-I Circle of Fifths',
     description: 'Practice I-V-I chord progressions through all 12 keys in Circle of Fifths order',
     mode: 'chord',
+    benefits: 'Master the "5-1" connection, the most powerful resolution in Western music.',
     config: {
       keyProgression: CIRCLE_OF_FIFTHS_KEYS,
       generateProgression: generateIVIProgression,
@@ -81,6 +124,7 @@ export const EXERCISES = {
     name: 'I-V-I Circle of Fifths',
     description: 'Practice I-V-I chord progressions through all 12 keys in Circle of Fifths order',
     mode: 'chord',
+    benefits: 'Practice the fundamental I-V-I progression using Roman numeral theory.',
     config: {
       keyProgression: CIRCLE_OF_FIFTHS_KEYS,
       generateProgression: (root) => generateProgressionFromRomanPattern('I V I', root, 'major'),
@@ -92,9 +136,45 @@ export const EXERCISES = {
     name: 'I-IV-V-I Circle of Fifths',
     description: 'Practice I-IV-V-I chord progressions through all 12 keys in Circle of Fifths order',
     mode: 'chord',
+    benefits: 'Builds muscle memory for the most fundamental harmonic relationship and common tone voice leading.',
     config: {
       keyProgression: CIRCLE_OF_FIFTHS_KEYS,
       generateProgression: (root) => generateProgressionFromRomanPattern('I IV V I', root, 'major'),
+      scaleType: 'major'
+    }
+  },
+  'major-scales-circle': {
+    id: 'major-scales-circle',
+    name: '12 Major Scales Journey',
+    description: 'Master all 12 major scales starting from C Major. ⚠️ Remember to stretch your hands before playing to avoid injury!',
+    mode: 'scale',
+    benefits: 'Internalizes the sound and layout of all 12 major keys, essential for improvisation and theory.',
+    config: {
+      keyProgression: CIRCLE_OF_FIFTHS_KEYS,
+      generateProgression: (root) => generateScaleProgression(root, 'major'),
+      scaleType: 'major'
+    }
+  },
+  'interval-sprints': {
+    id: 'interval-sprints',
+    name: 'Interval Sprints',
+    description: 'Practice every interval from the root in a major key (e.g., C-D, C-E, C-F...).',
+    mode: 'scale',
+    benefits: 'Develops ear recognition for different intervals and strengthens finger independence by anchoring to the root.',
+    config: {
+      generateProgression: (root) => generateIntervalSprints(root, 'major'),
+      scaleType: 'major'
+    }
+  },
+  'interval-sprints-circle': {
+    id: 'interval-sprints-circle',
+    name: '12-Key Interval Sprints',
+    description: 'Master interval sprints across all 12 major keys in Circle of Fifths order.',
+    mode: 'scale',
+    benefits: 'Challenges mental agility and finger precision across the entire keyboard through Systematic interval practice.',
+    config: {
+      keyProgression: CIRCLE_OF_FIFTHS_KEYS,
+      generateProgression: (root) => generateIntervalSprints(root, 'major'),
       scaleType: 'major'
     }
   }

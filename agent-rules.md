@@ -51,3 +51,4 @@
    - When updating `usage-ideas.md`, also update `public/usage-ideas.md` to keep them in sync
    - After updating markdown files, run `npm run convert-md` to regenerate `public/usage-ideas.html`
    - Verify the exercise appears correctly in the HTML version by checking the generated file
+13. **URL Lesson Visibility**: If you create a new URL-based lesson or exercise, the link to this lesson MUST be added to `http://localhost:5173/usage-ideas.html` (via `usage-ideas.md`) so users can discover and access it easily.
