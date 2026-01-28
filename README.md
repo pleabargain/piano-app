@@ -1,7 +1,7 @@
 <!-- https://github.com/pleabargain/piano-app -->
 # Piano App
 
-Last updated: 2026-01-26
+Last updated: 2026-01-28
 
 A React-based piano training application built with Vite. Practice scales, chords, and free play with MIDI keyboard support.
 
@@ -162,43 +162,45 @@ npm run test:log
   - **Recording Management**: Save, load, and delete multiple recordings
   - **Local Storage**: Recordings persist across browser sessions
 
-### Pyramid Layout (split-keyboard branch)
+### Unified Pyramid Layout
 
-The application features an innovative pyramid layout for integrated chord and scale practice:
+The application features a unified pyramid layout designed for integrated chord, scale, and progression practice:
 
 #### Layout Structure
 
 ```
          ┌─────────────────┐
-         │ Circle of Fifths│  (Top - Centered, Scaled)
+         │ Circle of Fifths│  (Top-level Reference)
          └─────────────────┘
     
-┌──────────┐  ┌──────────┐  ┌──────────┐
-│Extensions│  │  Chord   │  │  Scale   │  (Middle Row)
-│          │  │ Practice │  │ Selector │
-└──────────┘  └──────────┘  └──────────┘
+┌──────────┐ ┌──────────┐ ┌──────────────┐ ┌──────────┐
+│Extensions│ │  Chord   │ │   Practice   │ │  Scale   │
+│  Panel   │ │ Practice │ │   Builders   │ │ Selector │
+└──────────┘ └──────────┘ └──────────────┘ └──────────┘
 
-┌──────────────┐            ┌──────────────┐
-│ Chord Piano  │            │ Scale Piano  │  (Bottom Row)
-│  (C2-C4)     │            │  (C4-C6)     │
-└──────────────┘            └──────────────┘
+┌──────────────────────────────────────────────────┐
+│                  Unified Piano                   │
+│             (A0-C8 Full 88-Key Range)            │
+└──────────────────────────────────────────────────┘
 ```
 
 #### Three-Row Design
 
-1. **Top Row**: Interactive Circle of Fifths (centered, 70% scale)
-   - No title for clean appearance
-   - Click any chord segment to highlight it
-   - Automatically reflects locked chord root
+1. **Top Row**: Interactive Circle of Fifths (centered)
+   - Real-time harmonic relationship visualization
+   - Click segments to quickly set root keys
+   - Reflects locked chords automatically
 
-2. **Middle Row**: Three Information Panels
-   - **Extensions Panel (Left)**: Shows chord extensions and variations
-   - **Chord Practice (Center)**: Main chord detection and locking
-   - **Scale Selector (Right)**: Choose scales for practice
+2. **Middle Row**: Functional Practice Panels
+   - **Extensions Panel**: Shows available chord extensions (7ths, 9ths, etc.)
+   - **Chord Practice**: Displays detected chords, inversions, and lock status
+   - **Practice Builders**: Tools to create custom key or chord progressions
+   - **Scale Selector**: Filter and select scales based on root notes
 
-3. **Bottom Row**: Two Interactive Piano Keyboards
-   - **Left Piano (C2-C4)**: Chord practice with chord highlighting
-   - **Right Piano (C4-C6)**: Scale practice with scale note highlighting
+3. **Bottom Row**: Unified Interactive Piano
+   - Full 88-key range (A0-C8)
+   - Integrated visualization for both chords and scales
+   - **Multi-layer highlighting**: Shows scale notes (yellow), target chords (blue), and recording playback (purple) simultaneously
 
 #### Extensions Panel Features
 
@@ -233,7 +235,7 @@ The application features an innovative pyramid layout for integrated chord and s
   - Helps users understand equivalent chord voicings and harmonic functions
 - **Inversion Display**: Shows chord inversions (Root, 1st, 2nd, 3rd)
 - **Extension Suggestions**: Recommends 7th, 9th, and other extended chords
-- **Visual Feedback**: Highlights chord notes on left piano
+- **Visual Feedback**: Highlights chord notes on the unified piano
 - **Supported Chord Types**:
   - Triads: Major, Minor, Diminished, Augmented
   - Suspended: Sus2, Sus4
@@ -251,7 +253,7 @@ The application features an innovative pyramid layout for integrated chord and s
   - Harmonic Minor
   - Melodic Minor
   - Blues
-- **Auto-Highlighting**: Selected scale notes highlighted on right piano
+- **Auto-Highlighting**: Selected scale notes highlighted on the unified piano
 - **Info Messages**: Clear explanations of filtering behavior
 
 #### Stable UI Design
@@ -267,14 +269,14 @@ The application features an innovative pyramid layout for integrated chord and s
 
 **Scenario: Learning D Major and its scales**
 
-1. **Play D Major chord** (D-F#-A) on left piano
+1. **Play D Major chord** (D-F#-A) on the piano
 2. **View extensions** in left panel: D Major 7, D Dominant 7, etc.
 3. **Lock the chord** using the lock button
 4. **Circle of Fifths** highlights D as the root
 5. **Scale Selector** filters to show: D Major, D Minor, D Harmonic Minor, D Blues
 6. **Select D Major scale** from dropdown
-7. **Right piano highlights** D Major scale notes (D-E-F#-G-A-B-C#-D)
-8. **Practice the scale** on the right piano using the highlighted notes
+7. **Piano highlights** D Major scale notes (D-E-F#-G-A-B-C#-D)
+8. **Practice the scale** on the piano using the highlighted notes
 9. **Switch to D Blues** for variety
 10. **Unlock** when ready to practice a different chord/key
 
@@ -1021,6 +1023,15 @@ Run tests with `npm test` or `npm run test:ui` for interactive test interface.
 
 ## Recent Updates
 
+### 2026-01-28: Interval Sprints and Multi-Key Support
+
+Added "Interval Sprints" and "12-Key Interval Sprints" exercises to help users build finger agility and ear recognition.
+
+- **Interval Sprints Exercise**: Practice intervals from the root (e.g., Unis-2nd, Unis-3rd) in any major key.
+- **12-Key Interval Sprints**: Automated practice that cycles through all 12 major keys in Circle of Fifths order.
+- **Improved Exercise Registry**: Added comprehensive configuration for the new interval-based exercises.
+- **Unit Testing**: Added dedicated tests for interval sprint generation and registration.
+
 ### 2026-01-11: Enhanced Scale Progression UI
 
 Enhanced the KeyProgressionBuilder component to match the rich UI features of ProgressionBuilder:
@@ -1117,6 +1128,8 @@ This enhancement helps users understand that the same notes can function as diff
 
 ## Development Notes
 
+**2026-01-28**: Added Interval Sprints exercises and verified date consistency as per `agent-rules.md`. Fixed incorrect "Last updated" dates in README.
+
 **2026-01-26**: Implemented URL-based routing system with React Router. Added I-V-I Circle Exercise that loops continuously through all 12 keys in Circle of Fifths order. Exercise accessible at `/exercise/i-v-i-circle` with optional URL parameters (`?startKey=C&keys=12`). Exercise automatically advances through keys and loops indefinitely for continuous practice. Added comprehensive unit tests for exercise configuration, loader, and routing functionality. Created markdown-to-HTML conversion script - `usage-ideas.md` is kept for editing, and `usage-ideas.html` is automatically generated for display at `http://localhost:5173/usage-ideas.html`. Run `npm run convert-md` to regenerate HTML from markdown.
 
 **2026-01-11**: I'm very proud of this iteration. Can now load `G Am C F Dm Em` as a sample chord progression. Minors and diminished chords will be tested soon.
@@ -1125,4 +1138,4 @@ This enhancement helps users understand that the same notes can function as diff
 
 ---
 
-Last Updated: 2026-01-26
+Last Updated: 2026-01-28

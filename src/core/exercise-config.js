@@ -1,4 +1,5 @@
 // https://github.com/pleabargain/piano-app
+// 2026-01-28: Added Interval Sprints and 12-Key Interval Sprints
 import { NOTES, getNoteIndex, getScaleNotes, getChordNameFromRoman } from './music-theory';
 import { parseProgression } from './progression-parser';
 
