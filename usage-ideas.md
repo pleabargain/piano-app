@@ -97,6 +97,8 @@ Based on Pur Pasteur's "20 Drills to Become a Music Theory Beast" and your exist
   - Individual keys: [C](http://localhost:5173/exercise/interval-sprints?startKey=C), [G](http://localhost:5173/exercise/interval-sprints?startKey=G), [D](http://localhost:5173/exercise/interval-sprints?startKey=D), [A](http://localhost:5173/exercise/interval-sprints?startKey=A), [E](http://localhost:5173/exercise/interval-sprints?startKey=E), [B](http://localhost:5173/exercise/interval-sprints?startKey=B), [F#](http://localhost:5173/exercise/interval-sprints?startKey=F%23), [C#](http://localhost:5173/exercise/interval-sprints?startKey=C%23), [G#](http://localhost:5173/exercise/interval-sprints?startKey=G%23), [D#](http://localhost:5173/exercise/interval-sprints?startKey=D%23), [A#](http://localhost:5173/exercise/interval-sprints?startKey=A%23), [F](http://localhost:5173/exercise/interval-sprints?startKey=F)
   - > [!NOTE]
     > **Note**: This is not as easy as you might think! Keeping the root as a constant anchor while sprinting to expanding intervals is a great mental workout.
+- **Major Pentatonic Circle**: [http://localhost:5173/exercise/major-pentatonic-circle](http://localhost:5173/exercise/major-pentatonic-circle)
+  - Systematic practice of the major pentatonic scale (1-2-3-5-6) through all 12 keys.
 
 ## Scale Practice
 
@@ -108,6 +110,24 @@ Scale practice is fundamental to developing finger dexterity, muscle memory, and
 - **Focus on Evenness**: Pay attention to making each note equal in volume and timing - the visual feedback helps you identify when you're rushing or dragging
 - **Practice Scales in Both Directions**: Play scales ascending and descending, focusing on smooth transitions at the top and bottom
 - **Use the Circle of Fifths**: Click through different keys on the Circle of Fifths to practice scales in the order of increasing sharps/flats
+
+---
+
+## Major Pentatonic Circle Mastery
+
+The Major Pentatonic scale is a 5-note scale used across countless genres. This lesson focuses on mastering the shapes and sounds of the pentatonic scale through the Circle of Fifths.
+
+### Lesson Goal:
+Build fluid movement and mental mapping of the Major Pentatonic scale across all 12 keys.
+
+### Why this is useful:
+The major pentatonic is a "safe" scale—it avoids the dissonant half-steps found in major scales (the 4th and 7th), making it perfect for soloing and melodic creation. Practicing it through the Circle of Fifths ensures you can transpose these melodic ideas instantly.
+
+### Practice Steps:
+1. **Start the Exercise**: Launch the [Major Pentatonic Circle](http://localhost:5173/exercise/major-pentatonic-circle).
+2. **Visualize the Pattern**: Recognize the 5 notes (Root, 2nd, 3rd, 5th, 6th).
+3. **Internalize the Sound**: Notice the open, consonant sound of the intervals.
+4. **Modulate Systematically**: As the app moves clockwise, adapt your hand shape to the new key.
 - **Combine with Metronome**: While the app doesn't have a built-in metronome, practice with an external metronome starting slow and gradually increasing tempo
 - **Scale Patterns**: Once comfortable with basic scales, practice variations like thirds, fourths, or broken thirds within the scale
 - **Blues Scale Practice**: Use the Blues scale option to practice this essential scale used in jazz, blues, and rock music

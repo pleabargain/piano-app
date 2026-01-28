@@ -155,6 +155,18 @@ export const EXERCISES = {
       scaleType: 'major'
     }
   },
+  'major-pentatonic-circle': {
+    id: 'major-pentatonic-circle',
+    name: 'Major Pentatonic Circle',
+    description: 'Practice the Major Pentatonic scale through all 12 keys in Circle of Fifths order.',
+    mode: 'scale',
+    benefits: 'The major pentatonic is a versatile scale that works over major and dominant chords. Practicing it through the Circle of Fifths builds foundational soloing skills and finger agility.',
+    config: {
+      keyProgression: CIRCLE_OF_FIFTHS_KEYS,
+      generateProgression: (root) => generateScaleProgression(root, 'major_pentatonic'),
+      scaleType: 'major_pentatonic'
+    }
+  },
   'interval-sprints': {
     id: 'interval-sprints',
     name: 'Interval Sprints',
