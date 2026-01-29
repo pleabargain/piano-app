@@ -1,7 +1,7 @@
 <!-- https://github.com/pleabargain/piano-app -->
 # Piano App
 
-Last updated: 2026-01-28
+Last updated: 2026-01-29
 
 A React-based piano training application built with Vite. Practice scales, chords, and free play with MIDI keyboard support.
 
@@ -1030,6 +1030,12 @@ Run tests with `npm test` or `npm run test:ui` for interactive test interface.
 
 ## Recent Updates
 
+### 2026-01-29: Refined Agent Rules Documentation
+
+- Clarified dependency update checks and documentation expectations.
+- Expanded testing and UI debugging guidance for API mocks and error handling.
+- Noted the README date stamp requirement for change tracking.
+
 ### 2026-01-28: Interval Sprints and Multi-Key Support
 
 Added "Interval Sprints" and "12-Key Interval Sprints" exercises to help users build finger agility and ear recognition.
@@ -1145,4 +1151,4 @@ This enhancement helps users understand that the same notes can function as diff
 
 ---
 
-Last Updated: 2026-01-28
+Last Updated: 2026-01-29
