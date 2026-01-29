@@ -11,6 +11,7 @@ vi.mock('../core/midi-manager', () => ({
         addListener: vi.fn(),
         removeListener: vi.fn(),
         getFirstInputName: vi.fn(),
+        setRecordingCallback: vi.fn(), // Required: App.jsx calls this during initialization
     },
 }));
 
@@ -19,7 +20,10 @@ describe('Circle of Fifths Integration', () => {
         const { container } = render(<BrowserRouter><App /></BrowserRouter>);
 
         // Switch to Chord Practice mode to ensure the UI is in the correct state
-        const chordModeBtn = screen.getByText('Chord Practice');
+        // Use getAllByText and select the button (not the h3 heading)
+        const chordModeBtns = screen.getAllByText('Chord Practice');
+        const chordModeBtn = chordModeBtns.find(btn => btn.tagName === 'BUTTON');
+        expect(chordModeBtn).toBeTruthy();
         fireEvent.click(chordModeBtn);
 
         // List of all expected chords from Circle of Fifths
