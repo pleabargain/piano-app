@@ -252,7 +252,10 @@ The application features a unified pyramid layout designed for integrated chord,
   - Natural Minor
   - Harmonic Minor
   - Melodic Minor
+  - Lydian
   - Blues
+  - Major Pentatonic
+  - Minor Pentatonic
 - **Auto-Highlighting**: Selected scale notes highlighted on the unified piano
 - **Info Messages**: Clear explanations of filtering behavior
 
@@ -273,7 +276,7 @@ The application features a unified pyramid layout designed for integrated chord,
 2. **View extensions** in left panel: D Major 7, D Dominant 7, etc.
 3. **Lock the chord** using the lock button
 4. **Circle of Fifths** highlights D as the root
-5. **Scale Selector** filters to show: D Major, D Minor, D Harmonic Minor, D Blues
+5. **Scale Selector** filters to show: D Major, D Minor, D Harmonic Minor, D Melodic Minor, D Lydian, D Blues, D Major Pentatonic, D Minor Pentatonic
 6. **Select D Major scale** from dropdown
 7. **Piano highlights** D Major scale notes (D-E-F#-G-A-B-C#-D)
 8. **Practice the scale** on the piano using the highlighted notes
@@ -305,6 +308,10 @@ The application features a unified pyramid layout designed for integrated chord,
   - Natural Minor scales
   - Harmonic Minor scales
   - Melodic Minor scales
+  - Lydian scales
+  - Blues scales
+  - Major Pentatonic scales
+  - Minor Pentatonic scales
 
 - **Chord Detection**:
   - Major, Minor, Diminished, Augmented triads
@@ -413,7 +420,7 @@ piano-app/
 
 3. **Select Your Settings**:
    - **Key Center**: Choose the root note (C, C#, D, etc.)
-   - **Scale Type**: Select Major, Natural Minor, Harmonic Minor, or Melodic Minor
+   - **Scale Type**: Select Major, Natural Minor, Harmonic Minor, Melodic Minor, Lydian, Blues, Major Pentatonic, or Minor Pentatonic
    - **Mode**: Choose Scale Practice, Chord Practice, or Free Play
    - **Keyboard Size**: Adjust the virtual keyboard range
 
