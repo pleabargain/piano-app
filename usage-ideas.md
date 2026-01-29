@@ -99,6 +99,9 @@ Based on Pur Pasteur's "20 Drills to Become a Music Theory Beast" and your exist
     > **Note**: This is not as easy as you might think! Keeping the root as a constant anchor while sprinting to expanding intervals is a great mental workout.
 - **Major Pentatonic Circle**: [http://localhost:5173/exercise/major-pentatonic-circle](http://localhost:5173/exercise/major-pentatonic-circle)
   - Systematic practice of the major pentatonic scale (1-2-3-5-6) through all 12 keys.
+- **vi-IV-I-V Circle Exercise**: [http://localhost:5173/exercise/vi-iv-i-v-circle](http://localhost:5173/exercise/vi-iv-i-v-circle)
+  - Master the classic "50s progression" through all 12 keys
+  - With parameters: [http://localhost:5173/exercise/vi-iv-i-v-circle?startKey=C&keys=12](http://localhost:5173/exercise/vi-iv-i-v-circle?startKey=C&keys=12)
 
 ## Scale Practice
 
@@ -790,6 +793,54 @@ Before diving into focused practice, warm-up exercises help get your fingers mov
 
 ---
 
+### The "vi-IV-I-V Circle Exercise" (Continuous Practice)
+
+**What it is**: An automated exercise that guides you through vi-IV-I-V chord progressions (the classic "50s progression") in all 12 keys around the Circle of Fifths, looping continuously for endless practice. This progression is one of the most popular in pop music, used in countless songs from the 1950s to today.
+
+**How to access it**:
+1. Navigate to: `http://localhost:5173/exercise/vi-iv-i-v-circle`
+2. The exercise automatically starts with C Major and guides you through vi-IV-I-V (Am-F-C-G in C Major)
+3. After completing vi-IV-I-V in each key, it automatically advances to the next key in Circle of Fifths order
+4. **The exercise loops continuously** - when you complete all 12 keys, it automatically starts over from the beginning, allowing you to practice endlessly!
+
+**How to use it**:
+1. Connect your MIDI keyboard
+2. The app will show you the current target chord (vi, IV, I, or V)
+3. Play the correct chord - the app detects when you play it correctly
+4. After completing all four chords (vi-IV-I-V), the exercise automatically moves to the next key
+5. Continue practicing - the exercise loops through all keys indefinitely!
+
+**URL Parameters** (optional customization):
+- `?startKey=C` - Start at a specific key (e.g., `?startKey=G` to start at G Major)
+- `?keys=12` - Practice only the first N keys (e.g., `?keys=6` for first 6 keys)
+- Combine both: `?startKey=G&keys=6` - Start at G and practice 6 keys
+
+**Examples**:
+- Full circle starting at C: `http://localhost:5173/exercise/vi-iv-i-v-circle`
+- Start at G Major: `http://localhost:5173/exercise/vi-iv-i-v-circle?startKey=G`
+- Practice first 6 keys only: `http://localhost:5173/exercise/vi-iv-i-v-circle?keys=6`
+- Start at D, practice 3 keys: `http://localhost:5173/exercise/vi-iv-i-v-circle?startKey=D&keys=3`
+
+**Why it's effective**:
+- **Continuous practice**: The looping feature means you can practice for as long as you want without interruption
+- **Automatic progression**: No need to manually switch keys - focus entirely on playing the chords
+- **Circle of Fifths order**: Practices keys in the most musically logical sequence
+- **Real-time feedback**: See exactly which chord you need to play and get confirmation when correct
+- **Builds muscle memory**: Repetitive practice through all keys strengthens finger patterns
+- **Popular progression**: Master one of the most-used progressions in popular music
+
+**Practice tips**:
+- Start slow and focus on accuracy - speed will come naturally
+- Pay attention to voice leading - notice how chords share common tones (especially between vi and IV)
+- Try different inversions for smoother transitions between chords
+- Use the visual feedback to see which keys are highlighted for each chord
+- Practice daily - even 10-15 minutes of continuous looping practice builds significant skill
+- Notice the emotional quality: vi-IV-I-V creates a gentle, nostalgic sound that's perfect for ballads and pop songs
+
+**Variation**: Once comfortable with vi-IV-I-V, try experimenting with different starting points or adding the vi chord to other progressions!
+
+---
+
 ### The "Random Key Adventure" (5-7 minutes)
 
 **What it is**: A fun exploration exercise that keeps you on your toes.
@@ -1046,6 +1097,211 @@ This 6-week lesson plan is designed for someone who has basic piano knowledge (c
 *Last Updated: 2025-01-28*
 
 <!-- Warm-up exercises section added: 2025-01-28 -->
+
+---
+
+## Mastering the vi-IV-I-V Progression: The 50s Progression
+
+The vi-IV-I-V progression (also known as the "50s progression" or "vi-IV-I-V progression") is one of the most popular chord progressions in popular music. You've heard it in countless songs from the 1950s to today - it's the foundation of many ballads, pop songs, and emotional pieces.
+
+**Video Reference**: Watch this instructional video to understand the progression better: [https://www.youtube.com/watch?v=R93OyCh3_Js](https://www.youtube.com/watch?v=R93OyCh3_Js)
+
+### Understanding the Progression
+
+**Roman Numeral Analysis**:
+- **vi**: The relative minor chord (6th degree of the major scale)
+- **IV**: The subdominant chord (4th degree)
+- **I**: The tonic chord (home/root)
+- **V**: The dominant chord (5th degree)
+
+**Example in C Major**:
+- vi = A Minor (Am)
+- IV = F Major (F)
+- I = C Major (C)
+- V = G Major (G)
+
+So the progression is: **Am - F - C - G**
+
+**Why It Sounds So Familiar**:
+This progression creates a gentle, nostalgic, and emotionally satisfying sound. It starts on the minor chord (vi), which gives it a slightly melancholic or introspective feel, then moves through IV and I before resolving to V, which creates a sense of forward motion. The progression feels both familiar and fresh - that's why it's been used in so many hit songs!
+
+### The Automated Exercise
+
+Want to practice this progression through all 12 keys automatically? Try the [vi-IV-I-V Circle Exercise](#the-vi-iv-i-v-circle-exercise-continuous-practice) at `http://localhost:5173/exercise/vi-iv-i-v-circle` - it automatically guides you through all 12 keys with continuous looping!
+
+### Step-by-Step Practice Plan
+
+#### Week 1: Learn the Progression in C Major (30 minutes/day)
+
+**Day 1-2: Basic Progression** (30 minutes)
+- Open Chord Practice mode, set Key Center to C Major
+- Build the progression: Am - F - C - G (vi-IV-I-V)
+- Play it slowly, getting comfortable with the sound
+- Notice how each chord feels different
+- Practice transitioning smoothly between chords
+
+**Day 3-4: Root Position Mastery** (30 minutes)
+- Play the progression in root position multiple times
+- Focus on smooth transitions
+- Use a metronome at 60 BPM - one chord per beat
+- Gradually increase tempo as you get comfortable
+
+**Day 5-7: Internalize the Sound** (30 minutes)
+- Play the progression without looking at the app
+- Try to identify each chord by sound alone
+- Experiment with different rhythms
+- Play it as a waltz (3/4 time), then as a ballad (4/4 time)
+
+**Weekly Goal**: Play vi-IV-I-V in C Major smoothly at 80 BPM
+
+---
+
+#### Week 2: Practice in G and F Major (30 minutes/day)
+
+**Day 1-2: G Major** (30 minutes)
+- Set Key Center to G Major
+- Build the progression: Em - C - G - D (vi-IV-I-V in G Major)
+- Notice how it sounds similar but different from C Major
+- Practice until it feels as natural as C Major
+
+**Day 3-4: F Major** (30 minutes)
+- Set Key Center to F Major
+- Build the progression: Dm - Bb - F - C (vi-IV-I-V in F Major)
+- Pay attention to the Bb - your first flat!
+- Practice smooth transitions
+
+**Day 5-7: Comparison Practice** (30 minutes)
+- Play the progression in C, then G, then F
+- Notice the similarities and differences
+- Try to play all three keys in sequence
+- Use the [automated exercise](http://localhost:5173/exercise/vi-iv-i-v-circle) to practice all three
+
+**Weekly Goal**: Play vi-IV-I-V smoothly in C, G, and F Major
+
+---
+
+#### Week 3: Add Inversions and Voice Leading (30 minutes/day)
+
+**Day 1-2: Understanding Inversions** (30 minutes)
+- Review chord inversions: root position, 1st inversion, 2nd inversion
+- Play Am in root position, then try 1st inversion (C-E-A)
+- Notice how inversions change the sound and feel
+
+**Day 3-4: Smooth Voice Leading** (30 minutes)
+- Practice the progression with inversions:
+  - Am (root) → F (1st inversion) → C (2nd inversion) → G (root)
+- Focus on keeping common tones in place
+- Notice how inversions create smoother transitions
+
+**Day 5-7: Experimentation** (30 minutes)
+- Try different inversion combinations
+- Find the smoothest path between chords
+- Practice with both hands (chord in left, melody in right)
+- Use Free Play mode to experiment freely
+
+**Weekly Goal**: Play vi-IV-I-V with smooth voice leading using inversions
+
+---
+
+#### Week 4: Practice Through All 12 Keys (30 minutes/day)
+
+**Day 1-2: Circle of Fifths Introduction** (30 minutes)
+- Use the Circle of Fifths in the app to visualize key relationships
+- Practice the progression in C, G, D (first 3 keys)
+- Notice how each key adds one more sharp
+
+**Day 3-4: More Keys** (30 minutes)
+- Continue through A, E, B (keys 4-6)
+- Use the [automated exercise](http://localhost:5173/exercise/vi-iv-i-v-circle) to guide you
+- Focus on maintaining the same feel in each key
+
+**Day 5-7: All 12 Keys** (30 minutes)
+- Practice through all 12 keys using the automated exercise
+- Start slow - accuracy is more important than speed
+- Notice how the progression feels the same but sounds different in each key
+- Challenge yourself: Can you play through all 12 keys without stopping?
+
+**Weekly Goal**: Play vi-IV-I-V through all 12 keys smoothly
+
+---
+
+#### Week 5: Apply to Backing Tracks (30 minutes/day)
+
+**Day 1-2: Find Backing Tracks** (30 minutes)
+- Search for backing tracks that use vi-IV-I-V (many pop ballads do!)
+- Examples: Search "vi-IV-I-V backing track" or "50s progression backing track"
+- Find tracks in different keys (C, G, F are good starting points)
+
+**Day 3-4: Play Along** (30 minutes)
+- Set the app to match the backing track's key
+- Play the vi-IV-I-V progression along with the track
+- Focus on matching the tempo and feel
+- Try different inversions to create movement
+
+**Day 5-7: Improvisation** (30 minutes)
+- Use Free Play mode with the backing track
+- Play the vi-IV-I-V progression as chords
+- Add a simple melody using scale notes
+- Experiment with rhythm and timing
+- Have fun - this progression sounds great no matter what you do!
+
+**Weekly Goal**: Play vi-IV-I-V along with backing tracks and improvise simple melodies
+
+---
+
+### Practice Tips
+
+**Common Challenges**:
+- **Transitioning from vi to IV**: These chords share a common tone (C in C Major). Keep that note in place!
+- **Remembering the progression**: Think "minor, subdominant, tonic, dominant" or "6-4-1-5"
+- **Speed vs. Accuracy**: Always prioritize accuracy. Speed comes naturally with practice.
+
+**Voice Leading Suggestions**:
+- Keep common tones between chords stationary
+- Move other notes by the smallest interval possible
+- Use inversions to create smoother transitions
+- Experiment to find what sounds best to you
+
+**Inversion Practice**:
+- Try playing the progression with all chords in root position first
+- Then try: vi (root) → IV (1st inv) → I (2nd inv) → V (root)
+- Experiment with different combinations
+- Find the smoothest path for your hands
+
+**Ear Training**:
+- Try to identify the progression when you hear it in songs
+- Play the progression and sing along with each chord
+- Notice the emotional quality - it's nostalgic and gentle
+
+---
+
+### Songs That Use This Progression
+
+The vi-IV-I-V progression appears in countless songs. Here are just a few examples:
+
+- **"Stand By Me"** by Ben E. King (A minor key version)
+- **"Let It Be"** by The Beatles (uses variations)
+- **"No Woman, No Cry"** by Bob Marley
+- **"Don't Stop Believin'"** by Journey (uses variations)
+- Many modern pop ballads and emotional songs
+
+Try to identify this progression when you hear it in music - it's everywhere!
+
+---
+
+### Next Steps
+
+Once you've mastered vi-IV-I-V:
+
+1. **Try Variations**: Experiment with vi-IV-V-I or vi-I-IV-V
+2. **Add Extensions**: Try adding 7ths or 9ths to the chords
+3. **Combine Progressions**: Mix vi-IV-I-V with other progressions you know
+4. **Compose**: Use this progression as a foundation for your own songs
+5. **Explore Other Progressions**: Try I-V-vi-IV (another popular one!)
+
+---
+
+*Created: 2026-01-29*
 
 ---
 

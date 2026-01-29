@@ -198,4 +198,67 @@ describe('exercise-config', () => {
       });
     });
   });
+
+  describe('vi-IV-I-V Circle Exercise', () => {
+    it('should contain vi-iv-i-v-circle exercise', () => {
+      expect(EXERCISES['vi-iv-i-v-circle']).toBeDefined();
+    });
+
+    it('should have correct structure for vi-iv-i-v-circle', () => {
+      const exercise = EXERCISES['vi-iv-i-v-circle'];
+      expect(exercise.id).toBe('vi-iv-i-v-circle');
+      expect(exercise.name).toBe('vi-IV-I-V Circle of Fifths');
+      expect(exercise.mode).toBe('chord');
+      expect(exercise.config).toBeDefined();
+      expect(exercise.config.keyProgression).toEqual(CIRCLE_OF_FIFTHS_KEYS);
+      expect(typeof exercise.config.generateProgression).toBe('function');
+      expect(exercise.config.scaleType).toBe('major');
+    });
+
+    it('should generate vi-IV-I-V progression for C Major', () => {
+      const exercise = getExercise('vi-iv-i-v-circle');
+      const progression = exercise.config.generateProgression('C');
+      expect(progression).toHaveLength(4);
+      expect(progression[0].roman).toBe('vi');
+      expect(progression[1].roman).toBe('IV');
+      expect(progression[2].roman).toBe('I');
+      expect(progression[3].roman).toBe('V');
+      expect(progression[0].name).toBe('A Minor');
+      expect(progression[1].name).toBe('F Major');
+      expect(progression[2].name).toBe('C Major');
+      expect(progression[3].name).toBe('G Major');
+    });
+
+    it('should generate vi-IV-I-V progression for G Major', () => {
+      const exercise = getExercise('vi-iv-i-v-circle');
+      const progression = exercise.config.generateProgression('G');
+      expect(progression).toHaveLength(4);
+      expect(progression[0].roman).toBe('vi');
+      expect(progression[1].roman).toBe('IV');
+      expect(progression[2].roman).toBe('I');
+      expect(progression[3].roman).toBe('V');
+      expect(progression[0].name).toBe('E Minor');
+      expect(progression[1].name).toBe('C Major');
+      expect(progression[2].name).toBe('G Major');
+      expect(progression[3].name).toBe('D Major');
+    });
+
+    it('should generate vi-IV-I-V progression for all Circle of Fifths keys', () => {
+      const exercise = getExercise('vi-iv-i-v-circle');
+      CIRCLE_OF_FIFTHS_KEYS.forEach(root => {
+        const progression = exercise.config.generateProgression(root);
+        expect(progression).toHaveLength(4);
+        expect(progression[0].roman).toBe('vi');
+        expect(progression[1].roman).toBe('IV');
+        expect(progression[2].roman).toBe('I');
+        expect(progression[3].roman).toBe('V');
+      });
+    });
+
+    it('should return empty array for invalid root', () => {
+      const exercise = getExercise('vi-iv-i-v-circle');
+      const progression = exercise.config.generateProgression('Invalid');
+      expect(progression).toEqual([]);
+    });
+  });
 });

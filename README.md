@@ -1,7 +1,7 @@
 <!-- https://github.com/pleabargain/piano-app -->
 # Piano App
 
-Last updated: 2026-01-28
+Last updated: 2026-01-29
 
 A React-based piano training application built with Vite. Practice scales, chords, and free play with MIDI keyboard support.
 
@@ -1029,6 +1029,23 @@ Run tests with `npm test` or `npm run test:ui` for interactive test interface.
 ---
 
 ## Recent Updates
+
+### 2026-01-29: vi-IV-I-V Circle Exercise and Lesson Plan
+
+Added the vi-IV-I-V Circle Exercise (the classic "50s progression") and comprehensive lesson plan:
+
+- **vi-IV-I-V Circle Exercise**: Automated practice through all 12 keys in Circle of Fifths order
+  - Accessible at `/exercise/vi-iv-i-v-circle` with optional URL parameters
+  - Continuous looping through all keys for endless practice
+  - One of the most popular chord progressions in pop music
+- **Comprehensive Lesson Plan**: 5-week step-by-step practice plan for mastering the progression
+  - Week-by-week breakdown from basic progression to backing track application
+  - Includes video reference link to instructional content
+  - Practice tips, voice leading suggestions, and song examples
+- **Exercise Documentation**: Detailed documentation similar to other circle exercises
+  - URL parameters, examples, practice tips, and variations
+  - Added to Quick Links section for easy discovery
+- **Unit Testing**: Added comprehensive tests for exercise configuration and routing
 
 ### 2026-01-28: Interval Sprints and Multi-Key Support
 

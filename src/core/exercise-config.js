@@ -190,6 +190,18 @@ export const EXERCISES = {
       generateProgression: (root) => generateIntervalSprints(root, 'major'),
       scaleType: 'major'
     }
+  },
+  'vi-iv-i-v-circle': {
+    id: 'vi-iv-i-v-circle',
+    name: 'vi-IV-I-V Circle of Fifths',
+    description: 'Practice the classic vi-IV-I-V chord progression (50s progression) through all 12 keys in Circle of Fifths order',
+    mode: 'chord',
+    benefits: 'Master one of the most popular chord progressions in pop music, used in countless songs from the 1950s to today.',
+    config: {
+      keyProgression: CIRCLE_OF_FIFTHS_KEYS,
+      generateProgression: (root) => generateProgressionFromRomanPattern('vi IV I V', root, 'major'),
+      scaleType: 'major'
+    }
   }
 };
 
