@@ -135,6 +135,16 @@ The major pentatonic is a "safe" scale—it avoids the dissonant half-steps foun
 - **Scale Patterns**: Once comfortable with basic scales, practice variations like thirds, fourths, or broken thirds within the scale
 - **Blues Scale Practice**: Use the Blues scale option to practice this essential scale used in jazz, blues, and rock music
 
+---
+
+### Pentatonic Construction Rule: The "No-Tension" Scale
+
+The most common way to build a **Major Pentatonic Scale** is to take a Major scale and **exclude the 4th and 7th notes**.
+
+> [!TIP]
+> **Why exclude the 4th and 7th?**
+> In a major scale, the 4th and 7th notes are the "active" degrees that create the most tension (the 4th wants to resolve down to the 3rd, and the 7th wants to resolve up to the root). By removing them, you eliminate the possibility of playing a "clashing" half-step interval. This creates a "safe" melodic space where every note sounds consonant against the root chord—making it the perfect tool for effortless improvisation!
+
 ## Chord Discovery
 
 The chord discovery features help you understand harmony, voice leading, and chord progressions. Here's how to maximize this functionality:
