@@ -37,11 +37,9 @@ Based on Pur Pasteur's "20 Drills to Become a Music Theory Beast" and your exist
   - Identify the quality (Major 2nd, Major 3rd, Perfect 4th, etc.).
   - > [!NOTE]
     > **Challenge Alert!** This exercise is not as easy as you might think—it requires intense focus to hit the root and varying intervals accurately in sequence!
-- **Triad Shape-Shifting (10 mins)**:
-  - Play a C Major triad.
-  - Cycle through inversions: Root -> 1st -> 2nd -> Root.
   - Repeat for **F Major** and **G Major**.
   - *Keep the "glue" note (common tone) held down!*
+  - **Try the interactive lesson**: [http://localhost:5173/exercise/triad-shape-shifting](http://localhost:5173/exercise/triad-shape-shifting)
 
 ---
 

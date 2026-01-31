@@ -1,7 +1,7 @@
 <!-- https://github.com/pleabargain/piano-app -->
 # Piano App
 
-Last updated: 2026-01-29
+Last updated: 2026-01-31
 
 A React-based piano training application built with Vite. Practice scales, chords, and free play with MIDI keyboard support.
 
@@ -1138,6 +1138,8 @@ This enhancement helps users understand that the same notes can function as diff
 
 ## Current Status
 
+**2026-01-31**: Added Triad Shape-Shifting exercise with inversion validation and instructional feedback. Added comprehensive unit and integration tests.
+
 **2026-01-29**: Fixed critical bug where `midiManager.setRecordingCallback` was not a function in test mocks, causing app crashes during initialization. Created comprehensive unit tests to isolate and verify the fix. Fixed Priority 1 issue: Updated all tests in `App.test.jsx` to use `.unified-piano` selector instead of deprecated `.left-piano` selector, and corrected expected MIDI note values to match actual implementation (octave 3: [53, 57, 60] instead of octave 2: [41, 45, 48]). All 11 tests in App.test.jsx now pass.
 
 **2026-01-09**: Currently working on implementing local file saving functionality for chord progressions. The application allows users to create and save chord progressions to IndexedDB, but there have been issues with exporting/saving these progressions to local files. 
@@ -1216,14 +1218,30 @@ When critical bugs are identified in test logs, we follow a systematic approach 
 
 ## Development Notes
 
+**2026-01-31**: Added Triad Shape-Shifting exercise and fixed date consistency.
+
 **2026-01-28**: Added Interval Sprints exercises and verified date consistency as per `agent-rules.md`. Fixed incorrect "Last updated" dates in README.
 
 **2026-01-26**: Implemented URL-based routing system with React Router. Added I-V-I Circle Exercise that loops continuously through all 12 keys in Circle of Fifths order. Exercise accessible at `/exercise/i-v-i-circle` with optional URL parameters (`?startKey=C&keys=12`). Exercise automatically advances through keys and loops indefinitely for continuous practice. Added comprehensive unit tests for exercise configuration, loader, and routing functionality. Created markdown-to-HTML conversion script - `usage-ideas.md` is kept for editing, and `usage-ideas.html` is automatically generated for display at `http://localhost:5173/usage-ideas.html`. Run `npm run convert-md` to regenerate HTML from markdown.
 
 **2026-01-11**: I'm very proud of this iteration. Can now load `G Am C F Dm Em` as a sample chord progression. Minors and diminished chords will be tested soon.
 
-**TODO**: Add more screenshots
+### TODOs
+
+#### 🧪 Testing & Reliability
+- [ ] **Fix Inversion Validation UI Test**: Resolve the race condition where MIDI connection status overwrites exercise instructions in `App.jsx`.
+- [ ] **Status Message Priority**: Implement a message queue or priority system for `statusMessage` to ensure critical exercise feedback isn't lost.
+- [ ] **Consistent MIDI Mocking**: Standardize the MIDI manager mocks across all test files to prevent "is not a function" errors.
+- [ ] **E2E Integration**: Add more comprehensive integration tests for complex exercise progressions.
+
+#### 🎼 New Exercises & Features
+- [ ] **Diminished Inversions**: Add "Diminished Shape-Shifting" similar to the triad version.
+- [ ] **Suspended Chords**: Implement sus2 and sus4 progression cycles (see `SUS_CHORDS_IMPLEMENTATION_PLAN.md`).
+- [ ] **7th Chord Mastery**: Cycle through Dominant 7th and Major 7th inversions.
+- [ ] **Modal Practice**: Add exercises for Dorian, Phrygian, and Mixolydian modes.
+- [ ] **Metronome Integration**: Add a visual/audio metronome with timing validation for exercises.
+- [ ] **Visuals**: Add more screenshots and usage GIFs to the documentation.
 
 ---
 
-Last Updated: 2026-01-29
+Last Updated: 2026-01-31

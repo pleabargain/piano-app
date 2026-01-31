@@ -1,5 +1,5 @@
 // https://github.com/pleabargain/piano-app
-// 2026-01-28: Added Interval Sprints and 12-Key Interval Sprints
+// 2026-01-31: Added Triad Shape-Shifting and 12-Key Interval Sprints
 import { NOTES, getNoteIndex, getScaleNotes, getChordNameFromRoman } from './music-theory';
 import { parseProgression } from './progression-parser';
 
@@ -105,6 +105,29 @@ export function generateIntervalSprints(root, scaleType = 'major') {
 }
 
 /**
+ * Generate a progression of triad inversions for specific keys
+ * @returns {Array} Array of chord objects with target inversions: [{name: 'C Major', roman: 'I', inversion: 'Root Position'}, ...]
+ */
+export function generateTriadInversions() {
+  const keys = ['C', 'F', 'G'];
+  const inversions = ['Root Position', '1st Inversion', '2nd Inversion', 'Root Position'];
+  const progression = [];
+
+  keys.forEach(key => {
+    const scaleNotes = getScaleNotes(key, 'major');
+    inversions.forEach(inv => {
+      progression.push({
+        name: `${key} Major`,
+        roman: 'I', // In these specific keys, they are the I chord of their own major scale
+        inversion: inv
+      });
+    });
+  });
+
+  return progression;
+}
+
+/**
  * Exercise configuration registry
  */
 export const EXERCISES = {
@@ -200,6 +223,18 @@ export const EXERCISES = {
     config: {
       keyProgression: CIRCLE_OF_FIFTHS_KEYS,
       generateProgression: (root) => generateProgressionFromRomanPattern('vi IV I V', root, 'major'),
+      scaleType: 'major'
+    }
+  },
+  'triad-shape-shifting': {
+    id: 'triad-shape-shifting',
+    name: 'Triad Shape-Shifting',
+    description: 'Cycle through C, F, and G Major triad inversions: Root -> 1st -> 2nd -> Root. 💎 Keep the "glue" note (common tone) held down!',
+    mode: 'chord',
+    benefits: 'Builds chord visualization fluency and smooth hand movement (voice leading) across the keyboard.',
+    config: {
+      keyProgression: ['C'], // Just one "key cycle" since the generator handles C, F, G internal to its sequence
+      generateProgression: generateTriadInversions,
       scaleType: 'major'
     }
   }

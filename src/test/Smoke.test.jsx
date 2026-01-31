@@ -23,7 +23,7 @@ describe('App Smoke Test', () => {
             expect(screen.getByText(/Piano Trainer/i)).toBeTruthy();
             // Check for Controls
             expect(screen.getByText(/Key Center/i)).toBeTruthy();
-            expect(screen.getByText(/Scale Type/i)).toBeTruthy();
+            expect(screen.getByLabelText(/Scale Type:/i)).toBeTruthy();
 
             // Check for Layout changes
             // "Detected Chord" should be visible (if in free/chord mode, default is free?)

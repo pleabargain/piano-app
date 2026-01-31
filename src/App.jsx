@@ -712,21 +712,30 @@ function App() {
 
         const targetRootIdx = targetParsed ? getNoteIndex(targetParsed.root) : -1;
         const detectedRootIdx = detectedParsed ? getNoteIndex(detectedParsed.root) : -1;
-        const match = !!(targetParsed && detectedParsed
-          && targetParsed.chordType === detectedParsed.chordType
-          && targetRootIdx !== -1
-          && detectedRootIdx !== -1
-          && targetRootIdx === detectedRootIdx);
+
+        // Exact match check
+        const qualityMatch = targetParsed && detectedParsed && targetParsed.chordType === detectedParsed.chordType;
+        const rootMatch = targetRootIdx !== -1 && detectedRootIdx !== -1 && targetRootIdx === detectedRootIdx;
+        const inversionMatch = !targetChord.inversion || (detected && detected.inversion === targetChord.inversion);
+
+        const match = qualityMatch && rootMatch && inversionMatch;
+        const correctChordWrongInversion = qualityMatch && rootMatch && !inversionMatch;
 
         console.log('[App] Chord validation: comparison', {
           targetChordName: targetChord.name,
+          targetInversion: targetChord.inversion,
           detectedName: detected?.name,
-          targetParsed,
-          detectedParsed,
+          detectedInversion: detected?.inversion,
           targetRootIdx,
           detectedRootIdx,
-          match
+          match,
+          correctChordWrongInversion
         });
+
+        if (correctChordWrongInversion) {
+          setStatusMessage(`Target: ${targetChord.name} (${targetChord.inversion}) | You played: ${detected.inversion}. Keep trying!`);
+          return;
+        }
 
         if (detected && match) {
           console.log('[App] Chord validation: MATCH!');
@@ -1125,7 +1134,7 @@ function App() {
             <a href="/usage-ideas.html" target="_blank" rel="noopener noreferrer" className="usage-ideas-link">usage ideas</a>
           </h1>
           <div className="status-message-container">
-            <div className="status-message">
+            <div className="status-message" data-testid="status-message">
               {statusMessage}
               {exerciseConfig && exerciseConfig.benefits && (
                 <div className="benefits-tooltip-trigger">

@@ -3,7 +3,7 @@ import fs from 'fs';
 import path from 'path';
 
 describe('Date Consistency Verification', () => {
-    const today = '2026-01-28';
+    const today = '2026-01-31';
     const rootDir = 'c:/Users/denni/OneDrive/Documents/piano-app';
 
     it('should have correct "Last updated" date in README.md', () => {

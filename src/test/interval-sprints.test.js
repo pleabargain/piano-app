@@ -1,5 +1,5 @@
 // https://github.com/pleabargain/piano-app
-// 2026-01-28: Internal Sprints unit tests
+// 2026-01-31: Triad Shape-Shifting unit tests
 import { describe, it, expect } from 'vitest';
 import {
     generateIntervalSprints,
