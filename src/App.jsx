@@ -94,6 +94,7 @@ function App() {
   const [rejectErrors, setRejectErrors] = useState(false);
   const [requireAllInversions, setRequireAllInversions] = useState(false);
   const [playedInversions, setPlayedInversions] = useState(new Set()); // Track inversions played for current chord
+  const [inversionsByChordType, setInversionsByChordType] = useState(new Map()); // Track inversions per chord type (I, IV, V)
 
   // Exercise State
   const [exerciseConfig, setExerciseConfig] = useState(null);
@@ -114,6 +115,12 @@ function App() {
       // Set mode based on exercise
       setMode(loadedConfig.mode);
       setSelectedScaleType(loadedConfig.config.scaleType || 'major');
+      
+      // Auto-enable requireAllInversions for I-IV-V inversion exercises
+      if (exerciseId && exerciseId.startsWith('i4v5-inversions-')) {
+        setRequireAllInversions(true);
+        console.log('[App] Auto-enabled requireAllInversions for I-IV-V inversion exercise');
+      }
     } else {
       setExerciseConfig(null);
     }
@@ -125,6 +132,10 @@ function App() {
     setCurrentStepIndex(0);
     setIsPracticeActive(false);
     setChordAcknowledged(false);
+    // Reset inversion tracking when progression changes
+    setPlayedInversions(new Set());
+    setInversionsByChordType(new Map());
+    prevChordTypeRef.current = null;
   }, []);
 
   const handleExerciseKeyUpdate = useCallback((newKey) => {
@@ -311,9 +322,9 @@ function App() {
       console.log('[App] handleMidiMessage: device name', deviceName);
       setMidiDeviceName(deviceName);
       if (deviceName && midiEnabled) {
-        setStatusMessage(`MIDI Connected: ${deviceName}`);
+        if (!exerciseConfig) setStatusMessage(`MIDI Connected: ${deviceName}`);
       } else if (midiEnabled) {
-        setStatusMessage('MIDI Connected. Select a mode to play.');
+        if (!exerciseConfig) setStatusMessage('MIDI Connected. Select a mode to play.');
       }
     }
 
@@ -345,7 +356,7 @@ function App() {
         const deviceName = midiManager.getFirstInputName();
         setMidiDeviceName(deviceName);
         if (deviceName) {
-          setStatusMessage(`MIDI Connected: ${deviceName}`);
+          if (!exerciseConfig) setStatusMessage(`MIDI Connected: ${deviceName}`);
         }
         if (!deviceName) {
           setStatusMessage('MIDI Connected. Select a mode to play.');
@@ -672,23 +683,31 @@ function App() {
     }
   };
 
-  // Ref to track previous step index for inversion reset
-  const prevStepIndexRef = useRef(currentStepIndex);
+  // Ref to track previous chord type (roman numeral) for inversion reset
+  const prevChordTypeRef = useRef(null);
 
-  // Reset played inversions when chord changes or rule is disabled
+  // Reset played inversions when chord TYPE changes (not step), or rule is disabled
   useEffect(() => {
     if (!requireAllInversions) {
       setPlayedInversions(new Set());
+      setInversionsByChordType(new Map());
       lastDetectedInversionRef.current = { stepIndex: -1, inversion: null };
+      prevChordTypeRef.current = null;
     } else if (mode === 'chord' && progression.length > 0) {
-      // Reset when chord changes - only reset if step index actually changed
-      if (prevStepIndexRef.current !== currentStepIndex) {
-        setPlayedInversions(new Set());
+      const currentChord = progression[currentStepIndex % progression.length];
+      const currentChordType = currentChord?.roman; // I, IV, V, etc.
+      
+      // Reset when chord TYPE changes (not step index)
+      if (prevChordTypeRef.current !== currentChordType) {
+        // Load inversions for this chord type from our map, or start fresh
+        const inversionsForThisChord = inversionsByChordType.get(currentChordType) || new Set();
+        setPlayedInversions(inversionsForThisChord);
         lastDetectedInversionRef.current = { stepIndex: currentStepIndex, inversion: null };
-        prevStepIndexRef.current = currentStepIndex;
+        prevChordTypeRef.current = currentChordType;
+        console.log('[App] Chord type changed to', currentChordType, 'loaded inversions:', Array.from(inversionsForThisChord));
       }
     }
-  }, [currentStepIndex, requireAllInversions, mode, progression.length]);
+  }, [currentStepIndex, requireAllInversions, mode, progression, inversionsByChordType]);
 
   // Separate effect for Chord validation (state-based, not edge-based)
   useEffect(() => {
@@ -741,45 +760,56 @@ function App() {
           console.log('[App] Chord validation: MATCH!');
 
           // Track inversion if requireAllInversions is enabled
-          // Use a ref to prevent duplicate tracking when holding the same chord
+          // Track inversions per chord TYPE (I, IV, V), not per step
+          const currentChordType = targetChord.roman; // I, IV, V, etc.
           let updatedInversions = new Set(playedInversions);
+          let updatedInversionsByChordType = new Map(inversionsByChordType);
 
           if (requireAllInversions && detected.inversion) {
-            // Only track if this is a new inversion for this chord step
-            const isNewInversion = lastDetectedInversionRef.current.stepIndex !== currentStepIndex ||
+            // Check if this is a new inversion for this chord type
+            const inversionsForThisChord = updatedInversionsByChordType.get(currentChordType) || new Set();
+            const isNewInversion = !inversionsForThisChord.has(detected.inversion) ||
               lastDetectedInversionRef.current.inversion !== detected.inversion;
 
             if (isNewInversion) {
-              updatedInversions.add(detected.inversion);
+              // Add inversion to both local state and chord-type map
+              inversionsForThisChord.add(detected.inversion);
+              updatedInversionsByChordType.set(currentChordType, inversionsForThisChord);
+              updatedInversions = new Set(inversionsForThisChord);
+              
               setPlayedInversions(updatedInversions);
+              setInversionsByChordType(updatedInversionsByChordType);
               lastDetectedInversionRef.current = { stepIndex: currentStepIndex, inversion: detected.inversion };
-              console.log('[App] Chord validation: tracked inversion', detected.inversion, 'played inversions:', Array.from(updatedInversions));
-            }
-            if (!isNewInversion) {
+              
+              console.log('[App] Chord validation: tracked inversion', detected.inversion, 'for chord type', currentChordType);
+              console.log('[App] All inversions for', currentChordType, ':', Array.from(inversionsForThisChord));
+            } else {
               // Same inversion detected again, use current state
-              updatedInversions = new Set(playedInversions);
+              updatedInversions = new Set(inversionsForThisChord);
               console.log('[App] Chord validation: same inversion detected, not tracking again');
             }
           }
 
-          // Check if all inversions are required and if we have them all
+          // Check if all inversions are required and if we have them all for this chord type
           let canAdvance = true;
           if (requireAllInversions && targetParsed) {
             try {
               const expectedInversions = getExpectedInversions(targetParsed.chordType);
-              const allInversionsPlayed = expectedInversions.every(inv => updatedInversions.has(inv));
+              const inversionsForThisChord = updatedInversionsByChordType.get(currentChordType) || new Set();
+              const allInversionsPlayed = expectedInversions.every(inv => inversionsForThisChord.has(inv));
               canAdvance = allInversionsPlayed;
 
               console.log('[App] Chord validation: inversion check', {
+                chordType: currentChordType,
                 expectedInversions,
-                playedInversions: Array.from(updatedInversions),
+                playedInversions: Array.from(inversionsForThisChord),
                 allInversionsPlayed,
                 canAdvance
               });
 
               if (!allInversionsPlayed) {
-                const remaining = expectedInversions.filter(inv => !updatedInversions.has(inv));
-                setStatusMessage(`✅ Correct! Play remaining inversions: ${remaining.join(', ')}`);
+                const remaining = expectedInversions.filter(inv => !inversionsForThisChord.has(inv));
+                setStatusMessage(`✅ Correct! Play remaining inversions for ${currentChordType}: ${remaining.join(', ')}`);
                 setChordAcknowledged(true);
                 setIsPracticeActive(true);
                 return; // Don't advance yet
@@ -809,15 +839,14 @@ function App() {
             // This prevents rapid skipping if the user holds the chord
             const timer = setTimeout(() => {
               console.log('[App] Chord validation: timeout fired, advancing step index');
+              // Don't reset inversions - they're tracked per chord type
               setCurrentStepIndex(prev => {
                 const next = prev + 1;
                 console.log('[App] Chord validation: step index', { prev, next });
-                // Reset acknowledgment when moving to next chord
+                // Reset acknowledgment when moving to next step
                 setChordAcknowledged(false);
-                // Reset played inversions for next chord
-                setPlayedInversions(new Set());
-                // Reset inversion tracking ref for next chord
-                lastDetectedInversionRef.current = { stepIndex: next, inversion: null };
+                // Don't reset inversions or ref here - they're tracked per chord type and persist across steps
+                // The effect hook will load the correct inversions when chord type changes
                 return next;
               });
             }, 1500); // Increased delay to show acknowledgment
@@ -878,33 +907,46 @@ function App() {
     }
   };
 
+  // Helper to convert inversion string to number (for getChordNotesAsMidi)
+  const inversionStringToNumber = (inversionString) => {
+    if (!inversionString) return 0; // Default to root position
+    if (inversionString === 'Root Position') return 0;
+    if (inversionString === '1st Inversion') return 1;
+    if (inversionString === '2nd Inversion') return 2;
+    if (inversionString === '3rd Inversion') return 3;
+    return 0; // Default fallback
+  };
+
   // Helper to get highlighted notes for Left Piano (Chords)
   const getChordHighlights = () => {
     // If a chord is clicked in Circle of Fifths, show that regardless of mode
     if (chordMidiNotes.length > 0) return chordMidiNotes;
 
-    // In chord mode, show target chord from progression with all inversions supported
-    // Highlight all octaves of chord notes to support inversions
+    // In chord mode, show target chord from progression with specific inversion
+    // Flash only the keys for the target inversion to make it explicit
     if (mode === 'chord' && progression.length > 0) {
       const targetChord = progression[currentStepIndex % progression.length];
       const parsed = parseChordName(targetChord.name);
       if (parsed) {
-        // Get chord notes and generate MIDI notes for all octaves in the piano range
-        // This ensures inversions are visible - any octave of the chord notes will be highlighted
-        const chordNotes = getChordNotes(parsed.root, parsed.chordType);
-        // Use getNoteIndex to get pitch class indices directly (handles flats->sharps conversion)
-        const pitchClasses = chordNotes.map(note => getNoteIndex(note)).filter(idx => idx !== -1);
-
-        // Generate MIDI notes for all octaves in the piano range (36-96)
-        const allMidiNotes = [];
-        for (let octave = 2; octave <= 7; octave++) {
-          pitchClasses.forEach(pitchClass => {
-            const midiNote = (octave + 1) * 12 + pitchClass;
-            if (midiNote >= 36 && midiNote <= 96) {
-              allMidiNotes.push(midiNote);
-            }
-          });
-        }
+        // Get the target inversion (default to Root Position if not specified)
+        const targetInversion = targetChord.inversion || 'Root Position';
+        const inversionNumber = inversionStringToNumber(targetInversion);
+        
+        // Use getChordNotesAsMidi to get specific MIDI notes for the target inversion
+        // Use octave 4 (middle C area) as base, but also show in octave 3 for better visibility
+        const midiNotesOctave4 = getChordNotesAsMidi(parsed.root, parsed.chordType, inversionNumber, 4);
+        const midiNotesOctave3 = getChordNotesAsMidi(parsed.root, parsed.chordType, inversionNumber, 3);
+        
+        // Combine both octaves and filter to piano range (36-96)
+        const allMidiNotes = [...midiNotesOctave3, ...midiNotesOctave4].filter(note => note >= 36 && note <= 96);
+        
+        console.log('[App] getChordHighlights: target chord', {
+          name: targetChord.name,
+          inversion: targetInversion,
+          inversionNumber,
+          midiNotes: allMidiNotes
+        });
+        
         return allMidiNotes;
       }
     }
@@ -1435,12 +1477,18 @@ function App() {
         }
 
         {
-          mode === 'chord' && progression.length > 0 && (
-            <div className="current-target">
-              <h2>Target: {progression[currentStepIndex % progression.length].roman}</h2>
-              <h3>{progression[currentStepIndex % progression.length].name}</h3>
-            </div>
-          )
+          mode === 'chord' && progression.length > 0 && (() => {
+            const targetChord = progression[currentStepIndex % progression.length];
+            return (
+              <div className="current-target">
+                <h2>Target: {targetChord.roman}</h2>
+                <h3>{targetChord.name}</h3>
+                <div className="target-inversion-display">
+                  Play: <strong>{targetChord.inversion || 'Root Position'}</strong>
+                </div>
+              </div>
+            );
+          })()
         }
 
         {

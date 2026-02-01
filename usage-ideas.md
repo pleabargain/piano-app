@@ -38,8 +38,11 @@ Based on Pur Pasteur's "20 Drills to Become a Music Theory Beast" and your exist
   - > [!NOTE]
     > **Challenge Alert!** This exercise is not as easy as you might think—it requires intense focus to hit the root and varying intervals accurately in sequence!
   - Repeat for **F Major** and **G Major**.
-  - *Keep the "glue" note (common tone) held down!*
-  - **Try the interactive lesson**: [http://localhost:5173/exercise/triad-shape-shifting](http://localhost:5173/exercise/triad-shape-shifting)
+- **Triad Shape-Shifting (10 mins)**: [http://localhost:5173/exercise/triad-shape-shifting](http://localhost:5173/exercise/triad-shape-shifting)
+  - Practice ALL inversion combinations for C Major: Root↔1st, Root↔2nd, 1st↔2nd (6 transitions total).
+  - Repeat for F Major and G Major (18 total transitions).
+  - Master every possible transition between inversions, not just linear progressions.
+  - *Keep the "glue" note (common tone) held down during transitions!*
 
 ---
 
@@ -100,6 +103,26 @@ Based on Pur Pasteur's "20 Drills to Become a Music Theory Beast" and your exist
 - **vi-IV-I-V Circle Exercise**: [http://localhost:5173/exercise/vi-iv-i-v-circle](http://localhost:5173/exercise/vi-iv-i-v-circle)
   - Master the classic "50s progression" through all 12 keys
   - With parameters: [http://localhost:5173/exercise/vi-iv-i-v-circle?startKey=C&keys=12](http://localhost:5173/exercise/vi-iv-i-v-circle?startKey=C&keys=12)
+- **Triad Shape-Shifting**: [http://localhost:5173/exercise/triad-shape-shifting](http://localhost:5173/exercise/triad-shape-shifting)
+  - Master ALL inversion combinations (Root↔1st, Root↔2nd, 1st↔2nd) for C, F, and G Major.
+  - Practice every possible transition between inversions, not just linear progressions.
+
+### I-IV-V Inversion Exercises (All 12 Keys)
+
+Practice all inversion combinations for I-IV-V progressions in every key. Each exercise covers 18 transitions (6 per chord: I, IV, V).
+
+- **C Major (C-F-G)**: [http://localhost:5173/exercise/i4v5-inversions-c](http://localhost:5173/exercise/i4v5-inversions-c)
+- **G Major (G-C-D)**: [http://localhost:5173/exercise/i4v5-inversions-g](http://localhost:5173/exercise/i4v5-inversions-g)
+- **D Major (D-G-A)**: [http://localhost:5173/exercise/i4v5-inversions-d](http://localhost:5173/exercise/i4v5-inversions-d)
+- **A Major (A-D-E)**: [http://localhost:5173/exercise/i4v5-inversions-a](http://localhost:5173/exercise/i4v5-inversions-a)
+- **E Major (E-A-B)**: [http://localhost:5173/exercise/i4v5-inversions-e](http://localhost:5173/exercise/i4v5-inversions-e)
+- **B Major (B-E-F#)**: [http://localhost:5173/exercise/i4v5-inversions-b](http://localhost:5173/exercise/i4v5-inversions-b)
+- **F# Major (F#-B-C#)**: [http://localhost:5173/exercise/i4v5-inversions-f#](http://localhost:5173/exercise/i4v5-inversions-f%23)
+- **C# Major (C#-F#-G#)**: [http://localhost:5173/exercise/i4v5-inversions-c#](http://localhost:5173/exercise/i4v5-inversions-c%23)
+- **G# Major (G#-C#-D#)**: [http://localhost:5173/exercise/i4v5-inversions-g#](http://localhost:5173/exercise/i4v5-inversions-g%23)
+- **D# Major (D#-G#-A#)**: [http://localhost:5173/exercise/i4v5-inversions-d#](http://localhost:5173/exercise/i4v5-inversions-d%23)
+- **A# Major (A#-D#-F)**: [http://localhost:5173/exercise/i4v5-inversions-a#](http://localhost:5173/exercise/i4v5-inversions-a%23)
+- **F Major (F-A#-C)**: [http://localhost:5173/exercise/i4v5-inversions-f](http://localhost:5173/exercise/i4v5-inversions-f)
 
 ## Scale Practice
 
@@ -142,6 +165,69 @@ The most common way to build a **Major Pentatonic Scale** is to take a Major sca
 > [!TIP]
 > **Why exclude the 4th and 7th?**
 > In a major scale, the 4th and 7th notes are the "active" degrees that create the most tension (the 4th wants to resolve down to the 3rd, and the 7th wants to resolve up to the root). By removing them, you eliminate the possibility of playing a "clashing" half-step interval. This creates a "safe" melodic space where every note sounds consonant against the root chord—making it the perfect tool for effortless improvisation!
+
+---
+
+## Mastering Triad Inversions: Shape-Shifting
+
+Triad inversions are the key to smooth "voice leading"—moving from one chord to the next with minimal hand jumping. This lesson focuses on practicing ALL combinations of inversions for each chord, helping you master every possible transition.
+
+### Lesson Goal:
+Master all inversion transitions for C, F, and G Major triads. Practice every combination: Root->1st, Root->2nd, 1st->Root, 1st->2nd, 2nd->Root, and 2nd->1st.
+
+### Why this is useful:
+Instead of just practicing Root->1st->2nd->Root, you'll learn to transition between ANY two inversions smoothly. This builds complete mastery of triad shapes and helps you identify which note stays the same (the "glue" note) while others shift.
+
+### Practice Steps:
+1. **Start the Exercise**: Launch the [Triad Shape-Shifting Exercise](http://localhost:5173/exercise/triad-shape-shifting).
+2. **C Major All Combinations**: The exercise will guide you through all 6 inversion transitions for C Major:
+   - Root Position → 1st Inversion
+   - Root Position → 2nd Inversion
+   - 1st Inversion → Root Position
+   - 1st Inversion → 2nd Inversion
+   - 2nd Inversion → Root Position
+   - 2nd Inversion → 1st Inversion
+3. **Repeat for F and G Major**: After mastering C Major, you'll practice all combinations for F Major and G Major.
+4. **The Common Tone**: Notice which note stays the same between inversions—this is your "glue" note. Keep that finger held down while shifting the others!
+
+> [!IMPORTANT]
+> **Master All Transitions**: The goal is to learn ALL inversions, not just I-II-III progressions. This exercise covers every possible transition between inversions.
+
+## I-IV-V Inversion Mastery (All 12 Keys)
+
+Master inversions for the classic I-IV-V progression in every key! Each exercise practices all 18 inversion transitions (6 for I, 6 for IV, 6 for V).
+
+### What You'll Practice:
+For each key, you'll master all inversion combinations:
+- **I chord**: Root↔1st, Root↔2nd, 1st↔2nd (6 transitions)
+- **IV chord**: Root↔1st, Root↔2nd, 1st↔2nd (6 transitions)
+- **V chord**: Root↔1st, Root↔2nd, 1st↔2nd (6 transitions)
+- **Total**: 18 transitions per key
+
+### Practice All 12 Keys:
+
+1. **[C Major (C-F-G)](http://localhost:5173/exercise/i4v5-inversions-c)** - Start here! The easiest key with no sharps or flats.
+2. **[G Major (G-C-D)](http://localhost:5173/exercise/i4v5-inversions-g)** - One sharp (F#)
+3. **[D Major (D-G-A)](http://localhost:5173/exercise/i4v5-inversions-d)** - Two sharps (F#, C#)
+4. **[A Major (A-D-E)](http://localhost:5173/exercise/i4v5-inversions-a)** - Three sharps (F#, C#, G#)
+5. **[E Major (E-A-B)](http://localhost:5173/exercise/i4v5-inversions-e)** - Four sharps (F#, C#, G#, D#)
+6. **[B Major (B-E-F#)](http://localhost:5173/exercise/i4v5-inversions-b)** - Five sharps (F#, C#, G#, D#, A#)
+7. **[F# Major (F#-B-C#)](http://localhost:5173/exercise/i4v5-inversions-f%23)** - Six sharps (all sharps)
+8. **[C# Major (C#-F#-G#)](http://localhost:5173/exercise/i4v5-inversions-c%23)** - Seven sharps
+9. **[G# Major (G#-C#-D#)](http://localhost:5173/exercise/i4v5-inversions-g%23)** - Eight sharps
+10. **[D# Major (D#-G#-A#)](http://localhost:5173/exercise/i4v5-inversions-d%23)** - Nine sharps
+11. **[A# Major (A#-D#-F)](http://localhost:5173/exercise/i4v5-inversions-a%23)** - Ten sharps
+12. **[F Major (F-A#-C)](http://localhost:5173/exercise/i4v5-inversions-f)** - One flat (Bb)
+
+### Practice Tips:
+- **Start with C Major**: Master the pattern in the easiest key first
+- **Follow Circle of Fifths**: Progress through keys in order (C → G → D → A → E → B → F# → C# → G# → D# → A# → F)
+- **Focus on Voice Leading**: Notice which notes stay the same between chords—these are your "glue" notes
+- **Practice Smooth Transitions**: The goal is fluid movement, not just hitting the right chords
+- **Use the Visual Guide**: The keyboard will flash the correct keys for each target inversion
+
+> [!TIP]
+> **Progressive Mastery**: Don't rush! Master one key completely before moving to the next. Each key builds on the previous one, making the next key easier to learn.
 
 ## Chord Discovery
 

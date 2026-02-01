@@ -206,6 +206,10 @@ const ChordInfo = ({
                                                     {currentTargetChord.roman} ({currentTargetChord.name})
                                                     {chordsShareKeys && <span className="shared-key-indicator" title="Chords share keys"></span>}
                                                 </div>
+                                                {/* Display target inversion explicitly */}
+                                                <div className="target-chord-inversion">
+                                                    Play: <strong>{currentTargetChord.inversion || 'Root Position'}</strong>
+                                                </div>
                                             </div>
                                             {nextChord && (
                                                 <div className="next-chord-section">

@@ -79,10 +79,35 @@
 .key.chord-note:not(.active) {
   background: #60a5fa !important; /* Light Blue for white keys */
   box-shadow: 0 0 10px rgba(96, 165, 250, 0.5);
+  animation: chordKeyFlash 1.5s ease-in-out infinite;
 }
 .key.black.chord-note:not(.active) {
   background: #1e40af !important; /* Dark Blue for black keys */
   box-shadow: 0 0 10px rgba(30, 64, 175, 0.5);
+  animation: chordKeyFlashBlack 1.5s ease-in-out infinite;
+}
+
+/* Flashing animation for target chord keys - makes it explicit which keys to play */
+@keyframes chordKeyFlash {
+  0%, 100% {
+    background: #60a5fa !important;
+    box-shadow: 0 0 10px rgba(96, 165, 250, 0.5);
+  }
+  50% {
+    background: #3b82f6 !important; /* Brighter blue */
+    box-shadow: 0 0 20px rgba(59, 130, 246, 0.8), 0 0 30px rgba(59, 130, 246, 0.4);
+  }
+}
+
+@keyframes chordKeyFlashBlack {
+  0%, 100% {
+    background: #1e40af !important;
+    box-shadow: 0 0 10px rgba(30, 64, 175, 0.5);
+  }
+  50% {
+    background: #3b82f6 !important; /* Brighter blue */
+    box-shadow: 0 0 20px rgba(59, 130, 246, 0.8), 0 0 30px rgba(59, 130, 246, 0.4);
+  }
 }
 
 /* Shared Key Highlighting (keys shared between target and next chord) */

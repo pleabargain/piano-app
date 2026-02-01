@@ -1030,6 +1030,19 @@ Run tests with `npm test` or `npm run test:ui` for interactive test interface.
 
 ## Recent Updates
 
+### 2026-01-31: Triad Shape-Shifting and Inversion Validation
+
+Added the Triad Shape-Shifting exercise and implemented version-specific chord validation logic:
+- **Triad Shape-Shifting Exercise**: Master triad inversions for C, F, and G Major with voice leading
+- **I-IV-V Inversion Exercises**: Created 12 exercises (one per key) for practicing all inversion combinations in I-IV-V progressions
+- **Inversion Tracking**: Implemented per-chord-type inversion tracking that remembers played inversions across steps
+  - Inversions are tracked per chord type (I, IV, V), not per step
+  - When playing multiple steps of the same chord type, inversions are remembered
+  - Tracking resets only when moving to a different chord type
+  - I-IV-V exercises automatically enable `requireAllInversions` mode
+- **Inversion Validation**: Improved chord detection to validate specific inversions (Root, 1st, 2nd)
+- **Status Message Fix**: Resolved race condition between MIDI status and exercise instructions
+
 ### 2026-01-29: vi-IV-I-V Circle Exercise and Lesson Plan
 
 Added the vi-IV-I-V Circle Exercise (the classic "50s progression") and comprehensive lesson plan:
@@ -1138,7 +1151,7 @@ This enhancement helps users understand that the same notes can function as diff
 
 ## Current Status
 
-**2026-01-31**: Added Triad Shape-Shifting exercise with inversion validation and instructional feedback. Added comprehensive unit and integration tests.
+**2026-01-31**: Added Triad Shape-Shifting exercise and I-IV-V inversion exercises (12 keys) with per-chord-type inversion tracking. Inversions are now tracked by chord type (I, IV, V) rather than by step, allowing users to play inversions in any order while the app remembers which ones have been played. Added comprehensive unit and integration tests.
 
 **2026-01-29**: Fixed critical bug where `midiManager.setRecordingCallback` was not a function in test mocks, causing app crashes during initialization. Created comprehensive unit tests to isolate and verify the fix. Fixed Priority 1 issue: Updated all tests in `App.test.jsx` to use `.unified-piano` selector instead of deprecated `.left-piano` selector, and corrected expected MIDI note values to match actual implementation (octave 3: [53, 57, 60] instead of octave 2: [41, 45, 48]). All 11 tests in App.test.jsx now pass.
 
@@ -1241,6 +1254,40 @@ When critical bugs are identified in test logs, we follow a systematic approach 
 - [ ] **Modal Practice**: Add exercises for Dorian, Phrygian, and Mixolydian modes.
 - [ ] **Metronome Integration**: Add a visual/audio metronome with timing validation for exercises.
 - [ ] **Visuals**: Add more screenshots and usage GIFs to the documentation.
+
+#### 📚 URL Lesson Plan – Next TODO
+- [ ] **Blues Scale Circle Exercise** (PRIORITY for complete lesson plan): Add `blues-scale-circle` exercise (e.g. `/exercise/blues-scale-circle`) to practice the blues scale through all 12 keys. This is the **next TODO** to complete the URL-based lesson plan because:
+  - The 6-week Sample Lesson Plan (usage-ideas.md) Week 6 focuses on "Blues and Improvisation" but has no dedicated URL
+  - Blues scale is referenced in Daily Practice, warm-ups, and improvisation sections—all without direct exercise links
+  - Scale Practice mode supports Blues, but there is no automated Circle-of-Fifths progression for it
+  - Would complete the beginner lesson plan's final week with a one-click URL
+
+---
+
+## URL Lesson Plan Status
+
+The app supports a URL-based lesson system. Each exercise is accessible at `http://localhost:5173/exercise/{exercise-id}`. See `usage-ideas.html` for the full guide.
+
+### Exercises with URL lessons
+
+| Exercise | URL | Lesson in usage-ideas |
+|----------|-----|------------------------|
+| I-V-I Circle | `/exercise/i-v-i-circle` | ✅ Full lesson |
+| I-IV-V-I Circle | `/exercise/i-iv-v-i-circle` | ✅ Full lesson |
+| vi-IV-I-V Circle | `/exercise/vi-iv-i-v-circle` | ✅ Full lesson + 5-week plan |
+| 12 Major Scales | `/exercise/major-scales-circle` | ✅ Referenced in Daily Plan |
+| Major Pentatonic Circle | `/exercise/major-pentatonic-circle` | ✅ Full lesson |
+| Interval Sprints | `/exercise/interval-sprints-circle` | ✅ Referenced |
+| Triad Shape-Shifting | `/exercise/triad-shape-shifting` | ✅ Full lesson |
+| I-IV-V Inversions (12 keys) | `/exercise/i4v5-inversions-{key}` | ✅ Full lesson |
+
+### Gaps (no URL yet)
+
+- **Blues Scale Circle**: Week 6 of Sample Lesson Plan; blues warm-ups; no `/exercise/blues-scale-circle`
+- **I-ii-V-I progression**: Week 3 of Sample Lesson Plan; no dedicated exercise
+- **12-Bar Blues** (I-I-I-I-IV-IV-I-I-V-IV-I-I): Week 6; no chord progression exercise
+- **Lava Game**: Mode-based; no direct URL
+- **Sample Lesson Plan Weeks 1–5**: Many activities still reference "Scale Practice mode" / "Chord Practice mode" without exercise URLs; could be linked to existing exercises
 
 ---
 

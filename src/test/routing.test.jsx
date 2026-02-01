@@ -248,4 +248,29 @@ describe('Routing Integration', () => {
       });
     });
   });
+
+  describe('Triad Shape-Shifting Exercise Routing', () => {
+    it('should extract exercise ID from path', () => {
+      expect(getExerciseIdFromPath('/exercise/triad-shape-shifting')).toBe('triad-shape-shifting');
+    });
+
+    it('should load triad-shape-shifting exercise', () => {
+      const exercise = loadExerciseFromUrl('triad-shape-shifting', '');
+      expect(exercise).toBeDefined();
+      expect(exercise.id).toBe('triad-shape-shifting');
+    });
+
+    it('should render app at triad-shape-shifting exercise path', async () => {
+      render(
+        <MemoryRouter initialEntries={['/exercise/triad-shape-shifting']}>
+          <App />
+        </MemoryRouter>
+      );
+
+      await waitFor(() => {
+        const header = screen.queryByText(/Piano Trainer/i);
+        expect(header).toBeTruthy();
+      });
+    });
+  });
 });

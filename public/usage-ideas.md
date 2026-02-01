@@ -37,11 +37,11 @@ Based on Pur Pasteur's "20 Drills to Become a Music Theory Beast" and your exist
   - Identify the quality (Major 2nd, Major 3rd, Perfect 4th, etc.).
   - > [!NOTE]
     > **Challenge Alert!** This exercise is not as easy as you might think—it requires intense focus to hit the root and varying intervals accurately in sequence!
-- **Triad Shape-Shifting (10 mins)**:
-  - Play a C Major triad.
-  - Cycle through inversions: Root -> 1st -> 2nd -> Root.
-  - Repeat for **F Major** and **G Major**.
-  - *Keep the "glue" note (common tone) held down!*
+- **Triad Shape-Shifting (10 mins)**: [http://localhost:5173/exercise/triad-shape-shifting](http://localhost:5173/exercise/triad-shape-shifting)
+  - Practice ALL inversion combinations for C Major: Root↔1st, Root↔2nd, 1st↔2nd (6 transitions total).
+  - Repeat for F Major and G Major (18 total transitions).
+  - Master every possible transition between inversions, not just linear progressions.
+  - *Keep the "glue" note (common tone) held down during transitions!*
 
 ---
 
@@ -102,6 +102,26 @@ Based on Pur Pasteur's "20 Drills to Become a Music Theory Beast" and your exist
 - **vi-IV-I-V Circle Exercise**: [http://localhost:5173/exercise/vi-iv-i-v-circle](http://localhost:5173/exercise/vi-iv-i-v-circle)
   - Master the classic "50s progression" through all 12 keys
   - With parameters: [http://localhost:5173/exercise/vi-iv-i-v-circle?startKey=C&keys=12](http://localhost:5173/exercise/vi-iv-i-v-circle?startKey=C&keys=12)
+- **Triad Shape-Shifting**: [http://localhost:5173/exercise/triad-shape-shifting](http://localhost:5173/exercise/triad-shape-shifting)
+  - Master ALL inversion combinations (Root↔1st, Root↔2nd, 1st↔2nd) for C, F, and G Major.
+  - Practice every possible transition between inversions, not just linear progressions.
+
+### I-IV-V Inversion Exercises (All 12 Keys)
+
+Practice all inversion combinations for I-IV-V progressions in every key. Each exercise covers 18 transitions (6 per chord: I, IV, V).
+
+- **C Major (C-F-G)**: [http://localhost:5173/exercise/i4v5-inversions-c](http://localhost:5173/exercise/i4v5-inversions-c)
+- **G Major (G-C-D)**: [http://localhost:5173/exercise/i4v5-inversions-g](http://localhost:5173/exercise/i4v5-inversions-g)
+- **D Major (D-G-A)**: [http://localhost:5173/exercise/i4v5-inversions-d](http://localhost:5173/exercise/i4v5-inversions-d)
+- **A Major (A-D-E)**: [http://localhost:5173/exercise/i4v5-inversions-a](http://localhost:5173/exercise/i4v5-inversions-a)
+- **E Major (E-A-B)**: [http://localhost:5173/exercise/i4v5-inversions-e](http://localhost:5173/exercise/i4v5-inversions-e)
+- **B Major (B-E-F#)**: [http://localhost:5173/exercise/i4v5-inversions-b](http://localhost:5173/exercise/i4v5-inversions-b)
+- **F# Major (F#-B-C#)**: [http://localhost:5173/exercise/i4v5-inversions-f#](http://localhost:5173/exercise/i4v5-inversions-f%23)
+- **C# Major (C#-F#-G#)**: [http://localhost:5173/exercise/i4v5-inversions-c#](http://localhost:5173/exercise/i4v5-inversions-c%23)
+- **G# Major (G#-C#-D#)**: [http://localhost:5173/exercise/i4v5-inversions-g#](http://localhost:5173/exercise/i4v5-inversions-g%23)
+- **D# Major (D#-G#-A#)**: [http://localhost:5173/exercise/i4v5-inversions-d#](http://localhost:5173/exercise/i4v5-inversions-d%23)
+- **A# Major (A#-D#-F)**: [http://localhost:5173/exercise/i4v5-inversions-a#](http://localhost:5173/exercise/i4v5-inversions-a%23)
+- **F Major (F-A#-C)**: [http://localhost:5173/exercise/i4v5-inversions-f](http://localhost:5173/exercise/i4v5-inversions-f)
 
 ## Scale Practice
 

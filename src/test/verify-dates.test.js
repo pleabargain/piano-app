@@ -15,21 +15,22 @@ describe('Date Consistency Verification', () => {
         expect(content).toContain(`Last Updated: ${today}`);
 
         // Changelog entry
-        expect(content).toContain(`### ${today}: Interval Sprints and Multi-Key Support`);
+        expect(content).toContain(`### ${today}: Triad Shape-Shifting and Inversion Validation`);
 
         // Development notes
-        expect(content).toContain(`**${today}**: Added Interval Sprints exercises`);
+        expect(content).toContain(`**${today}**: Added Triad Shape-Shifting exercise`);
     });
 
     it('should have correct date comment in exercise-config.js', () => {
         const filePath = path.join(rootDir, 'src/core/exercise-config.js');
         const content = fs.readFileSync(filePath, 'utf8');
-        expect(content).toContain(`// ${today}: Added Interval Sprints and 12-Key Interval Sprints`);
+        expect(content).toContain(`// ${today}: Added Triad Shape-Shifting and 12-Key Interval Sprints`);
     });
 
     it('should have correct date comment in interval-sprints.test.js', () => {
         const filePath = path.join(rootDir, 'src/test/interval-sprints.test.js');
         const content = fs.readFileSync(filePath, 'utf8');
-        expect(content).toContain(`// ${today}: Internal Sprints unit tests`);
+        // This file was updated with Triad Shape-Shifting unit tests in this session
+        expect(content).toContain(`// ${today}: Triad Shape-Shifting unit tests`);
     });
 });
