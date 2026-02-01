@@ -1,7 +1,7 @@
 <!-- https://github.com/pleabargain/piano-app -->
 # Piano App
 
-Last updated: 2026-01-31
+Last updated: 2026-02-01
 
 A React-based piano training application built with Vite. Practice scales, chords, and free play with MIDI keyboard support.
 
@@ -162,9 +162,9 @@ npm run test:log
   - **Recording Management**: Save, load, and delete multiple recordings
   - **Local Storage**: Recordings persist across browser sessions
 
-### Unified Pyramid Layout
+### Practice Frames Layout
 
-The application features a unified pyramid layout designed for integrated chord, scale, and progression practice:
+The application features a horizontal practice frames layout designed for integrated chord, scale, and progression practice:
 
 #### Layout Structure
 
@@ -1030,6 +1030,23 @@ Run tests with `npm test` or `npm run test:ui` for interactive test interface.
 
 ## Recent Updates
 
+### 2026-02-01: AGENTS.md Yes/No Question Format Rule
+
+- **Yes/No Question Format**: Added rule 9 requiring simple yes/no confirmation questions to append "Y/N" on their own line (e.g., "Should I update the verify-dates test so it expects 2026-02-01? Y/N" instead of ending without the Y/N prompt).
+
+### 2026-02-01: Sheet Music Display and Layout Rename
+
+- **Horizontal sheet music notation**: Added `SheetMusicDisplay` component using VexFlow to render musical notation below the four practice frames and above the piano. Shows the current chord (detected, locked, or from progression) or the current scale (e.g., F Major Pentatonic) on a treble staff.
+- **Layout class rename**: Renamed `pyramid-container` to `practice-frames-container` and `pyramid-bottom` to `piano-row` throughout the codebase to reflect the horizontal frame layout (no longer a pyramid shape).
+- **Dependencies**: Added `vexflow` for music notation rendering.
+- **Branch**: Changes implemented on `sheet-music-horizon` branch.
+
+### 2026-02-01: Inversion Progress Checkboxes Fix and Unit Tests
+
+- **Bug fix (inversion checkboxes not updating)**: When the user played the correct chord in a different inversion than the target (e.g. C Major root when target was "Play: 1st Inversion"), the UI showed "C Major Root Position" and "Keep trying!" but the INVERSIONS PROGRESS checkboxes stayed at "0 / 3 inversions played". Inversion tracking only ran on a full match (correct inversion), so playing the right chord in the wrong inversion was never recorded. **Fix**: In the `correctChordWrongInversion` branch in `App.jsx`, we now update `playedInversions` and `inversionsByChordType` for the detected inversion so the checkboxes update whenever the user plays any correct chord inversion for the current chord type.
+- **Unit tests (ChordInversionDetection.test.js)**: Ensure C Major root, 1st, and 2nd inversions are correctly detected from MIDI input; arbitrary note order and octave doublings are handled.
+- **Unit tests (i4v5-inversion-tracking.test.jsx)**: Added/updated tests so that (1) after simulating C Major root, inversion progress shows at least "1 / 3 inversions played"; (2) playing root then 1st then 2nd inversion increases the count to 3/3; (3) tests wait for MIDI listener to be registered before simulating notes.
+
 ### 2026-01-31: Triad Shape-Shifting and Inversion Validation
 
 Added the Triad Shape-Shifting exercise and implemented version-specific chord validation logic:
@@ -1291,4 +1308,4 @@ The app supports a URL-based lesson system. Each exercise is accessible at `http
 
 ---
 
-Last Updated: 2026-01-31
+Last Updated: 2026-02-01

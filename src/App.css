@@ -855,8 +855,8 @@ header h1 {
   padding-top: 155px;
 }
 
-/* Pyramid Layout - Flattened to horizontal */
-.pyramid-container {
+/* Practice Frames Layout - Horizontal row of frames */
+.practice-frames-container {
   display: flex;
   flex-direction: row;
   align-items: flex-start;
@@ -870,7 +870,7 @@ header h1 {
 }
 
 /* Circle of Fifths container */
-.pyramid-container>.circle-of-fifths-container {
+.practice-frames-container>.circle-of-fifths-container {
   flex: 0 0 auto;
   transform: scale(1.0);
   transform-origin: center;
@@ -985,8 +985,15 @@ header h1 {
   min-height: 280px;
 }
 
-/* Bottom Row: Two Pianos side-by-side */
-.pyramid-bottom {
+/* Sheet music row - spans full width below frames */
+.sheet-music-row {
+  flex: 1 1 100%;
+  width: 100%;
+  min-width: 100%;
+}
+
+/* Bottom Row: Piano */
+.piano-row {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -1011,13 +1018,13 @@ header h1 {
   letter-spacing: 0.5px;
 }
 
-/* Make pianos smaller to fit side-by-side in pyramid */
-.pyramid-bottom .piano-container .key.white {
+/* Make pianos smaller to fit in layout */
+.piano-row .piano-container .key.white {
   width: 28px;
   height: 140px;
 }
 
-.pyramid-bottom .piano-container .key.black {
+.piano-row .piano-container .key.black {
   width: 18px;
   height: 85px;
   margin-left: -9px;
@@ -1026,23 +1033,23 @@ header h1 {
 
 /* Responsive: Stack on smaller screens */
 @media (max-width: 1100px) {
-  .pyramid-container {
+  .practice-frames-container {
     flex-direction: column;
     align-items: center;
   }
 
-  .pyramid-bottom {
+  .piano-row {
     flex-direction: column;
     align-items: center;
   }
 
-  .pyramid-container>.circle-of-fifths-container {
+  .practice-frames-container>.circle-of-fifths-container {
     transform: scale(0.9);
   }
 }
 
 @media (max-width: 768px) {
-  .pyramid-container>.circle-of-fifths-container {
+  .practice-frames-container>.circle-of-fifths-container {
     transform: scale(0.75);
   }
 }

@@ -1,0 +1,41 @@
+/* 2026-02-01: Sheet music display styles */
+.sheet-music-display {
+  width: 100%;
+  min-height: 120px;
+  padding: 12px 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.sheet-music-container {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100px;
+}
+
+.sheet-music-vexflow-output {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  overflow-x: auto;
+}
+
+.sheet-music-vexflow-output svg {
+  max-width: 100%;
+  height: auto;
+}
+
+.sheet-music-placeholder {
+  color: #9ca3af;
+  font-size: 0.95rem;
+  font-style: italic;
+  margin: 0;
+  padding: 20px;
+}

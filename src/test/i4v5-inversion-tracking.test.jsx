@@ -42,46 +42,45 @@ describe('I-IV-V Inversion Tracking', () => {
             </MemoryRouter>
         );
 
-        const midiCallback = midiManager.addListener.mock.calls[0][0];
-
-        // Wait for exercise to load
+        // Wait for exercise to load and for MIDI listener to be registered (useEffect)
         await waitFor(() => {
             expect(screen.getByTestId('status-message')).toBeInTheDocument();
+            expect(midiManager.addListener).toHaveBeenCalled();
         });
+        const midiCallback = midiManager.addListener.mock.calls[0][0];
 
-        // Step 1: Play C Major Root Position (I chord)
-        // C Major Root: C4=60, E4=64, G4=67
+        // Step 1: First step target is "Play: 1st Inversion". Play C Major Root Position;
+        // we get "Keep trying!" but inversion progress must update to 1/3 (Root Position recorded).
         act(() => {
             midiCallback({ type: 'noteOn', note: 60, velocity: 64 }, [60, 64, 67]);
         });
 
         await waitFor(() => {
-            const status = screen.getByTestId('status-message');
-            expect(status.textContent).toMatch(/Correct/i);
+            const progressText = screen.getByText(/\d \/ 3 inversions played/);
+            const count = progressText.textContent.match(/(\d+) \/ 3/);
+            expect(Number(count[1])).toBeGreaterThanOrEqual(1);
         }, { timeout: 3000 });
 
-        // Step 2: Play C Major 1st Inversion (still I chord, different step)
-        // C Major 1st: E4=64, G4=67, C5=72
+        // Step 2: Play C Major 1st Inversion (matches first step target or next)
         act(() => {
             midiCallback({ type: 'noteOn', note: 64, velocity: 64 }, [64, 67, 72]);
         });
 
         await waitFor(() => {
-            const status = screen.getByTestId('status-message');
-            // Should show that we need remaining inversions for I chord
-            expect(status.textContent).toMatch(/remaining inversions/i);
+            const progressText = screen.getByText(/\d \/ 3 inversions played/);
+            const count = progressText.textContent.match(/(\d+) \/ 3/);
+            expect(Number(count[1])).toBeGreaterThanOrEqual(2);
         }, { timeout: 3000 });
 
         // Step 3: Play C Major 2nd Inversion (still I chord)
-        // C Major 2nd: G4=67, C5=72, E5=76
         act(() => {
             midiCallback({ type: 'noteOn', note: 67, velocity: 64 }, [67, 72, 76]);
         });
 
         await waitFor(() => {
-            const status = screen.getByTestId('status-message');
-            // Should still show remaining inversions (we need all 6 transitions)
-            expect(status.textContent).toMatch(/remaining inversions/i);
+            const progressText = screen.getByText(/\d \/ 3 inversions played/);
+            const count = progressText.textContent.match(/(\d+) \/ 3/);
+            expect(Number(count[1])).toBe(3);
         }, { timeout: 3000 });
     });
 
@@ -92,28 +91,82 @@ describe('I-IV-V Inversion Tracking', () => {
             </MemoryRouter>
         );
 
-        const midiCallback = midiManager.addListener.mock.calls[0][0];
-
         await waitFor(() => {
             expect(screen.getByTestId('status-message')).toBeInTheDocument();
+            expect(midiManager.addListener).toHaveBeenCalled();
         });
+        const midiCallback = midiManager.addListener.mock.calls[0][0];
 
-        // Play C Major Root Position
+        // Play C Major Root Position (may match target or show "Keep trying!" - either way we track it)
         act(() => {
             midiCallback({ type: 'noteOn', note: 60, velocity: 64 }, [60, 64, 67]);
         });
 
         await waitFor(() => {
-            const status = screen.getByTestId('status-message');
-            expect(status.textContent).toMatch(/Correct/i);
+            const progressText = screen.getByText(/\d \/ 3 inversions played/);
+            const count = progressText.textContent.match(/(\d+) \/ 3/);
+            expect(Number(count[1])).toBeGreaterThanOrEqual(1);
         }, { timeout: 3000 });
 
-        // Wait for step to advance
+        // Inversions for I are remembered when moving between steps
         await waitFor(() => {
-            // After advancing, should still remember Root Position was played
-            const status = screen.getByTestId('status-message');
-            expect(status).toBeInTheDocument();
-        }, { timeout: 5000 });
+            expect(screen.getByTestId('status-message')).toBeInTheDocument();
+        }, { timeout: 2000 });
+    });
+
+    it('should update inversion checkboxes when playing correct chord in non-target inversion', async () => {
+        // When user plays C Major root but target is e.g. 1st Inversion, we must still
+        // record "Root Position" as played so the INVERSIONS PROGRESS checkboxes update.
+        render(
+            <MemoryRouter initialEntries={['/exercise/i4v5-inversions-c']}>
+                <App />
+            </MemoryRouter>
+        );
+
+        await waitFor(() => {
+            expect(screen.getByTestId('status-message')).toBeInTheDocument();
+            expect(midiManager.addListener).toHaveBeenCalled();
+        });
+        const midiCallback = midiManager.addListener.mock.calls[0][0];
+
+        // Simulate playing C Major root position (C4=60, E4=64, G4=67)
+        act(() => {
+            midiCallback({ type: 'noteOn', note: 60, velocity: 64 }, [60, 64, 67]);
+        });
+
+        // Inversion progress must update: should show at least "1 / 3 inversions played"
+        // (not stay at "0 / 3") whether we matched target or played wrong inversion.
+        await waitFor(() => {
+            const progressText = screen.getByText(/\d \/ 3 inversions played/);
+            expect(progressText).toBeInTheDocument();
+            const count = progressText.textContent.match(/(\d+) \/ 3/);
+            expect(Number(count[1])).toBeGreaterThanOrEqual(1);
+        }, { timeout: 3000 });
+    });
+
+    it('should show Root Position as played in Inversions Progress after playing root', async () => {
+        render(
+            <MemoryRouter initialEntries={['/exercise/i4v5-inversions-c']}>
+                <App />
+            </MemoryRouter>
+        );
+
+        await waitFor(() => {
+            expect(screen.getByTestId('status-message')).toBeInTheDocument();
+            expect(midiManager.addListener).toHaveBeenCalled();
+        });
+        const midiCallback = midiManager.addListener.mock.calls[0][0];
+
+        act(() => {
+            midiCallback({ type: 'noteOn', note: 60, velocity: 64 }, [60, 64, 67]);
+        });
+
+        // At least one inversion (Root Position) should be marked played in the list
+        await waitFor(() => {
+            const progressText = screen.getByText(/\d \/ 3 inversions played/);
+            const count = progressText.textContent.match(/(\d+) \/ 3/);
+            expect(Number(count[1])).toBeGreaterThanOrEqual(1);
+        }, { timeout: 3000 });
     });
 
     it('should reset inversion tracking when moving to different chord type', async () => {
@@ -123,11 +176,11 @@ describe('I-IV-V Inversion Tracking', () => {
             </MemoryRouter>
         );
 
-        const midiCallback = midiManager.addListener.mock.calls[0][0];
-
         await waitFor(() => {
             expect(screen.getByTestId('status-message')).toBeInTheDocument();
+            expect(midiManager.addListener).toHaveBeenCalled();
         });
+        const midiCallback = midiManager.addListener.mock.calls[0][0];
 
         // Play all inversions for I chord (simplified - just play a few)
         // This test verifies that when we move to IV chord, tracking resets

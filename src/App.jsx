@@ -9,6 +9,7 @@ import CircleOfFifths from './components/CircleOfFifths';
 import KeyDisplay from './components/KeyDisplay';
 import ChordInfo from './components/ChordInfo';
 import ScaleSelector from './components/ScaleSelector';
+import SheetMusicDisplay from './components/SheetMusicDisplay';
 import RecordingControls from './components/RecordingControls';
 import RecordingList from './components/RecordingList';
 import Exercise from './components/Exercise';
@@ -752,6 +753,22 @@ function App() {
         });
 
         if (correctChordWrongInversion) {
+          // Still track the inversion they played so the INVERSIONS PROGRESS checkboxes update
+          const currentChordType = targetChord.roman;
+          if (requireAllInversions && detected.inversion) {
+            const inversionsForThisChord = new Set(inversionsByChordType.get(currentChordType) || []);
+            const isNewInversion = !inversionsForThisChord.has(detected.inversion) ||
+              lastDetectedInversionRef.current.inversion !== detected.inversion;
+            if (isNewInversion) {
+              inversionsForThisChord.add(detected.inversion);
+              const updatedMap = new Map(inversionsByChordType);
+              updatedMap.set(currentChordType, inversionsForThisChord);
+              setPlayedInversions(new Set(inversionsForThisChord));
+              setInversionsByChordType(updatedMap);
+              lastDetectedInversionRef.current = { stepIndex: currentStepIndex, inversion: detected.inversion };
+              console.log('[App] Chord validation: tracked inversion (wrong target)', detected.inversion, 'for chord type', currentChordType);
+            }
+          }
           setStatusMessage(`Target: ${targetChord.name} (${targetChord.inversion}) | You played: ${detected.inversion}. Keep trying!`);
           return;
         }
@@ -882,7 +899,7 @@ function App() {
         console.error('[App] Error in chord validation:', error, { mode, progression, currentStepIndex, activeNotes });
       }
     }
-  }, [activeNotes, mode, progression, currentStepIndex, requireAllInversions, playedInversions]);
+  }, [activeNotes, mode, progression, currentStepIndex, requireAllInversions, playedInversions, inversionsByChordType]);
 
 
   // Helper to get expected inversions for a chord type
@@ -1200,8 +1217,8 @@ function App() {
 
         <div className="main-content">
 
-          {/* Pyramid Layout */}
-          <div className="pyramid-container">
+          {/* Practice Frames Layout */}
+          <div className="practice-frames-container">
 
             {/* Circle of Fifths */}
             <CircleOfFifths
@@ -1350,8 +1367,23 @@ function App() {
               onToggleCollapse={() => setIsScaleSelectorCollapsed(!isScaleSelectorCollapsed)}
             />
 
+            {/* Sheet Music: Horizontal notation for chord/scale (full width) */}
+            <div className="sheet-music-row">
+            <SheetMusicDisplay
+              detectedChord={detectedChord}
+              selectedRoot={lockedChord ? lockedChord.root : selectedRoot}
+              selectedScaleType={selectedScaleType}
+              mode={mode}
+              lockedChord={lockedChord}
+              progression={progression}
+              currentStepIndex={currentStepIndex}
+              keyProgression={keyProgression}
+              currentKeyIndex={currentKeyIndex}
+            />
+            </div>
+
             {/* Bottom Row: Unified Piano */}
-            <div className="pyramid-bottom">
+            <div className="piano-row">
               <div className="piano-section unified-piano">
                 <Piano
                   startNote={21}
@@ -1455,7 +1487,7 @@ function App() {
           </div>
         </div>
 
-        {/* Practice content in pyramid-container */}
+        {/* Practice content in practice-frames-container */}
 
         {
           mode === 'scale' && keyProgression.length > 0 && (

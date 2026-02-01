@@ -161,8 +161,8 @@
             background: #3b82f6;
         }
 
-        /* Pyramid Layout (Always Visible) */
-        .pyramid-container {
+        /* Practice Frames Layout (Always Visible) */
+        .practice-frames-container {
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -248,7 +248,7 @@
             justify-content: center;
         }
 
-        .pyramid-bottom {
+        .piano-row {
             display: flex;
             justify-content: center;
             align-items: flex-start;
@@ -555,7 +555,7 @@
 
         /* Responsive */
         @media (max-width: 1100px) {
-            .pyramid-middle, .pyramid-bottom {
+            .pyramid-middle, .piano-row {
                 flex-direction: column;
                 align-items: center;
             }
@@ -620,8 +620,8 @@
                 <button class="tab-button" onclick="switchTab('lava')">Lava Game</button>
             </div>
 
-            <!-- Always-Visible Pyramid Layout -->
-            <div class="pyramid-container">
+            <!-- Always-Visible Practice Frames Layout -->
+            <div class="practice-frames-container">
                 <div class="pyramid-top">
                     <div class="circle-of-fifths-placeholder">
                         Circle of Fifths
@@ -655,7 +655,7 @@
                     </div>
                 </div>
 
-                <div class="pyramid-bottom">
+                <div class="piano-row">
                     <div class="piano-section">
                         <div class="piano-placeholder">
                             Left Piano (C2-C5)
