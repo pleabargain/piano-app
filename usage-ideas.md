@@ -639,6 +639,30 @@ A pivot chord is a chord that exists in BOTH keys. It acts like a bridge - you'r
 
 ---
 
+## 2 Chord Lounge Piano
+
+**Master the "Cocktail Piano" Sound**
+
+This lesson focuses on the classic "lounge" or "cocktail" piano sound created by alternating between the **Major 6th** chord and the **Diminished** chord. This simple movement is the secret behind countless jazz standards and lounge improvisations.
+
+> [!TIP]
+> **Video Reference**: This lesson is based on the concepts from [2 CHORD LOUNGE PIANO](https://www.youtube.com/watch?v=zDBOs-HGj6U).
+
+### The Concept
+- **Chord 1**: C Major 6 (C-E-G-A) - The "Home" chord with a jazzy 6th.
+- **Chord 2**: D Diminished (D-F-Ab) - The "Tension" chord that pulls back to home.
+- **The Movement**: By alternating between these two, you create a sophisticated, infinite-loop harmonic bed perfect for improvisation.
+
+### Practice Drill ([Start Exercise](http://localhost:5173/exercise/2-chord-lounge))
+This exercise guides you through:
+1.  **C Major 6** in all 4 inversions (Root, 1st, 2nd, 3rd)
+2.  **D Diminished** in all 3 inversions (Root, 1st, 2nd)
+3.  **Alternating Vamp**: Practicing the smooth transition between them.
+
+**Goal**: Learn these shapes so well that your hands can find them instantly without looking!
+
+---
+
 ## Warm-Up Exercises: Fun Ways to Get Started
 
 Before diving into focused practice, warm-up exercises help get your fingers moving, your ears tuned, and your mind engaged. These exercises are designed to be enjoyable while preparing you for more serious practice. Mix and match them based on your mood and time available!

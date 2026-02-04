@@ -143,26 +143,26 @@ export function generateTriadInversions() {
  */
 export function generateI4V5Inversions(root) {
   if (!root) return [];
-  
+
   const inversions = ['Root Position', '1st Inversion', '2nd Inversion'];
   const progression = [];
-  
+
   // Get I, IV, V chords for this key
   const scaleNotes = getScaleNotes(root, 'major');
   if (!scaleNotes || scaleNotes.length === 0) return [];
-  
+
   // Get chord names for I, IV, V
   const iChord = getChordNameFromRoman('I', scaleNotes);
   const ivChord = getChordNameFromRoman('IV', scaleNotes);
   const vChord = getChordNameFromRoman('V', scaleNotes);
-  
+
   // For each chord (I, IV, V), generate all inversion transitions
   const chords = [
     { name: iChord, roman: 'I' },
     { name: ivChord, roman: 'IV' },
     { name: vChord, roman: 'V' }
   ];
-  
+
   chords.forEach(chord => {
     // Generate all pairs of inversions (from -> to)
     for (let i = 0; i < inversions.length; i++) {
@@ -178,7 +178,54 @@ export function generateI4V5Inversions(root) {
       }
     }
   });
-  
+
+  return progression;
+}
+
+/**
+ * Generate a drill for the "2 Chord Lounge Piano" style (C Major 6 and D Diminished)
+ * Covers all inversions of both chords to master the positions.
+ * @returns {Array} Progression array
+ */
+export function generateLoungeDrill() {
+  const progression = [];
+
+  // C Major 6 Inversions (4 notes = 4 inversions)
+  const c6Inversions = ['Root Position', '1st Inversion', '2nd Inversion', '3rd Inversion'];
+
+  // D Diminished Inversions (3 notes = 3 inversions)
+  const dDimInversions = ['Root Position', '1st Inversion', '2nd Inversion'];
+
+  // Interleave them: C6(inv) -> Ddim(inv) -> C6(next inv) -> ...
+  // Since they have different counts (4 vs 3), we'll loop enough times to cover both.
+  // LCM of 4 and 3 is 12, so 12 pairs would cover perfectly, but that's too long.
+  // Let's just do one pass of C6 inversions and pair them with Ddim inversions (looping Ddim if needed).
+
+  for (let i = 0; i < c6Inversions.length; i++) {
+    const cInv = c6Inversions[i];
+    const dInv = dDimInversions[i % dDimInversions.length]; // Wrap around D dim inversions
+
+    // Step 1: C Major 6
+    progression.push({
+      name: 'C Major 6',
+      roman: 'I6',
+      inversion: cInv
+    });
+
+    // Step 2: D Diminished
+    progression.push({
+      name: 'D Diminished',
+      roman: 'ii°',
+      inversion: dInv
+    });
+  }
+
+  // Add the Vamp for good measure (already interleaved)
+  progression.push({ name: 'C Major 6', roman: 'I6', inversion: 'Root Position' });
+  progression.push({ name: 'D Diminished', roman: 'ii°', inversion: 'Root Position' });
+  progression.push({ name: 'C Major 6', roman: 'I6', inversion: 'Root Position' });
+  progression.push({ name: 'D Diminished', roman: 'ii°', inversion: '1st Inversion' }); // Smooth movement?
+
   return progression;
 }
 
@@ -436,6 +483,19 @@ export const EXERCISES = {
       keyProgression: ['F'],
       generateProgression: () => generateI4V5Inversions('F'),
       scaleType: 'major'
+    }
+  },
+  '2-chord-lounge': {
+    id: '2-chord-lounge',
+    name: '2 Chord Lounge Piano',
+    description: 'Master the C Major 6 and D Diminished connection for that classic lounge sound.',
+    mode: 'chord',
+    benefits: 'Learn the two chords that unlock the "cocktail piano" sound. Practice all inversions to play them anywhere on the keyboard.',
+    config: {
+      keyProgression: ['C'], // Fixed key for this specific stylistic lesson
+      generateProgression: generateLoungeDrill,
+      scaleType: 'major',
+      requireAllInversions: false // Explicitly disable strict inversion tracking
     }
   }
 };

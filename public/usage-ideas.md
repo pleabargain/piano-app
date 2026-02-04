@@ -37,6 +37,7 @@ Based on Pur Pasteur's "20 Drills to Become a Music Theory Beast" and your exist
   - Identify the quality (Major 2nd, Major 3rd, Perfect 4th, etc.).
   - > [!NOTE]
     > **Challenge Alert!** This exercise is not as easy as you might think—it requires intense focus to hit the root and varying intervals accurately in sequence!
+  - Repeat for **F Major** and **G Major**.
 - **Triad Shape-Shifting (10 mins)**: [http://localhost:5173/exercise/triad-shape-shifting](http://localhost:5173/exercise/triad-shape-shifting)
   - Practice ALL inversion combinations for C Major: Root↔1st, Root↔2nd, 1st↔2nd (6 transitions total).
   - Repeat for F Major and G Major (18 total transitions).
@@ -154,6 +155,79 @@ The major pentatonic is a "safe" scale—it avoids the dissonant half-steps foun
 - **Combine with Metronome**: While the app doesn't have a built-in metronome, practice with an external metronome starting slow and gradually increasing tempo
 - **Scale Patterns**: Once comfortable with basic scales, practice variations like thirds, fourths, or broken thirds within the scale
 - **Blues Scale Practice**: Use the Blues scale option to practice this essential scale used in jazz, blues, and rock music
+
+---
+
+### Pentatonic Construction Rule: The "No-Tension" Scale
+
+The most common way to build a **Major Pentatonic Scale** is to take a Major scale and **exclude the 4th and 7th notes**.
+
+> [!TIP]
+> **Why exclude the 4th and 7th?**
+> In a major scale, the 4th and 7th notes are the "active" degrees that create the most tension (the 4th wants to resolve down to the 3rd, and the 7th wants to resolve up to the root). By removing them, you eliminate the possibility of playing a "clashing" half-step interval. This creates a "safe" melodic space where every note sounds consonant against the root chord—making it the perfect tool for effortless improvisation!
+
+---
+
+## Mastering Triad Inversions: Shape-Shifting
+
+Triad inversions are the key to smooth "voice leading"—moving from one chord to the next with minimal hand jumping. This lesson focuses on practicing ALL combinations of inversions for each chord, helping you master every possible transition.
+
+### Lesson Goal:
+Master all inversion transitions for C, F, and G Major triads. Practice every combination: Root->1st, Root->2nd, 1st->Root, 1st->2nd, 2nd->Root, and 2nd->1st.
+
+### Why this is useful:
+Instead of just practicing Root->1st->2nd->Root, you'll learn to transition between ANY two inversions smoothly. This builds complete mastery of triad shapes and helps you identify which note stays the same (the "glue" note) while others shift.
+
+### Practice Steps:
+1. **Start the Exercise**: Launch the [Triad Shape-Shifting Exercise](http://localhost:5173/exercise/triad-shape-shifting).
+2. **C Major All Combinations**: The exercise will guide you through all 6 inversion transitions for C Major:
+   - Root Position → 1st Inversion
+   - Root Position → 2nd Inversion
+   - 1st Inversion → Root Position
+   - 1st Inversion → 2nd Inversion
+   - 2nd Inversion → Root Position
+   - 2nd Inversion → 1st Inversion
+3. **Repeat for F and G Major**: After mastering C Major, you'll practice all combinations for F Major and G Major.
+4. **The Common Tone**: Notice which note stays the same between inversions—this is your "glue" note. Keep that finger held down while shifting the others!
+
+> [!IMPORTANT]
+> **Master All Transitions**: The goal is to learn ALL inversions, not just I-II-III progressions. This exercise covers every possible transition between inversions.
+
+## I-IV-V Inversion Mastery (All 12 Keys)
+
+Master inversions for the classic I-IV-V progression in every key! Each exercise practices all 18 inversion transitions (6 for I, 6 for IV, 6 for V).
+
+### What You'll Practice:
+For each key, you'll master all inversion combinations:
+- **I chord**: Root↔1st, Root↔2nd, 1st↔2nd (6 transitions)
+- **IV chord**: Root↔1st, Root↔2nd, 1st↔2nd (6 transitions)
+- **V chord**: Root↔1st, Root↔2nd, 1st↔2nd (6 transitions)
+- **Total**: 18 transitions per key
+
+### Practice All 12 Keys:
+
+1. **[C Major (C-F-G)](http://localhost:5173/exercise/i4v5-inversions-c)** - Start here! The easiest key with no sharps or flats.
+2. **[G Major (G-C-D)](http://localhost:5173/exercise/i4v5-inversions-g)** - One sharp (F#)
+3. **[D Major (D-G-A)](http://localhost:5173/exercise/i4v5-inversions-d)** - Two sharps (F#, C#)
+4. **[A Major (A-D-E)](http://localhost:5173/exercise/i4v5-inversions-a)** - Three sharps (F#, C#, G#)
+5. **[E Major (E-A-B)](http://localhost:5173/exercise/i4v5-inversions-e)** - Four sharps (F#, C#, G#, D#)
+6. **[B Major (B-E-F#)](http://localhost:5173/exercise/i4v5-inversions-b)** - Five sharps (F#, C#, G#, D#, A#)
+7. **[F# Major (F#-B-C#)](http://localhost:5173/exercise/i4v5-inversions-f%23)** - Six sharps (all sharps)
+8. **[C# Major (C#-F#-G#)](http://localhost:5173/exercise/i4v5-inversions-c%23)** - Seven sharps
+9. **[G# Major (G#-C#-D#)](http://localhost:5173/exercise/i4v5-inversions-g%23)** - Eight sharps
+10. **[D# Major (D#-G#-A#)](http://localhost:5173/exercise/i4v5-inversions-d%23)** - Nine sharps
+11. **[A# Major (A#-D#-F)](http://localhost:5173/exercise/i4v5-inversions-a%23)** - Ten sharps
+12. **[F Major (F-A#-C)](http://localhost:5173/exercise/i4v5-inversions-f)** - One flat (Bb)
+
+### Practice Tips:
+- **Start with C Major**: Master the pattern in the easiest key first
+- **Follow Circle of Fifths**: Progress through keys in order (C → G → D → A → E → B → F# → C# → G# → D# → A# → F)
+- **Focus on Voice Leading**: Notice which notes stay the same between chords—these are your "glue" notes
+- **Practice Smooth Transitions**: The goal is fluid movement, not just hitting the right chords
+- **Use the Visual Guide**: The keyboard will flash the correct keys for each target inversion
+
+> [!TIP]
+> **Progressive Mastery**: Don't rush! Master one key completely before moving to the next. Each key builds on the previous one, making the next key easier to learn.
 
 ## Chord Discovery
 
@@ -562,6 +636,30 @@ A pivot chord is a chord that exists in BOTH keys. It acts like a bridge - you'r
 - **Record Yourself**: Use screen recording or audio recording to track your progress over time
 - **Practice Both Hands**: While the app shows one keyboard, practice scales and chords with both hands on your physical keyboard
 - **Theory Application**: Use the app to visualize music theory concepts you're learning elsewhere
+
+---
+
+## 2 Chord Lounge Piano
+
+**Master the "Cocktail Piano" Sound**
+
+This lesson focuses on the classic "lounge" or "cocktail" piano sound created by alternating between the **Major 6th** chord and the **Diminished** chord. This simple movement is the secret behind countless jazz standards and lounge improvisations.
+
+> [!TIP]
+> **Video Reference**: This lesson is based on the concepts from [2 CHORD LOUNGE PIANO](https://www.youtube.com/watch?v=zDBOs-HGj6U).
+
+### The Concept
+- **Chord 1**: C Major 6 (C-E-G-A) - The "Home" chord with a jazzy 6th.
+- **Chord 2**: D Diminished (D-F-Ab) - The "Tension" chord that pulls back to home.
+- **The Movement**: By alternating between these two, you create a sophisticated, infinite-loop harmonic bed perfect for improvisation.
+
+### Practice Drill ([Start Exercise](http://localhost:5173/exercise/2-chord-lounge))
+This exercise guides you through:
+1.  **C Major 6** in all 4 inversions (Root, 1st, 2nd, 3rd)
+2.  **D Diminished** in all 3 inversions (Root, 1st, 2nd)
+3.  **Alternating Vamp**: Practicing the smooth transition between them.
+
+**Goal**: Learn these shapes so well that your hands can find them instantly without looking!
 
 ---
 

@@ -116,14 +116,23 @@ function App() {
       // Set mode based on exercise
       setMode(loadedConfig.mode);
       setSelectedScaleType(loadedConfig.config.scaleType || 'major');
-      
+
       // Auto-enable requireAllInversions for I-IV-V inversion exercises
-      if (exerciseId && exerciseId.startsWith('i4v5-inversions-')) {
+      // OR if explicitly requested by config
+      if (loadedConfig.config?.requireAllInversions !== undefined) {
+        setRequireAllInversions(loadedConfig.config.requireAllInversions);
+        console.log(`[App] Set requireAllInversions to ${loadedConfig.config.requireAllInversions} from config`);
+      } else if (exerciseId && exerciseId.startsWith('i4v5-inversions-')) {
         setRequireAllInversions(true);
         console.log('[App] Auto-enabled requireAllInversions for I-IV-V inversion exercise');
+      } else {
+        // IMPORTANT: Reset to false for other exercises to avoid stuck state
+        setRequireAllInversions(false);
       }
     } else {
       setExerciseConfig(null);
+      // Reset defaults when leaving exercise
+      setRequireAllInversions(false);
     }
   }, [location.pathname, location.search]);
 
@@ -697,7 +706,7 @@ function App() {
     } else if (mode === 'chord' && progression.length > 0) {
       const currentChord = progression[currentStepIndex % progression.length];
       const currentChordType = currentChord?.roman; // I, IV, V, etc.
-      
+
       // Reset when chord TYPE changes (not step index)
       if (prevChordTypeRef.current !== currentChordType) {
         // Load inversions for this chord type from our map, or start fresh
@@ -769,8 +778,24 @@ function App() {
               console.log('[App] Chord validation: tracked inversion (wrong target)', detected.inversion, 'for chord type', currentChordType);
             }
           }
+          console.warn('[App] Chord validation: WRONG INVERSION', {
+            target: targetChord.inversion,
+            played: detected.inversion
+          });
           setStatusMessage(`Target: ${targetChord.name} (${targetChord.inversion}) | You played: ${detected.inversion}. Keep trying!`);
           return;
+        }
+
+        if (!match && detected) {
+          console.warn('[App] Chord validation: MISMATCH DETECTED', {
+            targetName: targetChord.name,
+            detectedName: detected.name,
+            targetParsed,
+            detectedParsed,
+            qualityMatch,
+            rootMatch,
+            inversionMatch
+          });
         }
 
         if (detected && match) {
@@ -793,11 +818,11 @@ function App() {
               inversionsForThisChord.add(detected.inversion);
               updatedInversionsByChordType.set(currentChordType, inversionsForThisChord);
               updatedInversions = new Set(inversionsForThisChord);
-              
+
               setPlayedInversions(updatedInversions);
               setInversionsByChordType(updatedInversionsByChordType);
               lastDetectedInversionRef.current = { stepIndex: currentStepIndex, inversion: detected.inversion };
-              
+
               console.log('[App] Chord validation: tracked inversion', detected.inversion, 'for chord type', currentChordType);
               console.log('[App] All inversions for', currentChordType, ':', Array.from(inversionsForThisChord));
             } else {
@@ -948,22 +973,22 @@ function App() {
         // Get the target inversion (default to Root Position if not specified)
         const targetInversion = targetChord.inversion || 'Root Position';
         const inversionNumber = inversionStringToNumber(targetInversion);
-        
+
         // Use getChordNotesAsMidi to get specific MIDI notes for the target inversion
         // Use octave 4 (middle C area) as base, but also show in octave 3 for better visibility
         const midiNotesOctave4 = getChordNotesAsMidi(parsed.root, parsed.chordType, inversionNumber, 4);
         const midiNotesOctave3 = getChordNotesAsMidi(parsed.root, parsed.chordType, inversionNumber, 3);
-        
+
         // Combine both octaves and filter to piano range (36-96)
         const allMidiNotes = [...midiNotesOctave3, ...midiNotesOctave4].filter(note => note >= 36 && note <= 96);
-        
+
         console.log('[App] getChordHighlights: target chord', {
           name: targetChord.name,
           inversion: targetInversion,
           inversionNumber,
           midiNotes: allMidiNotes
         });
-        
+
         return allMidiNotes;
       }
     }
@@ -1369,17 +1394,17 @@ function App() {
 
             {/* Sheet Music: Horizontal notation for chord/scale (full width) */}
             <div className="sheet-music-row">
-            <SheetMusicDisplay
-              detectedChord={detectedChord}
-              selectedRoot={lockedChord ? lockedChord.root : selectedRoot}
-              selectedScaleType={selectedScaleType}
-              mode={mode}
-              lockedChord={lockedChord}
-              progression={progression}
-              currentStepIndex={currentStepIndex}
-              keyProgression={keyProgression}
-              currentKeyIndex={currentKeyIndex}
-            />
+              <SheetMusicDisplay
+                detectedChord={detectedChord}
+                selectedRoot={lockedChord ? lockedChord.root : selectedRoot}
+                selectedScaleType={selectedScaleType}
+                mode={mode}
+                lockedChord={lockedChord}
+                progression={progression}
+                currentStepIndex={currentStepIndex}
+                keyProgression={keyProgression}
+                currentKeyIndex={currentKeyIndex}
+              />
             </div>
 
             {/* Bottom Row: Unified Piano */}

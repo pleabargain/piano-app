@@ -350,6 +350,7 @@ The application features a horizontal practice frames layout designed for integr
 - **Scale Practice Tips**: Learn effective techniques for practicing scales, including using the Circle of Fifths, practicing in different octaves, and combining with metronomes
 - **Chord Discovery**: Explore chord inversions, extensions, and progressions with detailed guidance
 - **Play Along with Backing Tracks**: Instructions on how to use the app with external backing tracks for improvisation and practice
+- **2 Chord Lounge Piano**: Learn the classic cocktail piano sound with our new interactive drill (based on [2 CHORD LOUNGE PIANO](https://www.youtube.com/watch?v=zDBOs-HGj6U))
 
 ### Keyboard Visualization
 
