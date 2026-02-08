@@ -591,6 +591,17 @@ function App() {
   const prevActiveNotesRef = useRef([]);
   // Ref to track last detected inversion to prevent duplicate tracking
   const lastDetectedInversionRef = useRef({ stepIndex: -1, inversion: null });
+  // Ref to track validation timer (to persist across re-renders caused by activeNotes jitter)
+  const validationTimerRef = useRef(null);
+
+  // Cleanup timer on unmount
+  useEffect(() => {
+    return () => {
+      if (validationTimerRef.current) {
+        clearTimeout(validationTimerRef.current);
+      }
+    };
+  }, []);
 
   useEffect(() => {
     // Edge detection logic
@@ -854,7 +865,12 @@ function App() {
                 setStatusMessage(`✅ Correct! Play remaining inversions for ${currentChordType}: ${remaining.join(', ')}`);
                 setChordAcknowledged(true);
                 setIsPracticeActive(true);
-                return; // Don't advance yet
+                // Don't advance yet, but ensure timer is cleared if we were waiting to advance
+                if (validationTimerRef.current) {
+                  clearTimeout(validationTimerRef.current);
+                  validationTimerRef.current = null;
+                }
+                return;
               }
             } catch (error) {
               console.error('[App] Error checking inversions:', error, { targetParsed });
@@ -865,38 +881,42 @@ function App() {
           if (canAdvance) {
             console.log('[App] Chord validation: Advancing to next chord');
             // Correct chord held!
-            // Set acknowledgment state immediately for UI feedback
-            setChordAcknowledged(true);
-            setIsPracticeActive(true);
 
-            // Show acknowledgment message
-            const nextIndex = (currentStepIndex + 1) % progression.length;
-            const nextChord = progression[nextIndex];
-            const message = requireAllInversions
-              ? `✅ All inversions played! Next: ${nextChord.roman} (${nextChord.name})`
-              : `✅ Correct! Next: ${nextChord.roman} (${nextChord.name})`;
-            setStatusMessage(message);
+            // Only set acknowledgment if not already set (prevents spamming logs/state)
+            if (!chordAcknowledged) {
+              setChordAcknowledged(true);
+              setIsPracticeActive(true);
 
-            // Advance after a short delay to let them hear/see it
-            // This prevents rapid skipping if the user holds the chord
-            const timer = setTimeout(() => {
-              console.log('[App] Chord validation: timeout fired, advancing step index');
-              // Don't reset inversions - they're tracked per chord type
-              setCurrentStepIndex(prev => {
-                const next = prev + 1;
-                console.log('[App] Chord validation: step index', { prev, next });
-                // Reset acknowledgment when moving to next step
-                setChordAcknowledged(false);
-                // Don't reset inversions or ref here - they're tracked per chord type and persist across steps
-                // The effect hook will load the correct inversions when chord type changes
-                return next;
-              });
-            }, 1500); // Increased delay to show acknowledgment
+              // Show acknowledgment message
+              const nextIndex = (currentStepIndex + 1) % progression.length;
+              const nextChord = progression[nextIndex];
+              const message = requireAllInversions
+                ? `✅ All inversions played! Next: ${nextChord.roman} (${nextChord.name})`
+                : `✅ Correct! Next: ${nextChord.roman} (${nextChord.name})`;
+              setStatusMessage(message);
+            }
 
-            return () => {
-              console.log('[App] Chord validation: cleanup timeout');
-              clearTimeout(timer);
-            };
+            // Start timer ONLY if not already running.
+            // This prevents resetting the timer if activeNotes changes but still matches (jitter tolerance).
+            if (!validationTimerRef.current) {
+              console.log('[App] Chord validation: starting 1.5s timer');
+              validationTimerRef.current = setTimeout(() => {
+                console.log('[App] Chord validation: timeout fired, advancing step index');
+                // Don't reset inversions - they're tracked per chord type
+                setCurrentStepIndex(prev => {
+                  const next = prev + 1;
+                  console.log('[App] Chord validation: step index', { prev, next });
+                  // Reset acknowledgment when moving to next step
+                  setChordAcknowledged(false);
+                  return next;
+                });
+                validationTimerRef.current = null;
+              }, 1500);
+            }
+
+            // Note: We used to return a cleanup function here to clear the timer.
+            // We NO LONGER do that, because we want the timer to persist across re-renders
+            // as long as the match continues.
           }
         }
 
@@ -904,6 +924,13 @@ function App() {
           // Reset acknowledgment if chord doesn't match
           if (chordAcknowledged) {
             setChordAcknowledged(false);
+
+            // Cancel timer if we lose the match
+            if (validationTimerRef.current) {
+              console.log('[App] Chord validation: lost match, clearing timer');
+              clearTimeout(validationTimerRef.current);
+              validationTimerRef.current = null;
+            }
           }
 
           console.log('[App] Chord validation: NO MATCH', {
