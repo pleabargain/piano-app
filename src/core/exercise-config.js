@@ -1,5 +1,6 @@
 // https://github.com/pleabargain/piano-app
 // 2026-01-31: Added Triad Shape-Shifting and 12-Key Interval Sprints
+// 2026-02-11: Added I-vi-ii-V Scale & Chords Creative Lessons (12 standalone per-key exercises)
 import { NOTES, getNoteIndex, getScaleNotes, getChordNameFromRoman } from './music-theory';
 import { parseProgression } from './progression-parser';
 
@@ -496,6 +497,165 @@ export const EXERCISES = {
       generateProgression: generateLoungeDrill,
       scaleType: 'major',
       requireAllInversions: false // Explicitly disable strict inversion tracking
+    }
+  },
+
+  // I–vi–ii–V Scale & Chords Creative Lessons — 12 standalone lessons, one per key
+  // Each lesson: Step 1 = play the major scale (validated), Step 2 = play I–vi–ii–V (validated)
+  'i-vi-ii-v-lesson-c': {
+    id: 'i-vi-ii-v-lesson-c',
+    name: 'Scale & Chords Creative Lesson: C Major',
+    description: 'Standalone lesson for C Major only. Step 1: Play the scale. Step 2: Play I–vi–ii–V (C–Am–Dm–G). Designed to unlock your creative powers in chords and scales — focused, encouraging practice.',
+    mode: 'scale_then_chord',
+    benefits: 'Discover the I–vi–ii–V progression in C Major. A complete, self-contained lesson that builds confidence in both scale and chord fluency — no pressure, just exploration.',
+    config: {
+      keyProgression: ['C'],
+      scaleType: 'major',
+      generateScaleProgression: (root) => generateScaleProgression(root, 'major'),
+      generateChordProgression: (root) => generateProgressionFromRomanPattern('I vi ii V', root, 'major')
+    }
+  },
+  'i-vi-ii-v-lesson-g': {
+    id: 'i-vi-ii-v-lesson-g',
+    name: 'Scale & Chords Creative Lesson: G Major',
+    description: 'Standalone lesson for G Major only. Step 1: Play the scale. Step 2: Play I–vi–ii–V (G–Em–Am–D). Unlock your creative powers in chords and scales.',
+    mode: 'scale_then_chord',
+    benefits: 'Explore the I–vi–ii–V progression in G Major. One key, one lesson — build fluency at your own pace.',
+    config: {
+      keyProgression: ['G'],
+      scaleType: 'major',
+      generateScaleProgression: (root) => generateScaleProgression(root, 'major'),
+      generateChordProgression: (root) => generateProgressionFromRomanPattern('I vi ii V', root, 'major')
+    }
+  },
+  'i-vi-ii-v-lesson-d': {
+    id: 'i-vi-ii-v-lesson-d',
+    name: 'Scale & Chords Creative Lesson: D Major',
+    description: 'Standalone lesson for D Major only. Step 1: Play the scale. Step 2: Play I–vi–ii–V (D–Bm–Em–A). Encouraging, creative practice.',
+    mode: 'scale_then_chord',
+    benefits: 'Master D Major’s scale and I–vi–ii–V chords in a single focused lesson.',
+    config: {
+      keyProgression: ['D'],
+      scaleType: 'major',
+      generateScaleProgression: (root) => generateScaleProgression(root, 'major'),
+      generateChordProgression: (root) => generateProgressionFromRomanPattern('I vi ii V', root, 'major')
+    }
+  },
+  'i-vi-ii-v-lesson-a': {
+    id: 'i-vi-ii-v-lesson-a',
+    name: 'Scale & Chords Creative Lesson: A Major',
+    description: 'Standalone lesson for A Major only. Step 1: Play the scale. Step 2: Play I–vi–ii–V (A–F#m–Bm–E). Find your creative flow.',
+    mode: 'scale_then_chord',
+    benefits: 'Build fluency in A Major’s scale and I–vi–ii–V harmony in one self-contained lesson.',
+    config: {
+      keyProgression: ['A'],
+      scaleType: 'major',
+      generateScaleProgression: (root) => generateScaleProgression(root, 'major'),
+      generateChordProgression: (root) => generateProgressionFromRomanPattern('I vi ii V', root, 'major')
+    }
+  },
+  'i-vi-ii-v-lesson-e': {
+    id: 'i-vi-ii-v-lesson-e',
+    name: 'Scale & Chords Creative Lesson: E Major',
+    description: 'Standalone lesson for E Major only. Step 1: Play the scale. Step 2: Play I–vi–ii–V (E–C#m–F#m–B). Encouraging practice.',
+    mode: 'scale_then_chord',
+    benefits: 'Explore E Major’s scale and I–vi–ii–V chords — one key, one lesson.',
+    config: {
+      keyProgression: ['E'],
+      scaleType: 'major',
+      generateScaleProgression: (root) => generateScaleProgression(root, 'major'),
+      generateChordProgression: (root) => generateProgressionFromRomanPattern('I vi ii V', root, 'major')
+    }
+  },
+  'i-vi-ii-v-lesson-b': {
+    id: 'i-vi-ii-v-lesson-b',
+    name: 'Scale & Chords Creative Lesson: B Major',
+    description: 'Standalone lesson for B Major only. Step 1: Play the scale. Step 2: Play I–vi–ii–V (B–G#m–C#m–F#). Creative, focused practice.',
+    mode: 'scale_then_chord',
+    benefits: 'Discover B Major’s scale and I–vi–ii–V progression in a single encouraging lesson.',
+    config: {
+      keyProgression: ['B'],
+      scaleType: 'major',
+      generateScaleProgression: (root) => generateScaleProgression(root, 'major'),
+      generateChordProgression: (root) => generateProgressionFromRomanPattern('I vi ii V', root, 'major')
+    }
+  },
+  'i-vi-ii-v-lesson-f#': {
+    id: 'i-vi-ii-v-lesson-f#',
+    name: 'Scale & Chords Creative Lesson: F# Major',
+    description: 'Standalone lesson for F# Major only. Step 1: Play the scale. Step 2: Play I–vi–ii–V (F#–D#m–G#m–C#). Unlock your creative powers.',
+    mode: 'scale_then_chord',
+    benefits: 'Master F# Major’s scale and I–vi–ii–V chords — one key, one lesson.',
+    config: {
+      keyProgression: ['F#'],
+      scaleType: 'major',
+      generateScaleProgression: (root) => generateScaleProgression(root, 'major'),
+      generateChordProgression: (root) => generateProgressionFromRomanPattern('I vi ii V', root, 'major')
+    }
+  },
+  'i-vi-ii-v-lesson-c#': {
+    id: 'i-vi-ii-v-lesson-c#',
+    name: 'Scale & Chords Creative Lesson: C# Major',
+    description: 'Standalone lesson for C# Major only. Step 1: Play the scale. Step 2: Play I–vi–ii–V (C#–A#m–D#m–G#). Encouraging practice.',
+    mode: 'scale_then_chord',
+    benefits: 'Explore C# Major’s scale and I–vi–ii–V harmony in one focused lesson.',
+    config: {
+      keyProgression: ['C#'],
+      scaleType: 'major',
+      generateScaleProgression: (root) => generateScaleProgression(root, 'major'),
+      generateChordProgression: (root) => generateProgressionFromRomanPattern('I vi ii V', root, 'major')
+    }
+  },
+  'i-vi-ii-v-lesson-g#': {
+    id: 'i-vi-ii-v-lesson-g#',
+    name: 'Scale & Chords Creative Lesson: G# Major',
+    description: 'Standalone lesson for G# Major only. Step 1: Play the scale. Step 2: Play I–vi–ii–V (G#–Fm–Bm–D#). One key, one lesson.',
+    mode: 'scale_then_chord',
+    benefits: 'Build fluency in G# Major’s scale and I–vi–ii–V chords.',
+    config: {
+      keyProgression: ['G#'],
+      scaleType: 'major',
+      generateScaleProgression: (root) => generateScaleProgression(root, 'major'),
+      generateChordProgression: (root) => generateProgressionFromRomanPattern('I vi ii V', root, 'major')
+    }
+  },
+  'i-vi-ii-v-lesson-d#': {
+    id: 'i-vi-ii-v-lesson-d#',
+    name: 'Scale & Chords Creative Lesson: D# Major',
+    description: 'Standalone lesson for D# Major only. Step 1: Play the scale. Step 2: Play I–vi–ii–V (D#–Bm–Em–A#). Creative, focused practice.',
+    mode: 'scale_then_chord',
+    benefits: 'Discover D# Major’s scale and I–vi–ii–V progression.',
+    config: {
+      keyProgression: ['D#'],
+      scaleType: 'major',
+      generateScaleProgression: (root) => generateScaleProgression(root, 'major'),
+      generateChordProgression: (root) => generateProgressionFromRomanPattern('I vi ii V', root, 'major')
+    }
+  },
+  'i-vi-ii-v-lesson-a#': {
+    id: 'i-vi-ii-v-lesson-a#',
+    name: 'Scale & Chords Creative Lesson: A# Major',
+    description: 'Standalone lesson for A# Major only. Step 1: Play the scale. Step 2: Play I–vi–ii–V (A#–Fm–Gm–E). Encouraging practice.',
+    mode: 'scale_then_chord',
+    benefits: 'Master A# Major’s scale and I–vi–ii–V harmony in one lesson.',
+    config: {
+      keyProgression: ['A#'],
+      scaleType: 'major',
+      generateScaleProgression: (root) => generateScaleProgression(root, 'major'),
+      generateChordProgression: (root) => generateProgressionFromRomanPattern('I vi ii V', root, 'major')
+    }
+  },
+  'i-vi-ii-v-lesson-f': {
+    id: 'i-vi-ii-v-lesson-f',
+    name: 'Scale & Chords Creative Lesson: F Major',
+    description: 'Standalone lesson for F Major only. Step 1: Play the scale. Step 2: Play I–vi–ii–V (F–Dm–Gm–C). Unlock your creative powers in chords and scales.',
+    mode: 'scale_then_chord',
+    benefits: 'Explore F Major’s scale and I–vi–ii–V chords — one key, one lesson, at your own pace.',
+    config: {
+      keyProgression: ['F'],
+      scaleType: 'major',
+      generateScaleProgression: (root) => generateScaleProgression(root, 'major'),
+      generateChordProgression: (root) => generateProgressionFromRomanPattern('I vi ii V', root, 'major')
     }
   }
 };

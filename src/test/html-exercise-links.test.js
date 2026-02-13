@@ -39,7 +39,9 @@ describe('HTML Exercise Links Verification', () => {
     'i-iv-v-i-circle',
     'major-scales-circle',
     'major-pentatonic-circle',
-    'interval-sprints-circle'
+    'interval-sprints-circle',
+    'i-vi-ii-v-lesson-c',
+    'i-vi-ii-v-lesson-g'
   ];
   
   // Exercises that appear with query parameters (check for base URL pattern)

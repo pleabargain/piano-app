@@ -113,8 +113,9 @@ function App() {
     const loadedConfig = loadExerciseFromUrl(exerciseId, location.search);
     if (loadedConfig) {
       setExerciseConfig(loadedConfig);
-      // Set mode based on exercise
-      setMode(loadedConfig.mode);
+      // Set mode based on exercise (scale_then_chord starts in scale phase)
+      const effectiveMode = loadedConfig.mode === 'scale_then_chord' ? 'scale' : loadedConfig.mode;
+      setMode(effectiveMode);
       setSelectedScaleType(loadedConfig.config.scaleType || 'major');
 
       // Auto-enable requireAllInversions for I-IV-V inversion exercises
@@ -154,6 +155,10 @@ function App() {
 
   const handleExerciseStatusUpdate = useCallback((message) => {
     setStatusMessage(message);
+  }, []);
+
+  const handleExerciseModeChange = useCallback((newMode) => {
+    setMode(newMode);
   }, []);
 
   // Clear clicked chord when mode changes
@@ -1231,6 +1236,7 @@ function App() {
       onProgressionUpdate={handleExerciseProgressionUpdate}
       onKeyUpdate={handleExerciseKeyUpdate}
       onStatusUpdate={handleExerciseStatusUpdate}
+      onModeChange={handleExerciseModeChange}
     />
   ) : null;
 

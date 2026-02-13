@@ -261,4 +261,63 @@ describe('exercise-config', () => {
       expect(progression).toEqual([]);
     });
   });
+
+  describe('I-vi-ii-V Scale & Chords Creative Lessons', () => {
+    const lessonIds = [
+      'i-vi-ii-v-lesson-c', 'i-vi-ii-v-lesson-g', 'i-vi-ii-v-lesson-d',
+      'i-vi-ii-v-lesson-a', 'i-vi-ii-v-lesson-e', 'i-vi-ii-v-lesson-b',
+      'i-vi-ii-v-lesson-f#', 'i-vi-ii-v-lesson-c#', 'i-vi-ii-v-lesson-g#',
+      'i-vi-ii-v-lesson-d#', 'i-vi-ii-v-lesson-a#', 'i-vi-ii-v-lesson-f'
+    ];
+
+    it('should have all 12 lesson exercises defined', () => {
+      lessonIds.forEach(id => {
+        expect(EXERCISES[id]).toBeDefined();
+      });
+    });
+
+    it('should have scale_then_chord mode and phased config for i-vi-ii-v-lesson-c', () => {
+      const exercise = EXERCISES['i-vi-ii-v-lesson-c'];
+      expect(exercise.id).toBe('i-vi-ii-v-lesson-c');
+      expect(exercise.mode).toBe('scale_then_chord');
+      expect(exercise.config.keyProgression).toEqual(['C']);
+      expect(typeof exercise.config.generateScaleProgression).toBe('function');
+      expect(typeof exercise.config.generateChordProgression).toBe('function');
+    });
+
+    it('should generate scale progression for C Major', () => {
+      const exercise = EXERCISES['i-vi-ii-v-lesson-c'];
+      const scaleProg = exercise.config.generateScaleProgression('C');
+      expect(scaleProg).toBeDefined();
+      expect(scaleProg.length).toBe(15); // ascending + descending
+      expect(scaleProg[0].name).toBe('C');
+      expect(scaleProg[7].name).toBe('C'); // octave
+    });
+
+    it('should generate I-vi-ii-V chord progression for C Major', () => {
+      const exercise = EXERCISES['i-vi-ii-v-lesson-c'];
+      const chordProg = exercise.config.generateChordProgression('C');
+      expect(chordProg).toHaveLength(4);
+      expect(chordProg[0]).toEqual({ name: 'C Major', roman: 'I' });
+      expect(chordProg[1].roman).toBe('vi');
+      expect(chordProg[2].roman).toBe('ii');
+      expect(chordProg[3].roman).toBe('V');
+    });
+
+    it('should generate I-vi-ii-V chord progression for G Major (G-Em-Am-D)', () => {
+      const exercise = EXERCISES['i-vi-ii-v-lesson-g'];
+      const chordProg = exercise.config.generateChordProgression('G');
+      expect(chordProg).toHaveLength(4);
+      expect(chordProg[0]).toEqual({ name: 'G Major', roman: 'I' });
+      expect(chordProg[1].name).toBe('E Minor');
+      expect(chordProg[2].name).toBe('A Minor');
+      expect(chordProg[3].name).toBe('D Major');
+    });
+
+    it('should have standalone lesson description mentioning creative powers', () => {
+      const exercise = EXERCISES['i-vi-ii-v-lesson-c'];
+      expect(exercise.description).toMatch(/standalone/i);
+      expect(exercise.description.toLowerCase()).toMatch(/creative|encouraging/);
+    });
+  });
 });

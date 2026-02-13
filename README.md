@@ -1249,6 +1249,8 @@ When critical bugs are identified in test logs, we follow a systematic approach 
 
 ## Development Notes
 
+**2026-02-11**: Added I–vi–ii–V Scale & Chords Creative Lessons — 12 standalone exercises (one per key). Each lesson validates scale first, then I–vi–ii–V chords. Designed to unlock creative powers with encouraging, focused practice. URLs: `/exercise/i-vi-ii-v-lesson-{key}` for C, G, D, A, E, B, F#, C#, G#, D#, A#, F. Extended Exercise component with scale-then-chord phased mode.
+
 **2026-01-31**: Added Triad Shape-Shifting exercise and fixed date consistency.
 
 **2026-01-28**: Added Interval Sprints exercises and verified date consistency as per `agent-rules.md`. Fixed incorrect "Last updated" dates in README.
@@ -1298,6 +1300,7 @@ The app supports a URL-based lesson system. Each exercise is accessible at `http
 | Interval Sprints | `/exercise/interval-sprints-circle` | ✅ Referenced |
 | Triad Shape-Shifting | `/exercise/triad-shape-shifting` | ✅ Full lesson |
 | I-IV-V Inversions (12 keys) | `/exercise/i4v5-inversions-{key}` | ✅ Full lesson |
+| I–vi–ii–V Scale & Chords (12 keys) | `/exercise/i-vi-ii-v-lesson-{key}` | ✅ Quick Links + detailed guide |
 
 ### Gaps (no URL yet)
 
@@ -1309,4 +1312,4 @@ The app supports a URL-based lesson system. Each exercise is accessible at `http
 
 ---
 
-Last Updated: 2026-02-01
+Last Updated: 2026-02-11

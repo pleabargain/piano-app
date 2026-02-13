@@ -124,6 +124,63 @@ Practice all inversion combinations for I-IV-V progressions in every key. Each e
 - **A# Major (A#-D#-F)**: [http://localhost:5173/exercise/i4v5-inversions-a#](http://localhost:5173/exercise/i4v5-inversions-a%23)
 - **F Major (F-A#-C)**: [http://localhost:5173/exercise/i4v5-inversions-f](http://localhost:5173/exercise/i4v5-inversions-f)
 
+### I–vi–ii–V Scale & Chords Creative Lessons (All 12 Keys)
+
+**Each lesson is standalone for that key** — no cycling to other keys. Step 1: play the major scale (validated). Step 2: play I–vi–ii–V chords (validated). Designed to unlock your creative powers in chords and scales — encouraging, focused practice, not a drill.
+
+- **C Major (C–Am–Dm–G)**: [http://localhost:5173/exercise/i-vi-ii-v-lesson-c](http://localhost:5173/exercise/i-vi-ii-v-lesson-c)
+
+Standalone lessons for each key: Step 1 = play the major scale (validated), Step 2 = play I–vi–ii–V chords (validated). Designed to unlock creative powers in chords and scales — encouraging, focused practice, not a drill.
+
+- **C Major (C–Am–Dm–G)**: [http://localhost:5173/exercise/i-vi-ii-v-lesson-c](http://localhost:5173/exercise/i-vi-ii-v-lesson-c)
+- **G Major (G–Em–Am–D)**: [http://localhost:5173/exercise/i-vi-ii-v-lesson-g](http://localhost:5173/exercise/i-vi-ii-v-lesson-g)
+- **D Major (D–Bm–Em–A)**: [http://localhost:5173/exercise/i-vi-ii-v-lesson-d](http://localhost:5173/exercise/i-vi-ii-v-lesson-d)
+- **A Major (A–F#m–Bm–E)**: [http://localhost:5173/exercise/i-vi-ii-v-lesson-a](http://localhost:5173/exercise/i-vi-ii-v-lesson-a)
+- **E Major (E–C#m–F#m–B)**: [http://localhost:5173/exercise/i-vi-ii-v-lesson-e](http://localhost:5173/exercise/i-vi-ii-v-lesson-e)
+- **B Major (B–G#m–C#m–F#)**: [http://localhost:5173/exercise/i-vi-ii-v-lesson-b](http://localhost:5173/exercise/i-vi-ii-v-lesson-b)
+- **F# Major (F#–D#m–G#m–C#)**: [http://localhost:5173/exercise/i-vi-ii-v-lesson-f%23](http://localhost:5173/exercise/i-vi-ii-v-lesson-f%23)
+- **C# Major (C#–A#m–D#m–G#)**: [http://localhost:5173/exercise/i-vi-ii-v-lesson-c%23](http://localhost:5173/exercise/i-vi-ii-v-lesson-c%23)
+- **G# Major (G#–Fm–Bm–D#)**: [http://localhost:5173/exercise/i-vi-ii-v-lesson-g%23](http://localhost:5173/exercise/i-vi-ii-v-lesson-g%23)
+- **D# Major (D#–Bm–Em–A#)**: [http://localhost:5173/exercise/i-vi-ii-v-lesson-d%23](http://localhost:5173/exercise/i-vi-ii-v-lesson-d%23)
+- **A# Major (A#–Fm–Gm–E)**: [http://localhost:5173/exercise/i-vi-ii-v-lesson-a%23](http://localhost:5173/exercise/i-vi-ii-v-lesson-a%23)
+- **F Major (F–Dm–Gm–C)**: [http://localhost:5173/exercise/i-vi-ii-v-lesson-f](http://localhost:5173/exercise/i-vi-ii-v-lesson-f)
+
+---
+
+## I–vi–ii–V Scale & Chords Creative Lessons (Detailed Guide)
+
+### What these lessons are
+
+Each lesson is **standalone for that key** — one URL, one key, two validated phases. This is not a drill or a torture chamber. It’s designed to help you discover your creative powers in chords and scales at your own pace.
+
+### Lesson structure
+
+1. **Step 1 — Scale**: Play the major scale ascending and descending. The app validates each note.
+2. **Step 2 — Chords**: Play the I–vi–ii–V progression. The app validates each chord.
+3. **Completion**: When both phases are complete, the lesson congratulates you and optionally loops so you can practice again.
+
+### Example: G Major
+
+- **Scale**: G – A – B – C – D – E – F♯ – G (and back down)
+- **Chords**: G – Em – Am – D (I – vi – ii – V)
+
+### How to use
+
+1. Choose a key from the Quick Links above (e.g. [G Major](http://localhost:5173/exercise/i-vi-ii-v-lesson-g)).
+2. Connect your MIDI keyboard.
+3. Play the scale first. Follow the on-screen prompts.
+4. When the scale is complete, the app will prompt you to play the chords.
+5. After both phases, the lesson is complete. You can loop to practice again or take a break.
+
+### Practice tips
+
+- Take your time. There’s no timer or pressure.
+- Stretch your hands before playing.
+- Each lesson is self-contained — focus on one key until it feels comfortable.
+- Use this as a creative warm-up or a way to explore a new key in depth.
+
+---
+
 ## Scale Practice
 
 Scale practice is fundamental to developing finger dexterity, muscle memory, and understanding of music theory. Here are some effective ways to use the Scale Practice mode:

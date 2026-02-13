@@ -260,6 +260,19 @@ describe('Routing Integration', () => {
       expect(exercise.id).toBe('triad-shape-shifting');
     });
 
+    it('should load i-vi-ii-v-lesson-c exercise', () => {
+      const exercise = loadExerciseFromUrl('i-vi-ii-v-lesson-c', '');
+      expect(exercise).toBeDefined();
+      expect(exercise.id).toBe('i-vi-ii-v-lesson-c');
+      expect(exercise.mode).toBe('scale_then_chord');
+    });
+
+    it('should load i-vi-ii-v-lesson-f# with URL-encoded id', () => {
+      const exercise = loadExerciseFromUrl('i-vi-ii-v-lesson-f%23', '');
+      expect(exercise).toBeDefined();
+      expect(exercise.id).toBe('i-vi-ii-v-lesson-f#');
+    });
+
     it('should render app at triad-shape-shifting exercise path', async () => {
       render(
         <MemoryRouter initialEntries={['/exercise/triad-shape-shifting']}>

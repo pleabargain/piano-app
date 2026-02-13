@@ -29,7 +29,14 @@ export function parseUrlParams(search) {
  * @returns {Object|null} Exercise configuration with parsed parameters or null if not found
  */
 export function loadExerciseFromUrl(exerciseId, search = '') {
-  const exercise = getExercise(exerciseId);
+  let exercise = getExercise(exerciseId);
+  if (!exercise && exerciseId) {
+    try {
+      exercise = getExercise(decodeURIComponent(exerciseId));
+    } catch (_) {
+      exercise = null;
+    }
+  }
   if (!exercise) {
     return null;
   }
