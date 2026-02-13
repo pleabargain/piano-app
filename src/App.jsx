@@ -106,6 +106,7 @@ function App() {
     const pathname = location.pathname;
     if (!pathname.startsWith('/exercise/')) {
       setExerciseConfig(null);
+      setProgression([]);
       return;
     }
 
@@ -117,6 +118,25 @@ function App() {
       const effectiveMode = loadedConfig.mode === 'scale_then_chord' ? 'scale' : loadedConfig.mode;
       setMode(effectiveMode);
       setSelectedScaleType(loadedConfig.config.scaleType || 'major');
+
+      // Pre-initialize keyProgression for notation/scale display (scale_then_chord and chord exercises)
+      const keys = loadedConfig.config?.keyProgression || [];
+      if (keys.length > 0) {
+        setKeyProgression(keys);
+        setCurrentKeyIndex(loadedConfig.startKeyIndex ?? 0);
+      }
+
+      // Pre-initialize progression for chord exercises so notation shows target inversions immediately
+      const gen = loadedConfig.config?.generateProgression;
+      if (effectiveMode === 'chord' && gen && typeof gen === 'function') {
+        const keys = loadedConfig.config.keyProgression || ['C'];
+        const key = keys[0];
+        const prog = gen(key);
+        if (prog?.length) {
+          setProgression(prog);
+          setCurrentStepIndex(0);
+        }
+      }
 
       // Auto-enable requireAllInversions for I-IV-V inversion exercises
       // OR if explicitly requested by config
@@ -132,6 +152,8 @@ function App() {
       }
     } else {
       setExerciseConfig(null);
+      setProgression([]);
+      setKeyProgression([]);
       // Reset defaults when leaving exercise
       setRequireAllInversions(false);
     }

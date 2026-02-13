@@ -32,6 +32,14 @@
   height: auto;
 }
 
+/* High-contrast notation for dark UI: ensure notes, stems, clef, and staff are visible */
+.sheet-music-vexflow-output svg path,
+.sheet-music-vexflow-output svg line {
+  fill: #ffffff;
+  stroke: #ffffff;
+  stroke-width: 1.5;
+}
+
 .sheet-music-placeholder {
   color: #9ca3af;
   font-size: 0.95rem;

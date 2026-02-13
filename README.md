@@ -1,7 +1,7 @@
 <!-- https://github.com/pleabargain/piano-app -->
 # Piano App
 
-Last updated: 2026-02-01
+Last updated: 2026-02-13
 
 A React-based piano training application built with Vite. Practice scales, chords, and free play with MIDI keyboard support.
 
@@ -110,6 +110,12 @@ Runs all tests once and saves the full results to a date-stamped file in the `te
 npm run test:log
 ```
 *Logs are saved as `YYYY-MM-DDTHHmmss-tests[N].log` where `N` is the number of failed tests.*
+
+**E2E Tests (Playwright):**
+Runs end-to-end tests in a real Chromium browser. Catches font loading, layout timing, and VexFlow notation issues that unit tests miss. Requires the dev server (auto-started).
+```bash
+npm run test:e2e
+```
 
 ## Features
 
@@ -1312,4 +1318,4 @@ The app supports a URL-based lesson system. Each exercise is accessible at `http
 
 ---
 
-Last Updated: 2026-02-11
+Last Updated: 2026-02-13

@@ -84,6 +84,7 @@ export default function SheetMusicDisplay({
         scaleToShow = { root: selectedRoot, scaleType: selectedScaleType };
       }
     } else if (mode === 'chord' || mode === 'free') {
+      // Priority: locked > progression target > detected. In chord practice, show TARGET inversion to play.
       if (lockedChord) {
         const parsed = parseChordName(lockedChord.name);
         if (parsed) chordToShow = { ...parsed, inversion: lockedChord.inversion };
@@ -91,7 +92,7 @@ export default function SheetMusicDisplay({
         const target = progression[currentStepIndex % progression.length];
         if (target && target.name) {
           const parsed = parseChordName(target.name);
-          if (parsed) chordToShow = { ...parsed, inversion: target.inversion };
+          if (parsed) chordToShow = { ...parsed, inversion: target.inversion || 'Root Position' };
         }
       }
       if (!chordToShow && detectedChord) {
@@ -108,13 +109,20 @@ export default function SheetMusicDisplay({
       return;
     }
 
-    const renderNotation = () => {
+    let vfRetryCount = 0;
+    const renderNotation = (retryCount = 0) => {
       try {
         // Ensure div is still in DOM (e.g. after fast re-renders in tests)
         if (!div.id || !document.getElementById(div.id)) {
           return;
         }
-        const width = Math.max(containerRef.current?.offsetWidth || 400, 400);
+        const containerWidth = containerRef.current?.offsetWidth || 0;
+        // If container has no width yet (layout not ready), retry up to 3 times
+        if (containerWidth === 0 && retryCount < 3) {
+          setTimeout(() => renderNotation(retryCount + 1), 80);
+          return;
+        }
+        const width = Math.max(containerWidth, 400);
         const height = 120;
 
         const vf = new Factory({
@@ -122,6 +130,12 @@ export default function SheetMusicDisplay({
         });
 
         const score = vf.EasyScore();
+        // High-contrast styling for dark background: white notes so they're visible
+        score.addCommitHook((_options, note) => {
+          if (note && typeof note.setStyle === 'function') {
+            note.setStyle({ fillStyle: '#ffffff', strokeStyle: '#ffffff' });
+          }
+        });
         const system = vf.System({ x: 0, y: 0, width });
 
         let notesStr = '';
@@ -136,8 +150,11 @@ export default function SheetMusicDisplay({
         } else if (scaleToShow) {
           const scaleNotesForNotation = getScaleNotesForNotation(scaleToShow.root, scaleToShow.scaleType);
           if (scaleNotesForNotation.length > 0) {
-            const noteStrs = scaleNotesForNotation.map((n) => `${n.name}${n.octave}`);
-            notesStr = noteStrs.map((s, i) => (i === 0 ? `${s}/q` : s)).join(', ');
+            // Use eighth notes (/8) - 8 eighths fill 4/4; pad with rests (B4/8/r) if needed
+            const noteStrs = scaleNotesForNotation.map((n) => `${n.name}${n.octave}/8`);
+            const numRests = Math.max(0, 8 - noteStrs.length);
+            const restStrs = Array(numRests).fill('B4/8/r');
+            notesStr = [...noteStrs, ...restStrs].join(', ');
           }
         }
 
@@ -146,8 +163,8 @@ export default function SheetMusicDisplay({
           return;
         }
 
-        const numNotes = chordToShow ? 1 : (scaleToShow ? getScaleNotes(scaleToShow.root, scaleToShow.scaleType).length : 4);
-        const timeSig = numNotes <= 4 ? '4/4' : `${numNotes}/4`;
+        // Use 4/4 for all - avoids potential VexFlow issues with 8/4, 9/4 etc.
+        const timeSig = '4/4';
         system
           .addStave({
             voices: [score.voice(score.notes(notesStr, { stem: 'up' }))],
@@ -158,15 +175,29 @@ export default function SheetMusicDisplay({
         vf.draw();
         rendererRef.current = vf;
       } catch (err) {
+        const msg = err?.message || String(err);
         console.error('[SheetMusicDisplay] VexFlow render error:', err);
-        div.innerHTML = '<p class="sheet-music-placeholder">Unable to render notation</p>';
+        // Expose error for E2E debugging (data attribute, not visible to user)
+        vfRetryCount += 1;
+        if (vfRetryCount < 2) {
+          setTimeout(() => renderNotation(retryCount), 400);
+        } else {
+          const p = document.createElement('p');
+          p.className = 'sheet-music-placeholder';
+          p.textContent = 'Unable to render notation';
+          p.dataset.debugError = msg;
+          div.innerHTML = '';
+          div.appendChild(p);
+        }
       }
     };
 
+    // Wait for fonts then render; use longer delay in browser for VexFlow glyph resolution
+    const delay = typeof window !== 'undefined' && window.document?.fonts?.ready ? 200 : 50;
     if (document.fonts && document.fonts.ready) {
-      document.fonts.ready.then(() => setTimeout(renderNotation, 50));
+      document.fonts.ready.then(() => setTimeout(renderNotation, delay));
     } else {
-      setTimeout(renderNotation, 100);
+      setTimeout(renderNotation, delay);
     }
 
     return () => {
