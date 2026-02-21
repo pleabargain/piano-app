@@ -14,6 +14,21 @@ function midiToVexFlowNote(midi) {
   return `${noteName}${octave}`;
 }
 
+/** Convert VexFlow key string to MIDI number (e.g., "C/4" or "c/4" -> 60). Middle C = 60. */
+export function vexFlowKeyToMidi(keyStr) {
+  if (!keyStr || typeof keyStr !== 'string') return null;
+  const flatToSharp = { Db: 'C#', Eb: 'D#', Gb: 'F#', Ab: 'G#', Bb: 'A#', Cb: 'B', Fb: 'E' };
+  const normalized = keyStr.trim();
+  const match = normalized.match(/^([A-Ga-g][#b]?)(?:\/)?(\d+)$/);
+  if (!match) return null;
+  const notePart = match[1].charAt(0).toUpperCase() + (match[1].length > 1 ? match[1].slice(1).toLowerCase() : '');
+  const noteName = flatToSharp[notePart] || notePart;
+  const pitchClass = NOTE_NAMES.indexOf(noteName);
+  if (pitchClass === -1) return null;
+  const octave = parseInt(match[2], 10);
+  return (octave + 1) * 12 + pitchClass;
+}
+
 /** Map inversion string to number */
 function inversionStringToNumber(inv) {
   if (!inv) return 0;
@@ -46,6 +61,9 @@ function getScaleNotesForNotation(root, scaleType, startOctave = 4) {
   return result;
 }
 
+const HIGHLIGHT_STYLE = { fillStyle: '#00bfff', strokeStyle: '#00bfff' };
+const DEFAULT_STYLE = { fillStyle: '#ffffff', strokeStyle: '#ffffff' };
+
 export default function SheetMusicDisplay({
   detectedChord,
   selectedRoot,
@@ -56,6 +74,7 @@ export default function SheetMusicDisplay({
   currentStepIndex = 0,
   keyProgression = [],
   currentKeyIndex = 0,
+  activeNotes = [],
 }) {
   const containerRef = useRef(null);
   const rendererRef = useRef(null);
@@ -63,16 +82,20 @@ export default function SheetMusicDisplay({
   useEffect(() => {
     if (!containerRef.current) return;
 
-    // Clear previous content
-    while (containerRef.current.firstChild) {
-      containerRef.current.removeChild(containerRef.current.firstChild);
-    }
+    // Append new content first, then remove old - avoids flash when activeNotes updates
+    const oldChild = containerRef.current.firstChild;
     const div = document.createElement('div');
     div.id = 'sheet-music-output-' + Date.now();
     div.className = 'sheet-music-vexflow-output';
     div.style.width = '100%';
     div.style.minHeight = '100px';
     containerRef.current.appendChild(div);
+
+    const removeOldChild = () => {
+      if (oldChild && oldChild.parentNode === containerRef.current) {
+        containerRef.current.removeChild(oldChild);
+      }
+    };
 
     let chordToShow = null;
     let scaleToShow = null;
@@ -106,6 +129,7 @@ export default function SheetMusicDisplay({
 
     if (!chordToShow && !scaleToShow) {
       div.innerHTML = '<p class="sheet-music-placeholder">Play a chord or select a scale</p>';
+      removeOldChild();
       return;
     }
 
@@ -130,10 +154,17 @@ export default function SheetMusicDisplay({
         });
 
         const score = vf.EasyScore();
-        // High-contrast styling for dark background: white notes so they're visible
+        const activeSet = new Set(Array.isArray(activeNotes) ? activeNotes : []);
         score.addCommitHook((_options, note) => {
-          if (note && typeof note.setStyle === 'function') {
-            note.setStyle({ fillStyle: '#ffffff', strokeStyle: '#ffffff' });
+          if (!note || typeof note.setStyle !== 'function') return;
+          note.setStyle(DEFAULT_STYLE);
+          if (activeSet.size === 0) return;
+          const keys = typeof note.getKeys === 'function' ? note.getKeys() : [];
+          for (let i = 0; i < keys.length; i++) {
+            const midi = vexFlowKeyToMidi(keys[i]);
+            if (midi != null && activeSet.has(midi) && typeof note.setKeyStyle === 'function') {
+              note.setKeyStyle(i, HIGHLIGHT_STYLE);
+            }
           }
         });
         const system = vf.System({ x: 0, y: 0, width });
@@ -160,6 +191,7 @@ export default function SheetMusicDisplay({
 
         if (!notesStr) {
           div.innerHTML = '<p class="sheet-music-placeholder">Play a chord or select a scale</p>';
+          removeOldChild();
           return;
         }
 
@@ -174,6 +206,7 @@ export default function SheetMusicDisplay({
 
         vf.draw();
         rendererRef.current = vf;
+        removeOldChild();
       } catch (err) {
         const msg = err?.message || String(err);
         console.error('[SheetMusicDisplay] VexFlow render error:', err);
@@ -188,6 +221,7 @@ export default function SheetMusicDisplay({
           p.dataset.debugError = msg;
           div.innerHTML = '';
           div.appendChild(p);
+          removeOldChild();
         }
       }
     };
@@ -221,6 +255,7 @@ export default function SheetMusicDisplay({
     currentStepIndex,
     keyProgression,
     currentKeyIndex,
+    activeNotes,
   ]);
 
   return (

@@ -738,7 +738,9 @@ function App() {
   useEffect(() => {
     if (!requireAllInversions) {
       setPlayedInversions(new Set());
-      setInversionsByChordType(new Map());
+      // Only reset inversionsByChordType when it has content - avoids infinite loop
+      // (calling setInversionsByChordType(new Map()) creates new ref, retriggers effect)
+      setInversionsByChordType(prev => (prev.size > 0 ? new Map() : prev));
       lastDetectedInversionRef.current = { stepIndex: -1, inversion: null };
       prevChordTypeRef.current = null;
     } else if (mode === 'chord' && progression.length > 0) {
@@ -1459,6 +1461,7 @@ function App() {
                 currentStepIndex={currentStepIndex}
                 keyProgression={keyProgression}
                 currentKeyIndex={currentKeyIndex}
+                activeNotes={activeNotes}
               />
             </div>
 

@@ -1,7 +1,7 @@
 <!-- https://github.com/pleabargain/piano-app -->
 # Piano App
 
-Last updated: 2026-02-13
+Last updated: 2026-02-14
 
 A React-based piano training application built with Vite. Practice scales, chords, and free play with MIDI keyboard support.
 
@@ -794,6 +794,14 @@ If chord detection isn't working in Chord Practice mode:
 5. **Check Chord Name Match**: The detected chord name must exactly match the target chord name (e.g., "F Major" = "F Major")
 6. **Verify Progression is Set**: Make sure you've clicked "Set Progression" after entering your Roman numeral progression
 
+### Chrome Not Seeing MIDI
+
+Sometimes, for whatever reason, Chrome stops seeing the MIDI device. If the app shows "Connect MIDI keyboard to start" or your keyboard is not detected:
+
+1. Open `chrome://flags/#use-winrt-midi-api` in Chrome
+2. Enable the **MIDI** flag
+3. Restart Chrome
+
 ### Common Issues
 
 - **"No chord detected"**: You may be playing fewer than 3 notes, or the notes don't form a recognized chord
@@ -1036,6 +1044,12 @@ Run tests with `npm test` or `npm run test:ui` for interactive test interface.
 ---
 
 ## Recent Updates
+
+### 2026-02-14: Sheet Music Played-Note Highlighting
+
+- **Played-note highlighting**: When the user plays a note on the piano (or MIDI keyboard), the corresponding note on the sheet music notation strip is now highlighted in cyan (#00bfff). This applies in both chord mode (e.g., C Major chord shows C4, E4, G4—playing middle C highlights C4) and scale mode.
+- **Acceptance criteria**: If user plays middle C (MIDI 60), middle C is highlighted on the sheet music notation strip.
+- **Unit tests**: Added `vexFlowKeyToMidi.test.js` (26 tests) for VexFlow key-to-MIDI conversion, and `SheetMusicPlayedNoteHighlight.test.jsx` (10 tests) for integration coverage of the highlight feature.
 
 ### 2026-02-01: AGENTS.md Yes/No Question Format Rule
 
@@ -1318,4 +1332,4 @@ The app supports a URL-based lesson system. Each exercise is accessible at `http
 
 ---
 
-Last Updated: 2026-02-13
+Last Updated: 2025-02-21
